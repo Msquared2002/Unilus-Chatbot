@@ -50,42 +50,88 @@
 .lms-tools {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 14px;
   margin-left: auto;
   white-space: nowrap;
   font-size: 16px;
 }
-.lms-tools span {
+.tool-icon,
+.tool-caret {
   position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+.tool-icon {
+  width: 22px;
+  height: 22px;
+}
+.tool-icon svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.tool-icon:nth-child(2) svg {
+  fill: currentcolor;
+  stroke: none;
 }
 .lms-tools b {
   position: absolute;
-  top: -11px;
-  right: -10px;
-  padding: 3px 5px;
+  top: -10px;
+  right: -9px;
+  min-width: 16px;
+  height: 19px;
+  padding: 1px 4px;
   background: #ed572d;
-  font-size: 11px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 17px;
+  text-align: center;
 }
 .avatar {
   display: grid;
   place-items: center;
-  width: 44px;
-  height: 44px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   background: #ecf0f2;
   color: #3b4b59;
+  font-size: 16px;
+}
+.tool-caret {
+  font-size: 17px;
 }
 .lms-tools i {
-  height: 42px;
+  height: 38px;
   border-left: 2px solid #dce0e3;
 }
-.lms-tools button {
+.edit-label {
+  color: #fff;
+  font-size: 16px;
+}
+.edit-toggle {
+  position: relative;
   border: 0;
   background: #f0f2f4;
-  width: 40px;
-  height: 25px;
+  width: 42px;
+  height: 24px;
   border-radius: 20px;
-  color: #8d979e;
+  padding: 0;
+}
+.edit-toggle span {
+  position: absolute;
+  top: 5px;
+  left: 6px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #8d979e;
 }
 .lms-wrap {
   min-height: 100vh;

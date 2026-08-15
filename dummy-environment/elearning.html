@@ -18,11 +18,32 @@
         ><a href="#announcement">E – Learning Guide⌄</a
         ><a href="website.html">Home</a>
       </nav>
-      <div class="lms-tools">
-        <span>♟<b>7</b></span
-        ><span>▰</span><span>✉</span><span class="avatar">MB</span
-        ><span>⌄</span><i></i><span>Edit mode</span
-        ><button type="button" aria-label="Edit mode toggle">●</button>
+      <div class="lms-tools" aria-label="LMS utilities">
+        <span class="tool-icon has-alert" aria-label="Notifications">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M18 16v-5a6 6 0 0 0-12 0v5l-2 2h16z"></path>
+            <path d="M9.5 20a2.5 2.5 0 0 0 5 0"></path>
+          </svg>
+          <b>7</b>
+        </span>
+        <span class="tool-icon" aria-label="Messages">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 5h14v10H8l-3 3z"></path>
+          </svg>
+        </span>
+        <span class="tool-icon" aria-label="Mail">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3" y="5" width="18" height="14"></rect>
+            <path d="m3 7 9 6 9-6"></path>
+          </svg>
+        </span>
+        <span class="avatar">MB</span>
+        <span class="tool-caret">⌄</span>
+        <i></i>
+        <span class="edit-label">Edit mode</span>
+        <button class="edit-toggle" type="button" aria-label="Edit mode toggle">
+          <span></span>
+        </button>
       </div>
     </header>
     <main class="lms-wrap" id="top">
@@ -71,15 +92,6 @@
               type="search"
               placeholder="Search by activity type or name"
             />
-          </div>
-          <div class="timeline-event">
-            <time>Tuesday, 18 August 2026</time><span>12:00</span>
-            <div class="event-icon">⇧</div>
-            <div>
-              <b>BIT 402 FINAL YEAR PROJECT PROPOSAL SUBMISSION</b>
-              <p>Assignment is due · ICT Project/Research</p>
-            </div>
-            <button type="button" data-demo-action>Add submission</button>
           </div>
         </section>
         <section class="lms-card calendar" id="calendar">
@@ -133,8 +145,7 @@
         <section class="lms-card upcoming" id="courses">
           <h2>Upcoming events</h2>
           <div>
-            <span class="event-icon">⇧</span
-            ><b>BIT 402 FINAL YEAR PROJECT PROPOSAL SUBMISSION is due</b
+            <span class="event-icon">⇧</span><b>-</b
             ><small>Tuesday, 18 August, 12:00 PM</small>
           </div>
           <a href="#calendar">Go to calendar...</a>
