@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="University of Lusaka public website demonstration"
+    />
+    <title>University Of Lusaka Home</title>
+    <link rel="stylesheet" href="css/shared.css" />
+    <link rel="stylesheet" href="css/website.css" />
+  </head>
+  <body class="website-page">
+    <header class="site-header" id="top">
+      <a
+        class="site-header__brand"
+        href="website.html"
+        aria-label="University of Lusaka home"
+        ><img src="assets/unilus-logo.png" alt="University of Lusaka crest"
+      /></a>
+      <button
+        class="site-header__toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="website-nav"
+      >
+        ☰
+      </button>
+      <nav class="site-nav" id="website-nav" aria-label="Main navigation">
+        <a class="is-active" href="#top">HOME</a>
+        <a class="has-menu" href="#audiences"
+          >PORTAL <span>⌄</span
+          ><em><b>Students</b><b>Staff</b><b>Applicants</b></em></a
+        >
+        <a class="has-menu" href="#apply">APPLY NOW <span>⌄</span></a>
+        <a class="has-menu" href="#programmes">PROGRAMMES <span>⌄</span></a>
+        <a class="has-menu" href="#fees">FEES AND TUITION <span>⌄</span></a>
+        <a class="has-menu" href="#audiences"
+          >CURRENT STUDENTS <span>⌄</span></a
+        >
+        <a class="has-menu" href="#campus"
+          >CAMPUS ACCOMMODATION <span>⌄</span></a
+        >
+        <a class="has-menu" href="elearning.html"
+          >E – LEARNING <span>⌄</span></a
+        >
+        <a class="has-menu" href="#campus">LIBRARY <span>⌄</span></a>
+        <a class="has-menu" href="#about">ABOUT US <span>⌄</span></a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="site-hero" aria-label="University welcome">
+        <div class="site-hero__shade"></div>
+        <button
+          class="hero-arrow hero-arrow--left"
+          type="button"
+          data-hero-prev
+          aria-label="Previous hero image"
+        >
+          ‹
+        </button>
+        <button
+          class="hero-arrow hero-arrow--right"
+          type="button"
+          data-hero-next
+          aria-label="Next hero image"
+        >
+          ›
+        </button>
+        <div class="site-hero__content">
+          <h1 data-hero-title>Welcome to University of<br />Lusaka</h1>
+          <p data-hero-copy>
+            Empowering minds, shaping futures and advancing knowledge for a<br />better
+            tomorrow through excellence in education and research
+          </p>
+          <div class="hero-actions">
+            <a class="button button--green" href="#apply">Apply Now</a
+            ><a class="button button--outline" href="#apply"
+              >Application guide</a
+            ><a class="button button--outline" href="#programmes"
+              >Explore Programs →</a
+            >
+          </div>
+          <a class="hero-notice" href="#news">Registration Notice</a>
+        </div>
+      </section>
+
+      <section class="audiences section" id="audiences">
+        <div class="audiences__grid">
+          <article>
+            <span class="round-icon">♙</span>
+            <h2>Prospective Students</h2>
+            <p>
+              Discover admission requirements, application processes, and
+              financial aid opportunities.
+            </p>
+          </article>
+          <article>
+            <span class="round-icon">♙</span>
+            <h2>Current Students</h2>
+            <p>
+              Access your student portal, academic calendar, and campus
+              resources.
+            </p>
+          </article>
+          <article>
+            <span class="round-icon">♧</span>
+            <h2>Faculty &amp; Staff</h2>
+            <p>
+              Find resources, tools, and information for university faculty and
+              staff members.
+            </p>
+          </article>
+          <article>
+            <span class="round-icon">⌑</span>
+            <h2>Alumni</h2>
+            <p>
+              Stay connected with your alma mater and join our global alumni
+              network.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="programmes section" id="programmes">
+        <div class="section-heading">
+          <h2>Academic Programs</h2>
+          <p>Celebrating academic excellence and student achievement.</p>
+        </div>
+        <div class="programmes__grid">
+          <article class="program-card">
+            <img
+              src="assets/students-audience.jpg"
+              alt="Students in a lecture"
+            />
+            <div>
+              <h3>Bachelor of Laws</h3>
+              <p>
+                The Bachelor of Laws (LLB) degree offers courses that go beyond
+                the requirements of the conventional law degree.
+              </p>
+              <a href="#apply">Read More →</a>
+            </div>
+          </article>
+          <article class="program-card">
+            <img src="assets/campus-auditorium.jpg" alt="UNILUS auditorium" />
+            <div>
+              <h3>Bachelor of Science in Computer Science</h3>
+              <p>
+                The Bachelor of Science in Computer Science is a four-year
+                programme that provides a solid grounding in computing concepts
+                and emerging technologies.
+              </p>
+              <a href="#apply">Read More →</a>
+            </div>
+          </article>
+          <article class="program-card">
+            <img src="assets/campus-aerial.jpg" alt="University campus" />
+            <div>
+              <small>March 2026</small>
+              <h3>Master of Business Administration</h3>
+              <p>
+                The MBA at the University of Lusaka is designed with you in
+                mind. Creating versatile and confident leaders who can make
+                strategic decisions.
+              </p>
+              <a href="#apply">Read More →</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="stats-band section" id="about">
+        <div class="section-heading section-heading--light">
+          <h2>Excellence by the Numbers</h2>
+          <p>
+            Our commitment to academic excellence is reflected in these key
+            achievements and milestones.
+          </p>
+        </div>
+        <div class="stats-grid">
+          <div><strong>16,800</strong><span>Students Enrolled</span></div>
+          <div><strong>150+</strong><span>Programs Offered</span></div>
+          <div><strong>28</strong><span>Nationalities represented</span></div>
+          <div><strong>300+</strong><span>Faculty Members</span></div>
+          <div>
+            <strong>10,000+</strong><span>Graduates since<br />inception</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="modes section" id="apply">
+        <div class="section-heading section-heading--left">
+          <h2>Our Modes of Study</h2>
+        </div>
+        <div class="modes__grid">
+          <article>
+            <h3>Campus-Based</h3>
+            <small>FULL-TIME LEARNING</small>
+            <p>
+              Attend lectures and academic activities on campus with full access
+              to university facilities, libraries, and student support services.
+            </p>
+          </article>
+          <article>
+            <h3>Distance</h3>
+            <small>DISTANCE LEARNING</small>
+            <p>
+              Study remotely through online platforms and guided self-study,
+              ideal for learners who cannot attend campus regularly.
+            </p>
+          </article>
+          <article>
+            <h3>Part-Time Learning</h3>
+            <small>WORK &amp; STUDY</small>
+            <p>
+              A flexible option combining online learning with limited on-campus
+              sessions, tailored for working professionals.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="campus section" id="campus">
+        <div class="section-heading">
+          <h2>Campus Life</h2>
+          <p>
+            Experience a vibrant campus community with diverse opportunities for
+            personal<br />growth, leadership, and lifelong friendships.
+          </p>
+        </div>
+        <div class="campus__layout">
+          <div class="campus__photos">
+            <img
+              src="assets/campus-aerial.jpg"
+              alt="UNILUS campus aerial view"
+            /><img
+              src="assets/campus-auditorium.jpg"
+              alt="Innovation space at UNILUS"
+            /><img
+              src="assets/students-classroom.jpg"
+              alt="Students in a classroom"
+            /><img
+              src="assets/students-hall.jpg"
+              alt="UNILUS sports facilities"
+            />
+          </div>
+          <div class="campus__copy">
+            <h2>A Community Where You Belong</h2>
+            <p>
+              From student organizations and intramural sports to cultural
+              events and volunteer opportunities, our campus offers endless ways
+              to connect, grow, and make lasting memories.
+            </p>
+            <ul>
+              <li>✓ <b>Student Organizations</b></li>
+              <li>✓ <b>Varsity &amp; Intramural Sports</b></li>
+              <li>✓ <b>Community Service Programs</b></li>
+            </ul>
+            <a href="#about">Explore our sports-recreation →</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="why section" id="fees">
+        <div class="why__grid">
+          <article class="why__copy">
+            <h2>Why UNILUS ?</h2>
+            <p>
+              Our degree programmes are internationally recognised and designed
+              to prepare graduates for global careers.
+            </p>
+            <a class="button button--green" href="#programmes">Learn More</a>
+          </article>
+          <img
+            src="assets/library-exterior.jpg"
+            alt="UNILUS library exterior"
+          /><img
+            src="assets/library-interior.jpg"
+            alt="UNILUS library interior"
+          />
+          <article class="why__copy why__copy--green">
+            <p>See our most popular questions.</p>
+            <a class="button button--white" href="#news">Learn More</a>
+          </article>
+        </div>
+      </section>
+
+      <section class="news section" id="news">
+        <div class="section-heading section-heading--left">
+          <h2>Latest News &amp; Updates</h2>
+        </div>
+        <div class="news__layout">
+          <article class="news-feature">
+            <h3>
+              Leveraging Digital Technology To Enhance Ethics Review in Public
+              Health Emergencies June 30 @ 2:00 pm – 3:30 pm
+            </h3>
+            <small>● UNILUS　– ◷　June 29, 2026</small>
+            <p>
+              The session will explore the role of digital technologies,
+              including AI, in strengthening research ethics review during
+              public health emergencies...
+            </p>
+            <a class="button button--outline-dark" href="#news">Read More</a>
+          </article>
+          <div class="news-list">
+            <article>
+              <img src="assets/campus-aerial.jpg" alt="Campus aerial" />
+              <div>
+                <small>Events　News</small>
+                <h3>
+                  INVITATION TO THE OFFICIAL OPENING OF THE UNIVERSITY OF LUSAKA
+                  SILVEREST CAMPUS AND TEACHING HOSPITAL
+                </h3>
+                <p>● UNILUS　– ◷　April 7, 2026</p>
+              </div>
+            </article>
+            <article>
+              <img src="assets/students-audience.jpg" alt="Graduation event" />
+              <div>
+                <small>Events　News</small>
+                <h3>Graduation ceremonies</h3>
+                <p>● UNILUS　– ◷　March 10, 2026</p>
+              </div>
+            </article>
+            <article>
+              <img src="assets/newsletter.png" alt="Researcher newsletter" />
+              <div>
+                <small>University News</small>
+                <h3>The University of Lusaka brings research to life</h3>
+                <p>● UNILUS　– ◷　October 7, 2025</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="newsletter section">
+        <img src="assets/newsletter.png" alt="UNILUS Newsletter" />
+        <div>
+          <h2>UNILUS Newsletter</h2>
+          <p>
+            Download the first edition of the UNILUS Newsletter, highlighting
+            key activities from the first semester.
+          </p>
+          <a class="button button--green" href="#news"
+            >Read the latest edition</a
+          >
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        <img src="assets/unilus-logo.png" alt="University of Lusaka crest" />
+        <p>Passion for Quality Education: Our Driving Force</p>
+      </div>
+      <div>
+        <h3>CAMPUS ADDRESSES</h3>
+        <p><b>Silverest:</b><br />Plot No. 23072/M, Silverest Chongwe</p>
+        <p><b>Mass Media:</b><br />Plot No. 37413, off Alick Nkhata Road</p>
+        <p><b>Leopards Hill:</b><br />Plot No. 17986, off Leopards Hill Road</p>
+      </div>
+      <div>
+        <h3><u>CONTACT US</u></h3>
+        <p>☎ 0971263550</p>
+        <p>✉ info@unilus.ac.zm</p>
+      </div>
+      <small
+        >© <span data-year></span> University of Lusaka. All Rights
+        Reserved.</small
+      >
+    </footer>
+    <script src="js/shared.js"></script>
+    <script src="js/website.js"></script>
+  </body>
+</html>

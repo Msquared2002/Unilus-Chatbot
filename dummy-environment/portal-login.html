@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>UNILUS Student Portal Login</title>
+    <link rel="stylesheet" href="css/shared.css" />
+    <link rel="stylesheet" href="css/portal-login.css" />
+  </head>
+  <body class="portal-auth-page">
+    <header class="portal-auth-topbar">
+      <a class="portal-auth-brand" href="website.html">
+        <img src="assets/unilus-logo.png" alt="UNILUS" />
+        <span>UNILUS</span>
+      </a>
+      <nav class="portal-auth-nav" aria-label="Portal links">
+        <a href="apply.html">Apply Now</a>
+        <a href="elearning.html">E-learning</a>
+        <a href="website.html">Home</a>
+      </nav>
+    </header>
+    <main class="portal-auth-main">
+      <section class="portal-auth-card" aria-labelledby="login-heading">
+        <div class="portal-auth-card__brand">
+          <img src="assets/unilus-logo.png" alt="UNILUS crest" />
+          <h1>UNILUS Portal</h1>
+        </div>
+        <h2 id="login-heading">Sign In</h2>
+        <p class="portal-auth-card__intro">
+          Welcome back. Sign in to continue to the University of Lusaka portal.
+        </p>
+        <form class="portal-auth-form" data-portal-login novalidate>
+          <label for="portal-username">
+            User Name
+            <input
+              id="portal-username"
+              name="username"
+              type="text"
+              autocomplete="username"
+              placeholder="user name"
+              required
+            />
+          </label>
+          <label for="portal-password">
+            Password
+            <input
+              id="portal-password"
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              placeholder="password"
+              required
+            />
+          </label>
+          <button type="submit">Sign In</button>
+          <p class="portal-auth-error" data-login-error role="alert"></p>
+        </form>
+        <div class="portal-auth-links">
+          <a href="apply.html">Online application</a>
+          <span>Demo login only. No credentials are stored or sent.</span>
+        </div>
+      </section>
+    </main>
+    <script src="js/portal-login.js"></script>
+  </body>
+</html>

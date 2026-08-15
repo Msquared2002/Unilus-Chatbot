@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dashboard | UNILUS LMS</title>
+    <link rel="stylesheet" href="css/shared.css" />
+    <link rel="stylesheet" href="css/elearning.css" />
+  </head>
+  <body class="lms-page">
+    <header class="lms-header">
+      <a href="elearning.html" class="lms-name">UNILUS LMS</a>
+      <nav>
+        <a href="#top">Home</a><a class="active" href="#top">Dashboard</a
+        ><a href="#courses">My courses</a><a href="#calendar">Courses⌄</a
+        ><a href="portal-login.html">Portal⌄</a
+        ><a href="#calendar">Timetable⌄</a
+        ><a href="#announcement">E – Learning Guide⌄</a
+        ><a href="website.html">Home</a>
+      </nav>
+      <div class="lms-tools">
+        <span>♟<b>7</b></span
+        ><span>▰</span><span>✉</span><span class="avatar">MB</span
+        ><span>⌄</span><i></i><span>Edit mode</span
+        ><button type="button" aria-label="Edit mode toggle">●</button>
+      </div>
+    </header>
+    <main class="lms-wrap" id="top">
+      <div class="lms-content">
+        <h1>Hi, LUKA HAMUDUDU! 👋</h1>
+        <section class="lms-card announcement" id="announcement">
+          <h2>Announcement</h2>
+          <h3>INTRODUCING ASTRIA DIGITAL LIBRARY</h3>
+          <p>Dear Students,</p>
+          <p>
+            Did you know? Have you heard? The University of Lusaka has
+            subscribed to an electronic book (e-book) platform called ASTRIA
+            Digital Library. This platform enables you, to access books in
+            electronic format for your learning. These books can be accessed
+            from any location on your mobile phones, tablets, laptops and
+            desktops. Do not be left out of this wonderful experience.
+          </p>
+          <h4>STEPS FOR ACCESS</h4>
+          <p>
+            Step 1: Login credentials have been shared via your University of
+            Lusaka student emails.
+          </p>
+          <p>
+            Step 2: The email also contains links directing you to where you can
+            download the app depending on the gadget you are using.
+          </p>
+          <p>
+            Step 3: The email for credentials also contains links to
+            <b>User manuals and Video guides.</b>
+          </p>
+          <p>
+            Step 4: Once you download Astria Digital Library, proceed to login
+            using the credentials shared with you.
+          </p>
+          <p>
+            Step 5: Browse through Astria Digital Library to search for your
+            prescribed and recommended books.
+          </p>
+        </section>
+        <section class="lms-card timeline" id="timeline">
+          <h2>Timeline</h2>
+          <div class="timeline-controls">
+            <button type="button">Next 7 days⌄</button
+            ><button type="button">Sort by dates⌄</button
+            ><input
+              type="search"
+              placeholder="Search by activity type or name"
+            />
+          </div>
+          <div class="timeline-event">
+            <time>Tuesday, 18 August 2026</time><span>12:00</span>
+            <div class="event-icon">⇧</div>
+            <div>
+              <b>BIT 402 FINAL YEAR PROJECT PROPOSAL SUBMISSION</b>
+              <p>Assignment is due · ICT Project/Research</p>
+            </div>
+            <button type="button" data-demo-action>Add submission</button>
+          </div>
+        </section>
+        <section class="lms-card calendar" id="calendar">
+          <div class="calendar-title-row">
+            <h2>Calendar</h2>
+            <button type="button" class="new-event" data-demo-action>
+              New event
+            </button>
+          </div>
+          <select aria-label="Calendar course filter">
+            <option>All courses</option>
+          </select>
+          <div class="calendar-nav">
+            <span>◂　July</span>
+            <h3>August 2026</h3>
+            <span>September　▸</span>
+          </div>
+          <div class="calendar-grid">
+            <b>Mon</b><b>Tue</b><b>Wed</b><b>Thu</b><b>Fri</b><b>Sat</b
+            ><b>Sun</b><span></span><span></span><span></span><span></span
+            ><span></span><span>1</span><span>2</span><span>3</span
+            ><span>4</span><span>5</span><span>6</span><span>7</span
+            ><span>8</span><span>9</span><span>10</span><span>11</span
+            ><span>12</span><span>13</span><span>14</span
+            ><span class="today">15</span><span>16</span><span>17</span
+            ><span>18</span><span>19</span><span>20</span><span>21</span
+            ><span>22</span><span>23</span><span>24</span><span>25</span
+            ><span>26</span><span>27</span><span>28</span><span>29</span
+            ><span>30</span><span>31</span>
+          </div>
+          <p class="calendar-links">
+            Full calendar • Import or export calendars
+          </p>
+        </section>
+        <section class="lms-card latest">
+          <h2>Latest announcements</h2>
+          <p>13 August 2025, 10:36 PM</p>
+          <p>
+            Raymond Simwanza<br /><a href="#announcement">My Loft</a><br />Older
+            topics ...
+          </p>
+        </section>
+        <section class="lms-card logged">
+          <h2>Logged in user</h2>
+          <h3><span class="avatar">MB</span> LUKA HAMUDUDU BIT2424001</h3>
+          <p>
+            <b>City/town:</b> LUSAKA<br /><b>Email address:</b>
+            mjlukasquared@gmail.com
+          </p>
+        </section>
+        <section class="lms-card upcoming" id="courses">
+          <h2>Upcoming events</h2>
+          <div>
+            <span class="event-icon">⇧</span
+            ><b>BIT 402 FINAL YEAR PROJECT PROPOSAL SUBMISSION is due</b
+            ><small>Tuesday, 18 August, 12:00 PM</small>
+          </div>
+          <a href="#calendar">Go to calendar...</a>
+        </section>
+      </div>
+    </main>
+    <button class="lms-help" type="button">?</button>
+    <div class="demo-toast" role="status" aria-live="polite"></div>
+    <script src="js/shared.js"></script>
+    <script src="js/elearning.js"></script>
+  </body>
+</html>

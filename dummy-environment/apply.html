@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>UNILUS Online Application</title>
+    <link rel="stylesheet" href="css/shared.css" />
+    <link rel="stylesheet" href="css/apply.css" />
+  </head>
+  <body class="apply-page">
+    <header class="apply-topbar">
+      <a class="apply-brand" href="website.html">
+        <img src="assets/unilus-logo.png" alt="UNILUS" />
+        <span>UNILUS</span>
+      </a>
+      <nav class="apply-nav" aria-label="Application links">
+        <a href="portal-login.html">Student Portal</a>
+        <a href="website.html">Home</a>
+      </nav>
+    </header>
+    <main class="apply-main">
+      <header class="apply-heading">
+        <h1>Online Application</h1>
+        <p>
+          Begin a demonstration application for the University of Lusaka. This
+          form is separate from student portal authentication.
+        </p>
+      </header>
+      <section class="apply-card" aria-labelledby="application-heading">
+        <h2 id="application-heading">Applicant details</h2>
+        <form data-demo-application>
+          <div class="apply-grid">
+            <label class="apply-field" for="applicant-name">
+              Full name
+              <input id="applicant-name" name="name" type="text" required />
+            </label>
+            <label class="apply-field" for="applicant-email">
+              Email address
+              <input id="applicant-email" name="email" type="email" required />
+            </label>
+            <label class="apply-field" for="applicant-programme">
+              Programme of interest
+              <select id="applicant-programme" name="programme">
+                <option>Choose a programme</option>
+                <option>Bachelor of Information Technology</option>
+                <option>Bachelor of Business Administration</option>
+                <option>Bachelor of Laws</option>
+                <option>Bachelor of Medicine and Surgery</option>
+              </select>
+            </label>
+            <label class="apply-field" for="applicant-mode">
+              Mode of study
+              <select id="applicant-mode" name="mode">
+                <option>Choose a mode</option>
+                <option>Full-time</option>
+                <option>Part-time</option>
+                <option>Distance learning</option>
+              </select>
+            </label>
+            <label
+              class="apply-field apply-field--wide"
+              for="applicant-message"
+            >
+              Message
+              <textarea
+                id="applicant-message"
+                name="message"
+                placeholder="Tell us how we can help with your application."
+              ></textarea>
+            </label>
+          </div>
+          <div class="apply-actions">
+            <a href="portal-login.html">Back to portal login</a>
+            <button type="submit">Submit demo enquiry</button>
+          </div>
+          <p class="apply-message" data-application-message role="status"></p>
+        </form>
+      </section>
+    </main>
+    <script src="js/apply.js"></script>
+  </body>
+</html>

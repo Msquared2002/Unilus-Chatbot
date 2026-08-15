@@ -1,0 +1,20 @@
+{
+  "heroSlides": [
+    {
+      "image": "assets/hero-graduation.jpg",
+      "title": "Welcome to University of\nLusaka",
+      "copy": "Empowering minds, shaping futures and advancing knowledge for a\nbetter tomorrow through excellence in education and research"
+    },
+    {
+      "image": "assets/students-hall.jpg",
+      "title": "Learn, lead and\nmake an impact",
+      "copy": "A community of scholars, leaders and changemakers building\na better tomorrow through quality education."
+    }
+  ],
+  "modes": ["Campus-Based", "Distance", "Part-Time Learning"],
+  "news": [
+    "Latest News & Updates",
+    "Graduation ceremonies",
+    "The University of Lusaka brings research to life"
+  ]
+}
