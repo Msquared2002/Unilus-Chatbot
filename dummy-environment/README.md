@@ -1,6 +1,6 @@
 # UNILUS Dummy Environment
 
-High-fidelity Phase 1 reproductions of the supplied UNILUS public website, student portal, and e-learning screenshots. This folder is self-contained and uses only HTML5, CSS3, and Vanilla JavaScript.
+High-fidelity Phase 1 reproductions of the supplied UNILUS public website, student portal, and e-learning screenshots. This folder is self-contained and uses only HTML5, CSS3, and JavaScript.
 
 ## Run locally
 
@@ -23,8 +23,6 @@ The Student Portal launcher opens `portal-login.html`. Use `demo` and `unilus de
 
 The portal login, links, calendar controls, search, and other actions are demo-only. No authentication, backend service, live university data, AI/RAG, Google Sheets, Supabase, or framework dependency is included.
 
-## Reference comparison
-
-The supplied reference set was inspected in full: 40 images across the public website, student portal, and e-learning folders (30 PNG and 10 JPG files). The implementation was checked at the supplied desktop-style viewport and through the key scroll sections for each shell. The reference images themselves remain in the separate `Context` folder and were not duplicated here.
-
-Known differences are limited to browser chrome/scroll position from the source captures, original-site typography and icon rendering, and the fact that all interactions are local demo states rather than live services.
+## Login Credentials
+Username : demo
+Password : unilus demo
