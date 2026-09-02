@@ -1,0 +1,377 @@
+/* ============================================
+   UNILUS Avatar – Uses real PNG graduation cap
+   ============================================ */
+
+.uni-avatar-wrapper {
+  position: relative;
+  width: 110px;
+  height: 145px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  user-select: none;
+  perspective: 800px;
+  pointer-events: none;
+}
+
+/* ----- Real PNG Graduation Cap ----- */
+.uni-cap-img {
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 92px;
+  height: auto;
+  z-index: 10;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.35));
+  transition: transform 0.35s ease;
+  pointer-events: none;
+}
+
+/* ----- Black Ball Body ----- */
+.uni-body {
+  position: absolute;
+  bottom: 6px;
+  width: 78px;
+  height: 78px;
+  background: radial-gradient(circle at 35% 30%, #3a3a3a 0%, #1f1f1f 55%, #141414 100%);
+  border-radius: 50%;
+  box-shadow:
+    0 10px 25px rgba(0,0,0,0.22),
+    inset 0 -8px 16px rgba(255,255,255,0.05),
+    inset 0 6px 12px rgba(255,255,255,0.04);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  transition: transform 0.12s ease-out;
+  transform-style: preserve-3d;
+  overflow: hidden; /* lets .uni-outfit-img auto-clip to the sphere, box-shadow is unaffected */
+}
+
+/* ----- Outfit wrap layer -----
+   Lives INSIDE .uni-body so the circle clips it automatically.
+   Anchored from the BOTTOM so the full garment art renders at its natural
+   size (no cropping/squashing) - the eyes are positioned near the top of
+   the ball (see .uni-eyes) to clear whichever outfit is tallest. */
+.uni-outfit-img {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  z-index: 1;
+  pointer-events: none;
+  display: none;
+  /* The garment art itself is pre-shaped with a solid, full-width band at
+     its top edge (baked in at the source-image level, not via a CSS
+     stretch) so it sits flush against the circular body with no neckline
+     gap - and no extra transform is needed, which keeps the art crisp at
+     any display size instead of being blurred by runtime upscaling. */
+}
+.uni-eyes { z-index: 3; } /* keep eyes above every outfit layer */
+
+/* ----- Small chest accessory (kept for future reuse; unused by current outfits) -----
+   Also inside .uni-body so it's clipped, sits just above the wrap. */
+.uni-outfit-chest {
+  position: absolute;
+  bottom: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: auto;
+  z-index: 2;
+  pointer-events: none;
+  display: none;
+}
+
+/* ----- Accessory layers (wig, glasses, laptop) -----
+   Live OUTSIDE .uni-body (siblings) so they are NOT clipped by the circle.
+
+   Head-worn accessories are split into two layers each:
+   - the -wrap element handles POSITION + the idle/happy float, so it
+     bounces in the same phase as the cap and body (see visibility note below).
+   - the inner <img> handles the pointer-tracking tilt/eye-offset set from JS.
+
+   CSS animations always win over inline styles on the same property, so
+   putting both jobs on one element meant the float animation was silently
+   erasing the JS tracking transform every frame - glasses would float but
+   never actually track the eyes. Splitting them into parent/child lets both
+   apply at once, since transforms compose across nested elements.
+
+   The wig (.uni-accessory-top-wrap) and glasses (.uni-glasses-wrap) are two
+   INDEPENDENT layers/classes, not tied to setOutfit() at all - any glasses
+   can be worn together with any outfit (including the wig, or none). */
+.uni-accessory-top-wrap {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  width: 100px;
+  transform: translateX(-50%);
+  z-index: 9; /* above body, below cap */
+  pointer-events: none;
+  /* visibility (not display) keeps the float animation running continuously
+     in the background, in the same phase as the cap and body - display:none
+     would reset the animation to frame 0 every time an outfit is switched
+     on, so it would drift out of sync with the head's bounce. */
+  visibility: hidden;
+  opacity: 0;
+}
+.uni-accessory-top {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  transition: transform 0.12s ease-out;
+}
+/* Wig is cropped tight to its art, so its own width/offset are tuned
+   from its art - this is what makes it hug the head instead of floating
+   inside a mostly-empty image box. */
+.uni-avatar-wrapper.outfit-law-wig .uni-accessory-top-wrap {
+  width: 122px;
+  bottom: 41px;
+}
+
+/* Glasses: same wrap/inner-image split as the wig, but on their own layer
+   and z-index (above the wig, since they sit on the face and should stay
+   visible even if wig ringlets swing close to eye level), toggled by
+   setGlasses() rather than setOutfit(). */
+.uni-glasses-wrap {
+  position: absolute;
+  bottom: 25px;
+  left: 50%;
+  width: 90px;
+  transform: translateX(-50%);
+  z-index: 10; /* above the wig */
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+}
+.uni-glasses {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  transition: transform 0.12s ease-out;
+}
+.uni-avatar-wrapper.has-glasses .uni-glasses-wrap { visibility: visible; opacity: 1; }
+/* Each pair is cropped tight to its own art (frame + temple tips), and each
+   image's own lens-hole centers were used to size/place it so the lenses
+   frame the eyes generously (deliberately bigger than the raw eye-to-eye
+   gap, like a real pair of glasses sitting slightly proud of the face)
+   rather than shrinking the frame down to exactly the eyes' own width. */
+.uni-avatar-wrapper.glasses-round-gold .uni-glasses-wrap {
+  width: 91px;
+  bottom: 18px;
+}
+.uni-avatar-wrapper.glasses-square-black .uni-glasses-wrap {
+  width: 94px;
+  bottom: 33px;
+}
+.uni-avatar-wrapper.glasses-cateye-black .uni-glasses-wrap {
+  width: 95px;
+  bottom: 28px;
+}
+/* Glasses float in sync with the cap/wig too, same as the wig does below */
+.uni-avatar-wrapper.idle .uni-glasses-wrap {
+  animation: uni-cap-float 3s ease-in-out infinite;
+}
+.uni-avatar-wrapper.happy .uni-glasses-wrap {
+  animation: uni-cap-happy 0.55s ease infinite;
+}
+
+.uni-accessory-bottom {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 46px;
+  height: auto;
+  z-index: 11; /* in front of the body */
+  pointer-events: none;
+  display: none;
+}
+.uni-avatar-wrapper.has-outfit .uni-outfit-img { display: block; }
+.uni-avatar-wrapper.has-outfit-chest .uni-outfit-chest { display: block; }
+.uni-avatar-wrapper.has-accessory-top .uni-accessory-top-wrap { visibility: visible; opacity: 1; }
+.uni-avatar-wrapper.has-accessory-bottom .uni-accessory-bottom { display: block; }
+
+/* Wig needs the cap to float a bit higher so it clears the hair */
+.uni-avatar-wrapper.raise-cap .uni-cap-img {
+  top: -14px;
+}
+
+/* Wig floats in sync with the cap - same keyframes, same timing */
+.uni-avatar-wrapper.idle .uni-accessory-top-wrap {
+  animation: uni-cap-float 3s ease-in-out infinite;
+}
+.uni-avatar-wrapper.happy .uni-accessory-top-wrap {
+  animation: uni-cap-happy 0.55s ease infinite;
+}
+
+/* ----- Eyes ----- */
+.uni-eyes {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin-top: 16px; /* fixed distance from top of the 78px ball - clears the tallest outfit's collar */
+  transition: transform 0.07s ease-out;
+}
+
+.uni-eye {
+  width: 16px;
+  height: 19px;
+  background: #fff;
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+  transition: width 0.25s ease, height 0.25s ease, transform 0.25s ease;
+}
+
+.uni-eye::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 5px;
+  width: 6px;
+  height: 6px;
+  background: rgba(255,255,255,0.75);
+  border-radius: 50%;
+}
+
+/* ----- Thinking bubble (your GIF) ----- */
+.uni-thinking-bubble {
+  position: absolute;
+  top: 14px;
+  width: 64px;
+  height: auto;
+  opacity: 0;
+  transform: scale(0.55);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  pointer-events: none;
+  z-index: 20;
+}
+
+/* Default: bubble on the right */
+.uni-thinking-bubble {
+  right: -58px;
+  left: auto;
+}
+
+.uni-avatar-wrapper.thinking .uni-thinking-bubble {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* When avatar is on the right side of screen, flip bubble to the left */
+.uni-avatar-wrapper.bubble-left .uni-thinking-bubble {
+  right: auto;
+  left: -58px;
+  transform: scale(0.55) scaleX(-1);
+}
+.uni-avatar-wrapper.bubble-left.thinking .uni-thinking-bubble {
+  transform: scale(1) scaleX(-1);
+}
+
+/* ----- Gavel (only present in the law-wig/lawyer outfit) -----
+   Sits at rest (gavel-rest.png) beside the avatar whenever the lawyer
+   outfit is on, and .gavel-active (added briefly on click) swaps in the
+   animated slam. Positioned on the left, same as the fixed variant. */
+.uni-gavel-gif {
+  position: absolute;
+  left: -42px;
+  bottom: 13px;
+  width: 50px;
+  height: auto;
+  z-index: 20;
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+}
+.uni-avatar-wrapper.outfit-law-wig .uni-gavel-gif {
+  opacity: 1;
+  transform: scale(1);
+}
+/* Small pop while the slam gif is actively playing */
+.uni-avatar-wrapper.gavel-active .uni-gavel-gif {
+  transform: scale(1.08);
+}
+
+/* ----- Clickable avatar (tap/click to slam the gavel) -----
+   Only clickable while the lawyer outfit is on - the gavel only exists then.
+   The wrapper itself stays pointer-events:none so the rest of the page is
+   still click-through around the avatar's transparent bounding box - only
+   the ball and the cap (the visible avatar) become real click targets. */
+.uni-avatar-wrapper.outfit-law-wig .uni-body,
+.uni-avatar-wrapper.outfit-law-wig .uni-cap-img {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+/* ============================================
+   ANIMATION STATES
+   ============================================ */
+
+.uni-avatar-wrapper.idle .uni-body {
+  animation: uni-idle-bounce 3s ease-in-out infinite;
+}
+.uni-avatar-wrapper.idle .uni-cap-img {
+  animation: uni-cap-float 3s ease-in-out infinite;
+}
+
+@keyframes uni-idle-bounce {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+@keyframes uni-cap-float {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%      { transform: translateX(-50%) translateY(-7px); }
+}
+
+.uni-avatar-wrapper.happy .uni-eye {
+  width: 18px;
+  height: 21px;
+  transform: scaleY(1.12);
+}
+.uni-avatar-wrapper.happy .uni-body {
+  animation: uni-happy-bounce 0.55s ease infinite;
+}
+.uni-avatar-wrapper.happy .uni-cap-img {
+  animation: uni-cap-happy 0.55s ease infinite;
+}
+
+@keyframes uni-happy-bounce {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50%      { transform: translateY(-16px) scale(1.05); }
+}
+@keyframes uni-cap-happy {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%      { transform: translateX(-50%) translateY(-13px); }
+}
+
+.uni-avatar-wrapper.worry .uni-eye {
+  width: 14px;
+  height: 12px;
+  border-radius: 50% 50% 40% 40%;
+  transform: translateY(4px);
+}
+.uni-avatar-wrapper.worry .uni-body {
+  animation: uni-worry-shake 0.45s ease-in-out infinite;
+}
+@keyframes uni-worry-shake {
+  0%, 100% { transform: translateX(0); }
+  25%      { transform: translateX(-4px); }
+  75%      { transform: translateX(4px); }
+}
+
+.uni-avatar-wrapper.look-left .uni-eyes  { transform: translateX(-9px); }
+.uni-avatar-wrapper.look-right .uni-eyes { transform: translateX(9px); }
+.uni-avatar-wrapper.look-up .uni-eyes    { transform: translateY(-8px); }
+
+.uni-avatar-wrapper.thinking .uni-body {
+  animation: uni-think 1.6s ease-in-out infinite;
+}
+@keyframes uni-think {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.04); }
+}

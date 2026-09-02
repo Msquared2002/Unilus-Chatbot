@@ -1,0 +1,8 @@
+/* Integration-only overrides (not part of the original widget).
+   The e-learning dummy page already has its own floating "?" help button
+   (.lms-help) sitting at roughly the same bottom-right spot the widget
+   launcher uses by default. This nudges the widget launcher up on that
+   page only, so the two don't visually overlap. No other page is affected. */
+.lms-page .unilus-widget{
+  bottom: 92px;
+}
