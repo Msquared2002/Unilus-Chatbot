@@ -1,0 +1,17 @@
+Context/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+
+# Installed dependencies and local Python artifacts
+node_modules/
+__pycache__/
+*.pyc
+
+# Local GIS safety backups and generated temporary output
+backend/data/campus/backup/
+
+# Local editor settings
+.vscode/

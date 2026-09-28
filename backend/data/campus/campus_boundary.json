@@ -1,0 +1,58 @@
+{
+  "name": "University of Lusaka Silverest Campus",
+  "category": "campus_boundary",
+  "description": "University of Lusaka Silverest Campus boundary",
+  "operator": "Pinalo Chifwanakeni",
+  "website": "https://web.unilus.ac.zm/",
+  "coordinates": {
+    "lat": -15.3550065,
+    "lng": 28.4691214
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          28.4668484,
+          -15.353432
+        ],
+        [
+          28.4711082,
+          -15.3529952
+        ],
+        [
+          28.4714092,
+          -15.3565752
+        ],
+        [
+          28.467119,
+          -15.357015
+        ],
+        [
+          28.4669179,
+          -15.3543518
+        ],
+        [
+          28.4668484,
+          -15.353432
+        ]
+      ]
+    ]
+  },
+  "osm_ref": "way/1558103619",
+  "tags": {
+    "amenity": "university",
+    "education": "university",
+    "internet_access": "yes",
+    "internet_access:fee": "yes",
+    "name": "University of Lusaka Silverest Campus",
+    "operator": "Pinalo Chifwanakeni",
+    "operator:type": "university",
+    "website": "https://web.unilus.ac.zm/"
+  },
+  "source": {
+    "file": "map(4).osm",
+    "sha256": "780844ba75c763d9f7a0b77790ab3a43a7a3a3a8d3f299eb0d7946b22f07b7ac",
+    "boundaryOsmRef": "way/1558103619"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "generated_at": "2026-09-27T13:57:17.203Z",
+  "chunk_count": 1447,
+  "vector_count": 1447,
+  "embedding_model": "Xenova/all-MiniLM-L6-v2",
+  "embedding_dimensions": 384,
+  "embedding_input": "metadata_enriched_search_text_v1",
+  "search_text_schema": "metadata_enriched_search_text_v1",
+  "needs_embedding_rebuild": false
+}

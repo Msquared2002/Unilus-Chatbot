@@ -1,0 +1,10 @@
+{
+  "source_type": "openstreetmap",
+  "observed_date": "2026-09-27",
+  "place_id": "cafeteria_school_of_medicine",
+  "place_ids": [
+    "cafeteria_school_of_medicine"
+  ],
+  "operational_information_may_change": true,
+  "osm_ref": "relation/19253188"
+}

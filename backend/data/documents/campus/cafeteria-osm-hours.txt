@@ -1,0 +1,3 @@
+Cafeteria School of Medicine hours from OpenStreetMap
+Monday–Friday 08:00–20:30.
+Recorded from OpenStreetMap tags in the local Silverest export; operational details may change. Confirm current information with the facility.

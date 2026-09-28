@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>UNILUS - Student Information System</title>
+    <link rel="stylesheet" href="css/shared.css" />
+    <link rel="stylesheet" href="css/portal.css" />
+  <!-- ================= UNILUS Chatbot Widget: styles ================= -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="chatbot-widget/widget.css">
+<link rel="stylesheet" href="chatbot-widget/avatar.css">
+<link rel="stylesheet" href="chatbot-widget/integration.css">
+</head>
+  <body class="portal-page">
+    <header class="portal-topbar">
+      <a href="website.html" class="portal-brand"
+        ><img src="assets/unilus-logo.png" alt="UNILUS" /><b>UNILUS</b></a
+      ><button
+        class="portal-menu-toggle"
+        type="button"
+        aria-expanded="true"
+        aria-controls="portal-sidebar"
+      >
+        ☰
+      </button>
+      <nav>
+        <a href="apply.html">Apply Now⌄</a
+        ><a class="top-pill" href="elearning.html">E-learning</a
+        ><a class="top-pill" href="website.html">Home</a>
+      </nav>
+    </header>
+    <div class="portal-layout">
+      <aside class="portal-sidebar" id="portal-sidebar">
+        <div class="user-chip">
+          Current user: <b>LUKA HAMUDUDU - BIT2424001</b><span>⊕</span>
+        </div>
+        <h3>BASIC STUDENT <span>⊕</span></h3>
+        <nav class="portal-menu">
+          <a href="#dashboard">▢ <span>E-learning</span></a
+          ><a href="#dashboard">▢ <span>Home</span></a
+          ><a href="#profile">▢ <span>Personal Information</span></a
+          ><a href="#dashboard">▢ <span>Graduation Confirmation</span></a
+          ><a href="#dashboard">▢ <span>Quotations</span></a
+          ><a href="#dashboard">▢ <span>Course registration</span></a
+          ><a href="#dashboard">▢ <span>Class Pass</span></a
+          ><a href="#dashboard">▢ <span>Payments</span></a
+          ><a href="#dashboard">▢ <span>Exemptions Apply</span></a
+          ><a href="#dashboard">▢ <span>Accounts Switch</span></a
+          ><a href="#dashboard">▢ <span>Student appeal submit</span></a
+          ><a href="#dashboard">▢ <span>Apply for Accommodation</span></a
+          ><a href="#dashboard">▢ <span>Quota Application</span></a
+          ><a href="#dashboard">▢ <span>CA Marks</span></a
+          ><a href="#dashboard">▢ <span>Print Exam Slip</span></a
+          ><a href="#dashboard">▢ <span>Request Mode of study Change</span></a
+          ><a href="#dashboard">▢ <span>Pay Online</span></a
+          ><a href="#dashboard">▢ <span>Program Checklist</span></a
+          ><a href="#dashboard">▢ <span>Thesis Results</span></a
+          ><a href="#dashboard">▢ <span>Registration Form</span></a
+          ><a href="#dashboard">▢ <span>Final Results</span></a
+          ><a href="#dashboard">▢ <span>Question Bank</span></a
+          ><a href="#dashboard">▢ <span>Dissertation Tracker</span></a
+          ><a href="#dashboard">▢ <span>Overload Apply</span></a
+          ><a href="#dashboard">▢ <span>Change Password</span></a
+          ><a href="portal-login.html" data-logout>▢ <span>Logout</span></a>
+        </nav>
+      </aside>
+      <main class="portal-main">
+        <div class="portal-breadcrumb"><a href="#dashboard">Home</a></div>
+        <p class="profile-prompt">
+          Please take the time to enter your profile information first, you can
+          do this <a href="#profile">here</a>.
+        </p>
+        <section class="portal-welcome" id="dashboard">
+          <div class="welcome-heading">
+            <h1>Welcome, LUKA HAMUDUDU - BIT2424001</h1>
+            <span>Student Home</span>
+            <p>
+              Review notices, shortcuts, documents, and role-specific updates
+              from one workspace.
+            </p>
+          </div>
+          <div class="welcome-cards">
+            <article>
+              <small>PORTAL CONTEXT</small>
+              <h2>Student Home</h2>
+              <p>
+                This dashboard adapts to your active role and workflow state.
+              </p>
+            </article>
+            <article>
+              <small>ACCOUNT STATUS</small>
+              <h2>Active</h2>
+              <p>
+                Use the panels below to review notices, timetable links,
+                shortcuts, and announcements.
+              </p>
+            </article>
+          </div>
+        </section>
+        <section class="portal-panel notices" id="notices">
+          <h2>Student Notices</h2>
+          <article class="notice notice--registration">
+            <h3>IMPORTANT REGISTRATION NOTICE TO ALL STUDENTS</h3>
+            <time>Friday, 24th July 2026</time>
+            <p>Dear Students,</p>
+            <p>
+              Please be advised that semester registration officially closes
+              today, <b>Friday, 24th July 2026</b>, as classes are scheduled to
+              commence on <b>Monday, 27th July 2026.</b>
+            </p>
+            <div class="notice-block notice-block--yellow">
+              <h4>Late Registration Period</h4>
+              <p>
+                Students who fail to register by the close of business today may
+                take advantage of the late registration period, which will run
+                from <b>Monday, 27th July 2026 to Friday, 31st July 2026.</b>
+              </p>
+              <p>
+                No further extension will be granted beyond this period,
+                regardless of the mode of study.
+              </p>
+            </div>
+            <div class="notice-block notice-block--green">
+              <h4>Eligibility for University Activities</h4>
+              <p>
+                Kindly note that only <b>fully registered students</b> will be
+                eligible to participate in the following University activities:
+              </p>
+              <ul>
+                <li>Class attendance</li>
+                <li>Assignment submissions</li>
+                <li>Clinical rotations</li>
+                <li>Quizzes, Tests, Mooting and Advocacy Skills</li>
+                <li>Mid-Semester Assessments</li>
+                <li>End-of-Semester Final Examinations</li>
+              </ul>
+            </div>
+            <div class="notice-block notice-block--red">
+              <h4>Attendance Without Registration</h4>
+              <p>
+                Students who are not registered are
+                <b>not permitted to attend classes.</b>
+              </p>
+              <p>
+                Any student found attending classes without being duly
+                registered will be subject to disciplinary action in accordance
+                with the University's regulations.
+              </p>
+            </div>
+            <div class="notice-block notice-block--blue">
+              <h4>Important Notice on Fee Payments</h4>
+              <p>
+                All tuition and other University payments must be made
+                exclusively to the
+                <b>official University of Lusaka bank accounts.</b>
+              </p>
+              <p>
+                The University does not request or accept payments through
+                mobile money accounts.
+              </p>
+            </div>
+            <p class="notice-end">
+              The University wishes all students a successful and productive
+              semester.
+            </p>
+          </article>
+        </section>
+        <section class="portal-panel" id="emails">
+          <h2 class="blue-heading">SCHOOL EMAIL ADDRESSES</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>SCHOOL</th>
+                <th>EMAIL ADDRESS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Law</td>
+                <td>adminlaw@unilus.ac.zm</td>
+              </tr>
+              <tr>
+                <td>Technology and Social Sciences</td>
+                <td>adminiost@unilus.ac.zm</td>
+              </tr>
+              <tr>
+                <td>P.C Business School</td>
+                <td>adminbusiness@unilus.ac.zm</td>
+              </tr>
+              <tr>
+                <td>Medicine and Health Sciences</td>
+                <td>admin.somhs@unilus.ac.zm</td>
+              </tr>
+            </tbody>
+          </table>
+          <h3 class="registrar">REGISTRAR</h3>
+        </section>
+        <section class="portal-panel" id="timetable">
+          <div class="panel-title-row">
+            <h2>Timetable Links</h2>
+            <button class="export-button" type="button" data-demo-action>
+              Export to Excel
+            </button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>NAME</th>
+                <th>ACADEMIC YEAR</th>
+                <th>SEMESTER</th>
+                <th>ACTION</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>BSPH - Students</td>
+                <td>2026</td>
+                <td>2</td>
+                <td><button data-demo-action>View</button></td>
+              </tr>
+              <tr>
+                <td>DIPLOMA - POSTGRADUATE</td>
+                <td>2026</td>
+                <td>2</td>
+                <td><button data-demo-action>View</button></td>
+              </tr>
+              <tr>
+                <td>DIPLOMA - NURSING</td>
+                <td>2026</td>
+                <td>2</td>
+                <td><button data-demo-action>View</button></td>
+              </tr>
+              <tr>
+                <td>DIPLOMA - NURSING LECTURER</td>
+                <td>2026</td>
+                <td>2</td>
+                <td><button data-demo-action>View</button></td>
+              </tr>
+              <tr>
+                <td>DISTANCE - POSTGRADUATE</td>
+                <td>2026</td>
+                <td>2</td>
+                <td><button data-demo-action>View</button></td>
+              </tr>
+              <tr>
+                <td>LAW</td>
+                <td>2026</td>
+                <td>2</td>
+                <td><button data-demo-action>View</button></td>
+              </tr>
+              <tr>
+                <td>Lecturer</td>
+                <td>2026</td>
+                <td>2</td>
+                <td><button data-demo-action>View</button></td>
+              </tr>
+              <tr>
+                <td>Medicine Lecturer</td>
+                <td>2026</td>
+                <td>2</td>
+                <td><button data-demo-action>View</button></td>
+              </tr>
+              <tr>
+                <td>Medicine Student</td>
+                <td>2026</td>
+                <td>2</td>
+                <td><button data-demo-action>View</button></td>
+              </tr>
+              <tr>
+                <td>Postgraduate - Part time</td>
+                <td>2026</td>
+                <td>2</td>
+                <td><button data-demo-action>View</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+        <section class="portal-panel profile-panel" id="profile">
+          <h2>UNILUS Portal</h2>
+          <p>
+            This is a demonstration profile. No student identity system is
+            connected.
+          </p>
+          <div class="profile-grid">
+            <strong>Student identity</strong
+            ><span>LUKA HAMUDUDU - BIT2424001</span
+            ><strong>Account status</strong><span>Active demonstration</span>
+          </div>
+        </section>
+      </main>
+    </div>
+    <footer class="portal-footer">
+      <img src="assets/unilus-logo.png" alt="UNILUS crest" />
+      <div>
+        <h3>University of Lusaka Student Portal</h3>
+        <p>
+          Copyright © 2011-2026　|　Powered by <b>EduRole</b>　|　Customized by
+          <b>University of Lusaka ICT</b>
+        </p>
+        <p>
+          EduRole is licensed under a Creative Commons Attribution-NC-ND 3.0
+          Unported License.
+        </p>
+      </div>
+    </footer>
+    <div class="demo-toast" role="status" aria-live="polite"></div>
+    <script src="js/shared.js"></script>
+    <script src="js/portal.js"></script>
+  
+<!-- ================= UNILUS Chatbot Widget (start) ================= -->
+<!-- ================= floating widget ================= -->
+<div id="unilus-widget" class="unilus-widget">
+
+  <!-- collapsed launcher bubble: tapping this morphs it into the panel below -->
+  <button id="launcher" class="uw-launcher" aria-label="Open Unilus companion chat">
+    <div id="launcher-avatar-slot" class="avatar-slot avatar-slot--bubble"></div>
+    <span class="launcher-dot"></span>
+  </button>
+
+  <!-- chat panel (also hosts the settings + map views) -->
+  <section id="chat-panel" class="chat-panel" aria-label="Unilus student companion chat" hidden>
+
+    <header class="panel-header">
+      <div class="panel-header-left">
+        <button id="back-btn" class="icon-btn" aria-label="Back" hidden>
+          <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20Z"/></svg>
+        </button>
+        <div class="panel-header-title">
+          <p class="panel-title" id="panel-title-text">Unilus companion</p>
+          <p class="panel-subtitle" id="status-line">Online now</p>
+        </div>
+      </div>
+      <div class="panel-header-actions">
+        <button id="map-btn" class="icon-btn" aria-label="Campus map">
+          <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M15 5.1 9 3 3 5v16l6-2.1 6 2.1 6-2V3l-6 2.1ZM9 5.24l6-2.1v13.62l-6 2.1V5.24ZM5 6.5l2-.7v13.62l-2 .7V6.5Zm14 11-2 .7V4.58l2-.7Z"/></svg>
+        </button>
+        <button id="settings-btn" class="icon-btn" aria-label="Customise avatar">
+          <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M19.14 12.94a7.14 7.14 0 0 0 .06-.94 7.14 7.14 0 0 0-.06-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.3 7.3 0 0 0-1.63-.94l-.36-2.54a.5.5 0 0 0-.5-.42h-3.84a.5.5 0 0 0-.5.42l-.36 2.54a7.3 7.3 0 0 0-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L2.7 8.84a.5.5 0 0 0 .12.64l2.03 1.58a7.14 7.14 0 0 0-.06.94c0 .32.02.63.06.94L2.82 14.5a.5.5 0 0 0-.12.64l1.92 3.32a.5.5 0 0 0 .6.22l2.39-.96c.5.4 1.04.71 1.63.94l.36 2.54a.5.5 0 0 0 .5.42h3.84a.5.5 0 0 0 .5-.42l.36-2.54c.59-.23 1.13-.54 1.63-.94l2.39.96a.5.5 0 0 0 .6-.22l1.92-3.32a.5.5 0 0 0-.12-.64ZM12 15.5A3.5 3.5 0 1 1 15.5 12 3.5 3.5 0 0 1 12 15.5Z"/></svg>
+        </button>
+        <button id="expand-btn" class="icon-btn" aria-label="Expand chat window">
+          <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M9 3H3v6h2V5h4V3Zm6 0v2h4v4h2V3h-6ZM5 15H3v6h6v-2H5v-4Zm14 4h-4v2h6v-6h-2v4Z"/></svg>
+        </button>
+        <button id="close-btn" class="icon-btn" aria-label="Close chat">
+          <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M18.3 5.71 12 12.01l-6.3-6.3-1.4 1.4 6.3 6.3-6.3 6.3 1.4 1.4 6.3-6.3 6.3 6.3 1.4-1.4-6.3-6.3 6.3-6.3z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="panel-body">
+
+      <!-- ---- view: chat ---- -->
+      <div id="view-chat" class="panel-view">
+        <div id="hero-area" class="hero-area">
+          <div id="hero-avatar-slot" class="avatar-slot avatar-slot--hero"></div>
+          <h1 class="hero-title">Unilus student companion</h1>
+          <p class="hero-subtitle">Your digital university helpdesk</p>
+        </div>
+
+        <div id="chat-box" class="chat-box"></div>
+
+        <form id="input-area" class="input-area">
+          <input id="user-input" placeholder="Ask me anything about UNILUS..." autocomplete="off">
+          <button type="submit" class="send-btn" aria-label="Send message">
+            <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M3 20v-6l8-2-8-2V4l19 8Z"/></svg>
+          </button>
+        </form>
+      </div>
+
+      <!-- persistent live preview shown behind the gear icon > outfits/glasses flow -->
+      <div id="settings-preview" class="settings-preview" hidden>
+        <div id="settings-avatar-slot" class="avatar-slot avatar-slot--settings"></div>
+      </div>
+
+      <!-- ---- view: settings menu (gear icon lands here) ---- -->
+      <div id="view-settings-menu" class="panel-view" hidden>
+        <div class="settings-menu-list">
+          <button type="button" class="settings-row" data-nav="outfits">
+            <span class="settings-row-icon" id="outfit-preview-icon"></span>
+            <span class="settings-row-label">Outfits</span>
+            <svg class="settings-row-chevron" viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M9.29 6.71 14.59 12l-5.3 5.29 1.42 1.42L17.41 12 10.71 5.29Z"/></svg>
+          </button>
+          <div class="settings-row settings-row--static" id="theme-row">
+            <span class="settings-row-icon" id="theme-icon">
+              <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M12 4.5a1 1 0 0 1-1-1V2a1 1 0 1 1 2 0v1.5a1 1 0 0 1-1 1Zm0 15a1 1 0 0 1 1 1V22a1 1 0 1 1-2 0v-1.5a1 1 0 0 1 1-1ZM4.5 12a1 1 0 0 1-1 1H2a1 1 0 1 1 0-2h1.5a1 1 0 0 1 1 1Zm17.5 0a1 1 0 0 1-1 1h-1.5a1 1 0 1 1 0-2H21a1 1 0 0 1 1 1ZM6.34 6.34a1 1 0 0 1-1.41 0L3.87 5.29a1 1 0 1 1 1.41-1.41L6.34 4.93a1 1 0 0 1 0 1.41Zm12.02 12.02a1 1 0 0 1-1.41 0l-1.06-1.05a1 1 0 0 1 1.41-1.41l1.06 1.05a1 1 0 0 1 0 1.41ZM6.34 17.66a1 1 0 0 1 0 1.41L5.29 20.12a1 1 0 1 1-1.41-1.41l1.05-1.06a1 1 0 0 1 1.41 0Zm12.02-12.02a1 1 0 0 1 0 1.41l-1.05 1.06a1 1 0 0 1-1.41-1.41l1.05-1.05a1 1 0 0 1 1.41 0ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Z"/></svg>
+            </span>
+            <span class="settings-row-label">Dark mode</span>
+            <button type="button" class="theme-switch" id="theme-switch" role="switch" aria-checked="false" aria-label="Toggle dark mode"></button>
+          </div>
+          <button type="button" class="settings-row" data-nav="glasses">
+            <span class="settings-row-icon" id="glasses-preview-icon"></span>
+            <span class="settings-row-label">Glasses</span>
+            <svg class="settings-row-chevron" viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M9.29 6.71 14.59 12l-5.3 5.29 1.42 1.42L17.41 12 10.71 5.29Z"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- ---- view: outfits grid ---- -->
+      <div id="view-outfits" class="panel-view" hidden>
+        <div id="outfit-grid" class="swatch-grid"></div>
+      </div>
+
+      <!-- ---- view: glasses grid ---- -->
+      <div id="view-glasses" class="panel-view" hidden>
+        <div id="glasses-grid" class="swatch-grid"></div>
+      </div>
+
+      <!-- ---- view: campus map ---- -->
+      <div id="view-map" class="panel-view" hidden>
+        <div class="map-toolbar">
+          <div class="map-campus-toggle" id="campus-toggle">
+            <button type="button" class="map-campus-btn is-active" data-campus="pioneer">Pioneer</button>
+            <button type="button" class="map-campus-btn" data-campus="silverest">Silverest</button>
+            <button type="button" class="map-campus-btn" data-campus="leopards">Leopards Hill</button>
+          </div>
+        </div>
+        <div id="campus-map" class="campus-map"></div>
+        <div id="map-building-card" class="map-building-card" hidden>
+          <button type="button" class="map-building-close" id="map-building-close" aria-label="Close">&times;</button>
+          <img id="map-building-image" class="map-building-image" src="chatbot-widget/campus-data/placeholder.svg" alt="">
+          <h3 id="map-building-name">Building</h3>
+          <p id="map-building-desc">Description</p>
+          <div id="map-building-facilities" class="map-building-facilities" hidden></div>
+          <div id="map-building-gallery" class="map-building-gallery" hidden></div>
+          <a id="map-building-directions" class="map-building-directions" href="#" target="_blank" rel="noopener" hidden>Get directions</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div>
+<!-- ================= UNILUS Chatbot Widget (end) ================= -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="chatbot-widget/avatar.js"></script>
+<script src="chatbot-widget/dist/chatbot-widget.js"></script>
+</body>
+</html>

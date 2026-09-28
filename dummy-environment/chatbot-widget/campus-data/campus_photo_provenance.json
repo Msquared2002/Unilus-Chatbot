@@ -1,0 +1,174 @@
+{
+  "observed_date": "2026-09-27",
+  "source_archive": "silverest campus pics.zip",
+  "places": {
+    "unilus_library": {
+      "assets": {
+        "cover.jpg": "WhatsApp Image 2026-09-27 at 3.03.05 PM (1).jpeg",
+        "gallery-01.jpg": "WhatsApp Image 2026-09-27 at 3.03.05 PM (2).jpeg"
+      },
+      "mapping_confidence": "user_identified"
+    },
+    "the_growcery": {
+      "assets": {
+        "cover.jpg": "WhatsApp Image 2026-09-27 at 3.03.05 PM.jpeg"
+      },
+      "mapping_confidence": "user_identified"
+    },
+    "cafeteria_school_of_medicine": {
+      "assets": {
+        "cover.jpg": "WhatsApp Image 2026-09-27 at 3.03.06 PM (1).jpeg",
+        "gallery-01.jpg": "WhatsApp Image 2026-09-27 at 3.03.06 PM.jpeg",
+        "gallery-02.jpg": "WhatsApp Image 2026-09-27 at 3.03.11 PM (1).jpeg"
+      },
+      "mapping_confidence": "user_identified"
+    },
+    "unilus_gym": {
+      "assets": {
+        "cover.jpg": "WhatsApp Image 2026-09-27 at 3.03.26 PM (2).jpeg",
+        "gallery-01.jpg": "WhatsApp Image 2026-09-27 at 3.03.13 PM (2).jpeg",
+        "gallery-02.jpg": "WhatsApp Image 2026-09-27 at 3.03.14 PM.jpeg",
+        "gallery-03.jpg": "WhatsApp Image 2026-09-27 at 3.03.17 PM.jpeg",
+        "gallery-04.jpg": "WhatsApp Image 2026-09-27 at 3.03.20 PM.jpeg",
+        "gallery-05.jpg": "WhatsApp Image 2026-09-27 at 3.03.22 PM.jpeg"
+      },
+      "mapping_confidence": "user_identified"
+    },
+    "unilus_swimming_pool": {
+      "assets": {
+        "cover.jpg": "WhatsApp Image 2026-09-27 at 3.03.23 PM (1).jpeg",
+        "gallery-01.jpg": "WhatsApp Image 2026-09-27 at 3.03.23 PM.jpeg"
+      },
+      "mapping_confidence": "user_identified"
+    },
+    "unilus_basketball_court": {
+      "assets": {
+        "cover.jpg": "WhatsApp Image 2026-09-27 at 3.03.24 PM (1).jpeg",
+        "gallery-01.jpg": "WhatsApp Image 2026-09-27 at 3.03.25 PM (1).jpeg"
+      },
+      "mapping_confidence": "user_identified"
+    },
+    "unilus_volleyball_court": {
+      "assets": {
+        "cover.jpg": "WhatsApp Image 2026-09-27 at 3.03.26 PM (1).jpeg"
+      },
+      "mapping_confidence": "user_identified"
+    },
+    "unilus_tennis_court": {
+      "assets": {
+        "cover.jpg": "WhatsApp Image 2026-09-27 at 3.03.28 PM.jpeg"
+      },
+      "mapping_confidence": "user_identified"
+    },
+    "sports_pitch_soccer": {
+      "assets": {
+        "cover.jpg": "WhatsApp Image 2026-09-27 at 3.03.29 PM (1).jpeg",
+        "gallery-01.jpg": "WhatsApp Image 2026-09-27 at 3.03.30 PM.jpeg"
+      },
+      "mapping_confidence": "user_identified"
+    },
+    "running_track_athletics": {
+      "assets": {
+        "cover.jpg": "WhatsApp Image 2026-09-27 at 3.03.29 PM.jpeg"
+      },
+      "mapping_confidence": "user_identified"
+    },
+    "unilus_hostel_school_of_medicine_side": {
+      "assets": {
+        "cover.jpg": "WhatsApp Image 2026-09-27 at 3.03.31 PM (1).jpeg",
+        "gallery-01.jpg": "WhatsApp Image 2026-09-27 at 3.03.30 PM (1).jpeg",
+        "gallery-02.jpg": "WhatsApp Image 2026-09-27 at 3.03.31 PM.jpeg",
+        "gallery-03.jpg": "WhatsApp Image 2026-09-27 at 3.03.37 PM.jpeg"
+      },
+      "mapping_confidence": "user_identified"
+    },
+    "knowledge_field_2": {
+      "assets": {
+        "cover.jpg": "WhatsApp Image 2026-09-27 at 3.03.32 PM (1).jpeg",
+        "gallery-01.jpg": "WhatsApp Image 2026-09-27 at 3.03.32 PM.jpeg"
+      },
+      "mapping_confidence": "user_identified"
+    },
+    "unilus_chapel": {
+      "assets": {
+        "cover.jpg": "WhatsApp Image 2026-09-27 at 3.03.34 PM (1).jpeg",
+        "gallery-01.jpg": "WhatsApp Image 2026-09-27 at 3.03.33 PM (1).jpeg"
+      },
+      "mapping_confidence": "user_identified"
+    },
+    "p_c_school_of_business": {
+      "assets": {
+        "cover.jpg": "WhatsApp Image 2026-09-27 at 3.03.33 PM.jpeg",
+        "gallery-01.jpg": "WhatsApp Image 2026-09-27 at 3.03.34 PM.jpeg"
+      },
+      "mapping_confidence": "user_identified"
+    },
+    "school_of_business_hostels": {
+      "assets": {
+        "cover.jpg": "WhatsApp Image 2026-09-27 at 3.03.34 PM (2).jpeg",
+        "gallery-01.jpg": "WhatsApp Image 2026-09-27 at 3.03.35 PM.jpeg"
+      },
+      "mapping_confidence": "location_sequence"
+    },
+    "unilus_auditorium": {
+      "assets": {
+        "cover.jpg": "WhatsApp Image 2026-09-27 at 3.03.37 PM (1).jpeg",
+        "gallery-01.jpg": "WhatsApp Image 2026-09-27 at 3.03.38 PM.jpeg"
+      },
+      "mapping_confidence": "user_identified"
+    },
+    "knowledge_field_1": {
+      "assets": {
+        "cover.jpg": "WhatsApp Image 2026-09-27 at 3.03.38 PM (1).jpeg",
+        "gallery-01.jpg": "WhatsApp Image 2026-09-27 at 3.03.37 PM (2).jpeg",
+        "gallery-02.jpg": "WhatsApp Image 2026-09-27 at 3.03.40 PM.jpeg"
+      },
+      "mapping_confidence": "user_identified"
+    },
+    "foundation_labs": {
+      "assets": {
+        "cover.jpg": "WhatsApp Image 2026-09-27 at 3.03.39 PM (1).jpeg",
+        "gallery-01.jpg": "WhatsApp Image 2026-09-27 at 3.03.39 PM.jpeg"
+      },
+      "mapping_confidence": "user_identified"
+    },
+    "biochemistry_lab": {
+      "assets": {
+        "cover.jpg": "WhatsApp Image 2026-09-27 at 3.03.40 PM (1).jpeg",
+        "gallery-01.jpg": "WhatsApp Image 2026-09-27 at 3.03.41 PM.jpeg"
+      },
+      "mapping_confidence": "user_identified"
+    },
+    "basic_science_labs": {
+      "assets": {
+        "cover.jpg": "WhatsApp Image 2026-09-27 at 3.03.41 PM (1).jpeg",
+        "gallery-01.jpg": "WhatsApp Image 2026-09-27 at 3.03.42 PM.jpeg"
+      },
+      "mapping_confidence": "user_identified"
+    },
+    "unilus_hospital": {
+      "assets": {
+        "cover.jpg": "WhatsApp Image 2026-09-27 at 3.03.43 PM (2).jpeg",
+        "gallery-01.jpg": "WhatsApp Image 2026-09-27 at 3.03.43 PM (1).jpeg",
+        "gallery-02.jpg": "WhatsApp Image 2026-09-27 at 3.03.43 PM (3).jpeg",
+        "gallery-03.jpg": "WhatsApp Image 2026-09-27 at 3.03.43 PM.jpeg"
+      },
+      "mapping_confidence": "user_identified"
+    }
+  },
+  "unassigned": [
+    "3.03.10 PM.jpeg",
+    "3.03.11 PM.jpeg",
+    "3.03.27 PM (1).jpeg",
+    "3.03.27 PM.jpeg"
+  ],
+  "facilities": {
+    "botanic_bloom": {
+      "parent_place_id": "p_c_school_of_business",
+      "assets": {
+        "cover.jpg": "WhatsApp Image 2026-09-27 at 3.03.36 PM.jpeg",
+        "gallery-01.jpg": "WhatsApp Image 2026-09-27 at 3.03.36 PM (1).jpeg"
+      }
+    }
+  }
+}

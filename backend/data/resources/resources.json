@@ -1,0 +1,883 @@
+[
+  {
+    "topic": "password_reset",
+    "title": "Student Portal Password Recovery",
+    "description": "Reset a forgotten Student Portal password.",
+    "category": "Password Recovery",
+    "keywords": [
+      "forgot password",
+      "reset password",
+      "portal password",
+      "can't login",
+      "cannot log in",
+      "password recovery"
+    ],
+    "audience": [
+      "all"
+    ],
+    "routing_only": true,
+    "crawlable": true,
+    "priority": 2,
+    "url": "https://portal.unilus.ac.zm/password/recover"
+  },
+  {
+    "topic": "plagiarism_checker",
+    "title": "Plagiarism Checker Login",
+    "description": "Submit assignments for a similarity/plagiarism report before final submission.",
+    "category": "Student Services",
+    "keywords": [
+      "plagiarism",
+      "plagiarism checker",
+      "turnitin",
+      "similarity report",
+      "submit assignment check"
+    ],
+    "audience": [
+      "undergraduate",
+      "postgraduate"
+    ],
+    "routing_only": true,
+    "crawlable": true,
+    "priority": 2,
+    "url": "https://host.unilus.app/plagiarismcheck/login/index.php"
+  },
+  {
+    "topic": "moodle_postgraduate",
+    "title": "Moodle (Postgraduate) Login",
+    "description": "Access postgraduate e-learning course materials.",
+    "category": "Moodle",
+    "keywords": [
+      "moodle",
+      "e-learning",
+      "elearning",
+      "postgraduate moodle",
+      "lms login"
+    ],
+    "audience": [
+      "postgraduate"
+    ],
+    "routing_only": true,
+    "crawlable": true,
+    "priority": 2,
+    "url": "https://host.unilus.app/login/index.php"
+  },
+  {
+    "topic": "moodle_undergraduate",
+    "title": "Moodle (Undergraduate) Login",
+    "description": "Access undergraduate e-learning course materials.",
+    "category": "Moodle",
+    "keywords": [
+      "moodle",
+      "e-learning",
+      "elearning",
+      "undergraduate moodle",
+      "lms login"
+    ],
+    "audience": [
+      "undergraduate"
+    ],
+    "routing_only": true,
+    "crawlable": true,
+    "priority": 2,
+    "url": "https://undergrad.unilus.app/login/index.php?loginredirect=1"
+  },
+  {
+    "topic": "moodle_guide",
+    "title": "Moodle Guide",
+    "description": "Step-by-step instructions for using Moodle.",
+    "category": "Moodle",
+    "keywords": [
+      "how to use moodle",
+      "moodle guide",
+      "moodle help",
+      "moodle instructions"
+    ],
+    "audience": [
+      "all"
+    ],
+    "routing_only": false,
+    "crawlable": true,
+    "priority": 3,
+    "url": "https://moodleguide.vercel.app/#Section1"
+  },
+  {
+    "topic": "eduroam",
+    "title": "Eduroam Configuration Assistant",
+    "description": "Configure a device for the Eduroam campus wifi network.",
+    "category": "IT Support",
+    "keywords": [
+      "eduroam",
+      "campus wifi",
+      "wifi setup",
+      "university wifi"
+    ],
+    "audience": [
+      "all"
+    ],
+    "routing_only": true,
+    "crawlable": false,
+    "priority": 2,
+    "url": "https://cat.eduroam.org/"
+  },
+  {
+    "topic": "email_guide",
+    "title": "UNILUS Email Guide",
+    "description": "How to set up and use a UNILUS student email account.",
+    "category": "Email",
+    "keywords": [
+      "student email",
+      "unilus email",
+      "email setup",
+      "email guide"
+    ],
+    "audience": [
+      "all"
+    ],
+    "routing_only": false,
+    "crawlable": true,
+    "priority": 3,
+    "url": "https://web.unilus.ac.zm/unilus-email-guide/"
+  },
+  {
+    "topic": "it_support",
+    "title": "UNILUS IT Support Helpdesk",
+    "description": "Report an IT problem or get technical support.",
+    "category": "IT Support",
+    "keywords": [
+      "it support",
+      "it helpdesk",
+      "technical support",
+      "it problem",
+      "computer issue"
+    ],
+    "audience": [
+      "all"
+    ],
+    "routing_only": false,
+    "crawlable": true,
+    "priority": 2,
+    "url": "https://web.unilus.ac.zm/unilus-it-support-helpdesk/"
+  },
+  {
+    "topic": "application_guide",
+    "title": "Application Guide",
+    "description": "Admission requirements and how to apply to UNILUS.",
+    "category": "Admissions",
+    "keywords": [
+      "how to apply",
+      "application guide",
+      "admission requirements",
+      "how do I apply"
+    ],
+    "audience": [
+      "prospective"
+    ],
+    "routing_only": false,
+    "crawlable": true,
+    "priority": 1,
+    "url": "https://web.unilus.ac.zm/apply-online/"
+  },
+  {
+    "topic": "apply_online",
+    "title": "Apply Online",
+    "description": "Start an online application to UNILUS.",
+    "category": "Admissions",
+    "keywords": [
+      "apply online",
+      "apply now",
+      "start application",
+      "application portal",
+      "i want to apply"
+    ],
+    "audience": [
+      "prospective"
+    ],
+    "routing_only": true,
+    "crawlable": true,
+    "priority": 1,
+    "url": "https://web.unilus.ac.zm/apply-online/"
+  },
+  {
+    "topic": "correspondence_forms",
+    "title": "Correspondence Forms",
+    "description": "Official forms for correspondence/distance-learning students.",
+    "category": "Forms",
+    "keywords": [
+      "correspondence form",
+      "distance learning form",
+      "correspondence programme"
+    ],
+    "audience": [
+      "undergraduate"
+    ],
+    "routing_only": false,
+    "crawlable": true,
+    "priority": 2,
+    "url": "https://web.unilus.ac.zm/correspondence-forms/"
+  },
+  {
+    "topic": "fees_local_sadc",
+    "title": "Local & SADC Fees",
+    "description": "Tuition fee schedules for local and SADC students.",
+    "category": "Finance",
+    "keywords": [
+      "fees",
+      "tuition fees",
+      "local fees",
+      "sadc fees",
+      "how much are the fees"
+    ],
+    "audience": [
+      "local",
+      "sadc"
+    ],
+    "routing_only": false,
+    "crawlable": true,
+    "priority": 1,
+    "url": "https://web.unilus.ac.zm/local-sadc-fees/"
+  },
+  {
+    "topic": "fees_general",
+    "title": "Fees",
+    "description": "General tuition and fees information.",
+    "category": "Finance",
+    "keywords": [
+      "fees",
+      "tuition",
+      "school fees",
+      "cost of study"
+    ],
+    "audience": [
+      "all"
+    ],
+    "routing_only": false,
+    "crawlable": true,
+    "priority": 1,
+    "url": "https://web.unilus.ac.zm/fees/"
+  },
+  {
+    "topic": "fees_international",
+    "title": "International Student Fees",
+    "description": "Tuition fee schedules for international students.",
+    "category": "Finance",
+    "keywords": [
+      "international fees",
+      "foreign student fees",
+      "international tuition"
+    ],
+    "audience": [
+      "international"
+    ],
+    "routing_only": false,
+    "crawlable": true,
+    "priority": 1,
+    "url": "https://web.unilus.ac.zm/international-student-fees/"
+  },
+  {
+    "topic": "programmes_index",
+    "title": "Academic Programmes",
+    "description": "Full list of degree and diploma programmes offered.",
+    "category": "Academics",
+    "keywords": [
+      "programmes offered",
+      "list of programmes",
+      "courses offered",
+      "degree programmes"
+    ],
+    "audience": [
+      "prospective",
+      "all"
+    ],
+    "routing_only": false,
+    "crawlable": true,
+    "priority": 1,
+    "url": "https://web.unilus.ac.zm/programs/"
+  },
+  {
+    "topic": "academics_detail",
+    "title": "Academics",
+    "description": "Details of academic structure, faculties, and schools.",
+    "category": "Academics",
+    "keywords": [
+      "academics",
+      "faculties",
+      "schools",
+      "academic structure"
+    ],
+    "audience": [
+      "all"
+    ],
+    "routing_only": false,
+    "crawlable": true,
+    "priority": 2,
+    "url": "https://web.unilus.ac.zm/academics-detail/"
+  },
+  {
+    "topic": "programme_law",
+    "title": "Bachelor of Laws",
+    "description": "Programme page for the Bachelor of Laws (LLB).",
+    "category": "Academics",
+    "keywords": [
+      "bachelor of laws",
+      "llb",
+      "law programme",
+      "study law"
+    ],
+    "audience": [
+      "prospective"
+    ],
+    "routing_only": false,
+    "crawlable": true,
+    "priority": 2,
+    "url": "https://web.unilus.ac.zm/programs/bachelor-of-laws/"
+  },
+  {
+    "topic": "programme_computer_science",
+    "title": "Bachelor of Science in Computer Science",
+    "description": "Programme page for the BSc in Computer Science.",
+    "category": "Academics",
+    "keywords": [
+      "bachelor of science in computer science",
+      "computer science programme",
+      "bsc computer science"
+    ],
+    "audience": [
+      "prospective"
+    ],
+    "routing_only": false,
+    "crawlable": true,
+    "priority": 2,
+    "url": "https://web.unilus.ac.zm/programs/bachelor-of-science-in-computer-science-2/"
+  },
+  {
+    "topic": "programme_mba",
+    "title": "Master of Business Administration (MBA)",
+    "description": "Programme page for the MBA.",
+    "category": "Academics",
+    "keywords": [
+      "mba",
+      "master of business administration",
+      "business administration programme"
+    ],
+    "audience": [
+      "prospective",
+      "postgraduate"
+    ],
+    "routing_only": false,
+    "crawlable": true,
+    "priority": 2,
+    "url": "https://web.unilus.ac.zm/programs/master-of-business-administration-mba-2/"
+  },
+  {
+    "topic": "sports_recreation",
+    "title": "Sports & Recreation",
+    "description": "Sports facilities and recreational activities for students.",
+    "category": "Sports",
+    "keywords": [
+      "sports",
+      "recreation",
+      "gym",
+      "student sports",
+      "sports facilities"
+    ],
+    "audience": [
+      "all"
+    ],
+    "routing_only": false,
+    "crawlable": true,
+    "priority": 3,
+    "url": "https://web.unilus.ac.zm/sports-recreation/"
+  },
+  {
+    "topic": "calendar_timetables",
+    "title": "Calendars and Time Tables",
+    "description": "Academic calendar and general timetable information page.",
+    "category": "Timetables",
+    "keywords": [
+      "academic calendar",
+      "exam timetable",
+      "calendar",
+      "semester dates",
+      "term dates"
+    ],
+    "audience": [
+      "all"
+    ],
+    "routing_only": false,
+    "crawlable": true,
+    "priority": 1,
+    "url": "https://web.unilus.ac.zm/calendars-and-time-tables/"
+  },
+  {
+    "topic": "research",
+    "title": "Research at UNILUS",
+    "description": "Overview of research activities and centres.",
+    "category": "Research",
+    "keywords": [
+      "research",
+      "research centre",
+      "research opportunities"
+    ],
+    "audience": [
+      "all"
+    ],
+    "routing_only": false,
+    "crawlable": true,
+    "priority": 3,
+    "url": "https://web.unilus.ac.zm/research-2-2/"
+  },
+  {
+    "topic": "research_and_consultancy",
+    "title": "Research and Consultancy",
+    "description": "Research and consultancy services offered by UNILUS.",
+    "category": "Research",
+    "keywords": [
+      "research and consultancy",
+      "consultancy services",
+      "research office"
+    ],
+    "audience": [
+      "all"
+    ],
+    "routing_only": false,
+    "crawlable": true,
+    "priority": 3,
+    "url": "https://web.unilus.ac.zm/research-and-consultancy/"
+  },
+  {
+    "topic": "research_portal",
+    "title": "Research Portal",
+    "description": "UNILUS research portal system.",
+    "category": "Research",
+    "keywords": [
+      "research portal",
+      "research system",
+      "research repository"
+    ],
+    "audience": [
+      "all"
+    ],
+    "routing_only": false,
+    "crawlable": true,
+    "priority": 3,
+    "url": "https://research.unilus.ac.zm/home"
+  },
+  {
+    "topic": "accommodation",
+    "title": "Accommodation",
+    "description": "On-campus and off-campus accommodation options.",
+    "category": "Accommodation",
+    "keywords": [
+      "accommodation",
+      "hostel",
+      "student housing",
+      "residence",
+      "where can I stay"
+    ],
+    "audience": [
+      "all"
+    ],
+    "routing_only": false,
+    "crawlable": true,
+    "priority": 1,
+    "url": "https://web.unilus.ac.zm/accomodation/"
+  },
+  {
+    "topic": "residence_policy",
+    "title": "Student Housing and Residence Policy",
+    "description": "Official policy governing student housing and residence.",
+    "category": "Accommodation",
+    "keywords": [
+      "residence policy",
+      "housing policy",
+      "hostel rules",
+      "student housing policy"
+    ],
+    "audience": [
+      "all"
+    ],
+    "routing_only": false,
+    "crawlable": true,
+    "priority": 2,
+    "url": "https://web.unilus.ac.zm/student-housing-and-residence-policy/"
+  },
+  {
+    "topic": "international_students",
+    "title": "International Student Information",
+    "description": "Information specifically for international/foreign students.",
+    "category": "Student Services",
+    "keywords": [
+      "international student",
+      "foreign student",
+      "study visa",
+      "international admissions"
+    ],
+    "audience": [
+      "international"
+    ],
+    "routing_only": false,
+    "crawlable": true,
+    "priority": 2,
+    "url": "https://web.unilus.ac.zm/international-student-info/"
+  },
+  {
+    "topic": "faq",
+    "title": "Frequently Asked Questions",
+    "description": "Answers to commonly asked student questions.",
+    "category": "Student Services",
+    "keywords": [
+      "faq",
+      "frequently asked questions",
+      "common questions"
+    ],
+    "audience": [
+      "all"
+    ],
+    "routing_only": false,
+    "crawlable": true,
+    "priority": 2,
+    "url": "https://web.unilus.ac.zm/frequently-asked-questions/"
+  },
+  {
+    "topic": "faq_page",
+    "title": "FAQ",
+    "description": "Answers to commonly asked student questions (alternate URL).",
+    "category": "Student Services",
+    "keywords": [
+      "faq",
+      "frequently asked questions",
+      "common questions"
+    ],
+    "audience": [
+      "all"
+    ],
+    "routing_only": false,
+    "crawlable": true,
+    "priority": 3,
+    "url": "https://web.unilus.ac.zm/faq/"
+  },
+  {
+    "topic": "careers",
+    "title": "Careers",
+    "description": "Job vacancies and employment opportunities at UNILUS.",
+    "category": "Careers",
+    "keywords": [
+      "careers",
+      "jobs",
+      "vacancies",
+      "employment at unilus",
+      "job openings"
+    ],
+    "audience": [
+      "all"
+    ],
+    "routing_only": false,
+    "crawlable": true,
+    "priority": 3,
+    "url": "https://web.unilus.ac.zm/careers/"
+  },
+  {
+    "topic": "short_courses",
+    "title": "Short Courses",
+    "description": "Certificate and short course offerings.",
+    "category": "Short Courses",
+    "keywords": [
+      "short courses",
+      "short course",
+      "certificate courses"
+    ],
+    "audience": [
+      "all"
+    ],
+    "routing_only": false,
+    "crawlable": true,
+    "priority": 2,
+    "url": "https://shortcourses.unilus.ac.zm/"
+  },
+  {
+    "topic": "short_courses_payment",
+    "title": "Short Courses Payment",
+    "description": "Pay for a short course.",
+    "category": "Short Courses",
+    "keywords": [
+      "pay for short course",
+      "short course payment",
+      "short course fees payment"
+    ],
+    "audience": [
+      "all"
+    ],
+    "routing_only": true,
+    "crawlable": true,
+    "priority": 2,
+    "url": "https://shortcourses.unilus.ac.zm/payment"
+  },
+  {
+    "topic": "short_courses_more_info",
+    "title": "Short Courses \u2014 More Information",
+    "description": "Detailed information about available short courses.",
+    "category": "Short Courses",
+    "keywords": [
+      "short course information",
+      "short course details",
+      "more about short courses"
+    ],
+    "audience": [
+      "all"
+    ],
+    "routing_only": false,
+    "crawlable": true,
+    "priority": 3,
+    "url": "https://shortcourses.unilus.ac.zm/MoreInfo"
+  },
+  {
+    "topic": "short_courses_organisations",
+    "title": "Short Courses for Organisations",
+    "description": "Corporate/organisation training short courses.",
+    "category": "Short Courses",
+    "keywords": [
+      "corporate short courses",
+      "organisation training",
+      "company training unilus"
+    ],
+    "audience": [
+      "organisations"
+    ],
+    "routing_only": false,
+    "crawlable": true,
+    "priority": 3,
+    "url": "https://shortcourses.unilus.ac.zm/Organisations"
+  },
+  {
+    "topic": "boarding_houses",
+    "title": "Boarding Houses",
+    "description": "Available student boarding houses.",
+    "category": "Accommodation",
+    "keywords": [
+      "boarding house",
+      "boarding houses",
+      "student boarding"
+    ],
+    "audience": [
+      "all"
+    ],
+    "routing_only": false,
+    "crawlable": true,
+    "priority": 1,
+    "url": "https://sms.unilus.ac.zm/boarding-houses"
+  },
+  {
+    "topic": "boarding_house_register",
+    "title": "Register for a Boarding House",
+    "description": "Register/apply for a boarding house.",
+    "category": "Accommodation",
+    "keywords": [
+      "register boarding house",
+      "apply for boarding house",
+      "book boarding house"
+    ],
+    "audience": [
+      "all"
+    ],
+    "routing_only": true,
+    "crawlable": true,
+    "priority": 2,
+    "url": "https://sms.unilus.ac.zm/register-boarding-house"
+  },
+  {
+    "topic": "student_management_system",
+    "title": "Student Management System",
+    "description": "Main student portal for registration, results, and more.",
+    "category": "Student Portal",
+    "keywords": [
+      "student management system",
+      "sms portal",
+      "student portal",
+      "sms login"
+    ],
+    "audience": [
+      "all"
+    ],
+    "routing_only": true,
+    "crawlable": true,
+    "priority": 1,
+    "url": "https://sms.unilus.ac.zm/"
+  },
+  {
+    "topic": "sms_apply",
+    "title": "Apply via the Student Management System",
+    "description": "Submit an application through the SMS portal.",
+    "category": "Admissions",
+    "keywords": [
+      "apply through sms",
+      "sms application"
+    ],
+    "audience": [
+      "prospective"
+    ],
+    "routing_only": true,
+    "crawlable": true,
+    "priority": 2,
+    "url": "https://sms.unilus.ac.zm/apply"
+  },
+  {
+    "topic": "timetable_portal",
+    "title": "Timetable Portal",
+    "description": "Online timetable portal (see also the chatbot's own timetable search).",
+    "category": "Timetables",
+    "keywords": [
+      "timetable portal",
+      "online timetable",
+      "sms timetable"
+    ],
+    "audience": [
+      "all"
+    ],
+    "routing_only": true,
+    "crawlable": true,
+    "priority": 2,
+    "url": "https://sms.unilus.ac.zm/timetables"
+  },
+  {
+    "topic": "sms_payment",
+    "title": "Pay Fees (SMS Hosted Payment)",
+    "description": "Pay tuition/fees online.",
+    "category": "Finance",
+    "keywords": [
+      "pay fees online",
+      "sms payment",
+      "hosted payment",
+      "pay tuition"
+    ],
+    "audience": [
+      "all"
+    ],
+    "routing_only": true,
+    "crawlable": true,
+    "priority": 1,
+    "url": "https://sms.unilus.ac.zm/pay-hosted"
+  },
+  {
+    "topic": "attendance_app",
+    "title": "Edurole Attendance App",
+    "description": "Mobile app used for class attendance.",
+    "category": "Mobile Apps",
+    "keywords": [
+      "attendance app",
+      "edurole",
+      "class attendance app",
+      "attendance system"
+    ],
+    "audience": [
+      "all"
+    ],
+    "routing_only": true,
+    "crawlable": false,
+    "priority": 3,
+    "url": "https://play.google.com/store/apps/details?id=com.itunilus.EduroleAttendance"
+  },
+  {
+    "topic": "site_support",
+    "title": "UNILUS Support",
+    "description": "Support section of the main UNILUS website.",
+    "category": "Student Services",
+    "keywords": [
+      "support",
+      "unilus support",
+      "help"
+    ],
+    "audience": [
+      "all"
+    ],
+    "routing_only": true,
+    "crawlable": true,
+    "priority": 3,
+    "url": "https://www.unilus.ac.zm/site/#support"
+  },
+  {
+    "topic": "about_unilus",
+    "title": "About UNILUS",
+    "description": "General information about the University of Lusaka.",
+    "category": "Student Services",
+    "keywords": [
+      "about unilus",
+      "about the university",
+      "university history"
+    ],
+    "audience": [
+      "all"
+    ],
+    "routing_only": false,
+    "crawlable": true,
+    "priority": 3,
+    "url": "https://web.unilus.ac.zm/aboutunilus/"
+  },
+  {
+    "topic": "contact_us",
+    "title": "Contact Us",
+    "description": "Official UNILUS contact information.",
+    "category": "Student Services",
+    "keywords": [
+      "contact us",
+      "contact unilus",
+      "phone number",
+      "email address unilus"
+    ],
+    "audience": [
+      "all"
+    ],
+    "routing_only": true,
+    "crawlable": true,
+    "priority": 1,
+    "url": "https://web.unilus.ac.zm/contact-us/"
+  },
+  {
+    "topic": "senior_scholar",
+    "title": "Senior Scholar Programme",
+    "description": "Information about the Senior Scholar programme.",
+    "category": "Academics",
+    "keywords": [
+      "senior scholar"
+    ],
+    "audience": [
+      "all"
+    ],
+    "routing_only": false,
+    "crawlable": true,
+    "priority": 3,
+    "url": "https://web.unilus.ac.zm/senior-scholar/"
+  },
+  {
+    "topic": "misc_elementor_23004",
+    "title": "UNILUS Page (Fees/Admissions Related)",
+    "description": "An official UNILUS page; content classified automatically once crawled.",
+    "category": "Admissions",
+    "keywords": [
+      "unilus fees information",
+      "unilus admissions information"
+    ],
+    "audience": [
+      "all"
+    ],
+    "routing_only": false,
+    "crawlable": true,
+    "priority": 4,
+    "url": "https://web.unilus.ac.zm/elementor-23004/"
+  },
+  {
+    "topic": "misc_elementor_18120",
+    "title": "UNILUS Page",
+    "description": "An official UNILUS page; content classified automatically once crawled.",
+    "category": "Student Services",
+    "keywords": [
+      "unilus information page"
+    ],
+    "audience": [
+      "all"
+    ],
+    "routing_only": false,
+    "crawlable": true,
+    "priority": 4,
+    "url": "https://web.unilus.ac.zm/elementor-18120/"
+  }
+]

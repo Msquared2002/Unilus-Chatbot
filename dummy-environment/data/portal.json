@@ -1,0 +1,21 @@
+{
+  "student": {
+    "name": "LUKA HAMUDUDU",
+    "number": "BIT2424001",
+    "status": "Active demonstration"
+  },
+  "notices": [
+    "IMPORTANT REGISTRATION NOTICE TO ALL STUDENTS",
+    "Late Registration Period",
+    "Eligibility for University Activities",
+    "Attendance Without Registration",
+    "Important Notice on Fee Payments"
+  ],
+  "timetable": [
+    "BSPH - Students",
+    "DIPLOMA - POSTGRADUATE",
+    "DIPLOMA - NURSING",
+    "LAW",
+    "Medicine Student"
+  ]
+}

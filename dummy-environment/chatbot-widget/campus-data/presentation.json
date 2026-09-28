@@ -1,0 +1,207 @@
+{
+  "pioneer": {
+    "label": "Pioneer Campus",
+    "available": false,
+    "message": "Navigation is currently available only for Silverest Campus. Pioneer and Leopards Hill will be added in a future update."
+  },
+  "silverest": {
+    "label": "Silverest Campus",
+    "available": true,
+    "places": {
+      "unilus_library": {
+        "displayCategory": "Facility",
+        "gallery": [
+          "gallery-01"
+        ],
+        "facilities": [
+          "Hours: Mon - Friday: 08:00 - 22:00  Sat: 09:00 - 22:00  Sun & Public Holidays: Closed",
+          "Wi-Fi available"
+        ],
+        "cover": "cover"
+      },
+      "unilus_gym": {
+        "displayCategory": "Sports",
+        "gallery": [
+          "gallery-01",
+          "gallery-02",
+          "gallery-03",
+          "gallery-04",
+          "gallery-05"
+        ],
+        "facilities": [],
+        "cover": "cover"
+      },
+      "knowledge_field_2": {
+        "displayCategory": "Academic",
+        "gallery": [
+          "gallery-01"
+        ],
+        "facilities": [],
+        "cover": "cover"
+      },
+      "knowledge_field_1": {
+        "displayCategory": "Academic",
+        "gallery": [
+          "gallery-01",
+          "gallery-02"
+        ],
+        "facilities": [],
+        "cover": "cover"
+      },
+      "p_c_school_of_business": {
+        "displayCategory": "Academic",
+        "gallery": [
+          "gallery-01"
+        ],
+        "facilities": [
+          "Wi-Fi available"
+        ],
+        "cover": "cover"
+      },
+      "unilus_hostel_school_of_medicine_side": {
+        "displayCategory": "Hostel",
+        "gallery": [
+          "gallery-01",
+          "gallery-02",
+          "gallery-03"
+        ],
+        "facilities": [],
+        "cover": "cover"
+      },
+      "the_growcery": {
+        "displayCategory": "Food & Drink",
+        "gallery": [],
+        "facilities": [
+          "Hours: Mo-Su 07:00-22:00"
+        ],
+        "cover": "cover"
+      },
+      "unilus_hospital": {
+        "displayCategory": "Healthcare",
+        "gallery": [
+          "gallery-01",
+          "gallery-02",
+          "gallery-03"
+        ],
+        "facilities": [],
+        "cover": "cover"
+      },
+      "hostel_school_of_medicine_side": {
+        "displayCategory": "Hostel",
+        "gallery": [],
+        "facilities": []
+      },
+      "running_track_athletics": {
+        "displayCategory": "Sports",
+        "gallery": [],
+        "facilities": [],
+        "cover": "cover"
+      },
+      "cafeteria_school_of_medicine": {
+        "displayCategory": "Food & Drink",
+        "gallery": [
+          "gallery-01",
+          "gallery-02"
+        ],
+        "facilities": [
+          "Hours: Mo-Fr 08:00-20:30"
+        ],
+        "cover": "cover"
+      },
+      "unilus_swimming_pool": {
+        "displayCategory": "Sports",
+        "gallery": [
+          "gallery-01"
+        ],
+        "facilities": [],
+        "cover": "cover"
+      },
+      "sports_pitch_soccer": {
+        "displayCategory": "Sports",
+        "gallery": [
+          "gallery-01"
+        ],
+        "facilities": [],
+        "cover": "cover"
+      },
+      "biochemistry_lab": {
+        "displayCategory": "Academic",
+        "gallery": [
+          "gallery-01"
+        ],
+        "facilities": [],
+        "cover": "cover"
+      },
+      "foundation_labs": {
+        "displayCategory": "Academic",
+        "gallery": [
+          "gallery-01"
+        ],
+        "facilities": [],
+        "cover": "cover"
+      },
+      "life_science_labs": {
+        "displayCategory": "Academic",
+        "gallery": [],
+        "facilities": []
+      },
+      "basic_science_labs": {
+        "displayCategory": "Academic",
+        "gallery": [
+          "gallery-01"
+        ],
+        "facilities": [],
+        "cover": "cover"
+      },
+      "school_of_business_hostels": {
+        "displayCategory": "Hostel",
+        "gallery": [
+          "gallery-01"
+        ],
+        "facilities": [],
+        "cover": "cover"
+      },
+      "unilus_basketball_court": {
+        "displayCategory": "Sports",
+        "gallery": [
+          "gallery-01"
+        ],
+        "facilities": [],
+        "cover": "cover"
+      },
+      "unilus_volleyball_court": {
+        "displayCategory": "Sports",
+        "gallery": [],
+        "facilities": [],
+        "cover": "cover"
+      },
+      "unilus_tennis_court": {
+        "displayCategory": "Sports",
+        "gallery": [],
+        "facilities": [],
+        "cover": "cover"
+      },
+      "unilus_auditorium": {
+        "displayCategory": "Facility",
+        "gallery": [
+          "gallery-01"
+        ],
+        "facilities": [],
+        "cover": "cover"
+      },
+      "unilus_chapel": {
+        "displayCategory": "Facility",
+        "gallery": [
+          "gallery-01"
+        ],
+        "facilities": [],
+        "cover": "cover"
+      }
+    }
+  },
+  "leopards": {
+    "label": "Leopards Hill",
+    "available": false,
+    "message": "Navigation is currently available only for Silverest Campus. Pioneer and Leopards Hill will be added in a future update."
+  }
+}

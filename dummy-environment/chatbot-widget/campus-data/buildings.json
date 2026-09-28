@@ -1,0 +1,210 @@
+{
+  "silverest": {
+    "label": "Silverest Campus",
+    "available": true,
+    "center": [
+      -15.3550065,
+      28.4691214
+    ],
+    "zoom": 17,
+    "boundary": [
+      [
+        -15.353432,
+        28.4668484
+      ],
+      [
+        -15.3529952,
+        28.4711082
+      ],
+      [
+        -15.3565752,
+        28.4714092
+      ],
+      [
+        -15.357015,
+        28.467119
+      ],
+      [
+        -15.353432,
+        28.4668484
+      ]
+    ],
+    "buildings": [
+      {
+        "id": "knowledge_field_1",
+        "name": "Knowledge Field 1",
+        "description": "Academic building",
+        "coordinates": [
+          -15.3559023,
+          28.4701482
+        ],
+        "gallery": [],
+        "facilities": [],
+        "category": "Academic"
+      },
+      {
+        "id": "knowledge_field_2",
+        "name": "Knowledge Field 2",
+        "description": "Academic building",
+        "coordinates": [
+          -15.3552583,
+          28.469597
+        ],
+        "gallery": [],
+        "facilities": [],
+        "category": "Academic"
+      },
+      {
+        "id": "p_c_school_of_business",
+        "name": "P.C. School of Business",
+        "description": "Academic building",
+        "coordinates": [
+          -15.3537996,
+          28.4677818
+        ],
+        "gallery": [],
+        "facilities": [
+          "Wi-Fi available"
+        ],
+        "category": "Academic"
+      },
+      {
+        "id": "unilus_library",
+        "name": "Unilus Library",
+        "description": "University library",
+        "coordinates": [
+          -15.3558602,
+          28.4698067
+        ],
+        "gallery": [],
+        "facilities": [
+          "Hours: Mon - Friday: 08:00 - 22:00  Sat: 09:00 - 22:00  Sun & Public Holidays: Closed",
+          "Wi-Fi available"
+        ],
+        "category": "Facility"
+      },
+      {
+        "id": "cafeteria_school_of_medicine",
+        "name": "Cafeteria School of Medicine",
+        "description": "Cafeteria / food outlet",
+        "coordinates": [
+          -15.3552318,
+          28.4700184
+        ],
+        "gallery": [],
+        "facilities": [
+          "Hours: Mo-Fr 08:00-20:30"
+        ],
+        "category": "Food & Drink"
+      },
+      {
+        "id": "the_growcery",
+        "name": "The Growcery",
+        "description": "Convenience store / shop",
+        "coordinates": [
+          -15.355178,
+          28.4690404
+        ],
+        "gallery": [],
+        "facilities": [
+          "Hours: Mo-Su 07:00-22:00"
+        ],
+        "category": "Food & Drink"
+      },
+      {
+        "id": "unilus_hospital",
+        "name": "Unilus Hospital",
+        "description": "Campus healthcare facility",
+        "coordinates": [
+          -15.3563005,
+          28.4675129
+        ],
+        "gallery": [],
+        "facilities": [],
+        "category": "Healthcare"
+      },
+      {
+        "id": "hostel_school_of_medicine_side",
+        "name": "Hostel School of Medicine Side",
+        "description": "Student hostel",
+        "coordinates": [
+          -15.3536369,
+          28.469771
+        ],
+        "gallery": [],
+        "facilities": [],
+        "category": "Hostel"
+      },
+      {
+        "id": "unilus_hostel_school_of_medicine_side",
+        "name": "Unilus Hostel School of Medicine Side",
+        "description": "Student hostel",
+        "coordinates": [
+          -15.3544717,
+          28.469821
+        ],
+        "gallery": [],
+        "facilities": [],
+        "category": "Hostel"
+      },
+      {
+        "id": "running_track_athletics",
+        "name": "Running track (athletics)",
+        "description": "Running track (athletics)",
+        "coordinates": [
+          -15.353998,
+          28.4705928
+        ],
+        "gallery": [],
+        "facilities": [],
+        "category": "Sports"
+      },
+      {
+        "id": "sports_pitch_soccer",
+        "name": "Sports pitch (soccer)",
+        "description": "Sports pitch (soccer)",
+        "coordinates": [
+          -15.353996,
+          28.4705942
+        ],
+        "gallery": [],
+        "facilities": [],
+        "category": "Sports"
+      },
+      {
+        "id": "unilus_gym",
+        "name": "Unilus Gym",
+        "description": "Gym / fitness centre",
+        "coordinates": [
+          -15.3557968,
+          28.4708003
+        ],
+        "gallery": [],
+        "facilities": [],
+        "category": "Sports"
+      },
+      {
+        "id": "unilus_swimming_pool",
+        "name": "Unilus Swimming Pool",
+        "description": "Swimming pool",
+        "coordinates": [
+          -15.3554373,
+          28.4707617
+        ],
+        "gallery": [],
+        "facilities": [],
+        "category": "Sports"
+      }
+    ]
+  },
+  "pioneer": {
+    "label": "Pioneer Campus",
+    "available": false,
+    "message": "Navigation is currently available only for Silverest Campus. Pioneer and Leopards Hill will be added in a future update."
+  },
+  "leopards": {
+    "label": "Leopards Hill Campus",
+    "available": false,
+    "message": "Navigation is currently available only for Silverest Campus. Pioneer and Leopards Hill will be added in a future update."
+  }
+}

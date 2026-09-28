@@ -1,0 +1,2839 @@
+{
+  "schema_version": 1,
+  "nodes": [
+    {
+      "id": "n1",
+      "coordinates": [
+        28.4711941,
+        -15.3548564
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e1",
+        "e42",
+        "e43"
+      ]
+    },
+    {
+      "id": "n2",
+      "coordinates": [
+        28.4711895,
+        -15.3546536
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e1",
+        "e2"
+      ]
+    },
+    {
+      "id": "n3",
+      "coordinates": [
+        28.4711576,
+        -15.3544349
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e2",
+        "e3"
+      ]
+    },
+    {
+      "id": "n4",
+      "coordinates": [
+        28.4710938,
+        -15.3543461
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e3"
+      ]
+    },
+    {
+      "id": "n5",
+      "coordinates": [
+        28.4693649,
+        -15.3562807
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e4",
+        "e119",
+        "e120"
+      ]
+    },
+    {
+      "id": "n6",
+      "coordinates": [
+        28.4694616,
+        -15.3562664
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e4",
+        "e5"
+      ]
+    },
+    {
+      "id": "n7",
+      "coordinates": [
+        28.4695277,
+        -15.3562721
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e5",
+        "e6"
+      ]
+    },
+    {
+      "id": "n8",
+      "coordinates": [
+        28.4695995,
+        -15.3562869
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e6",
+        "e56",
+        "e57"
+      ]
+    },
+    {
+      "id": "n9",
+      "coordinates": [
+        28.4697634,
+        -15.3555106
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e7",
+        "e63",
+        "e64"
+      ]
+    },
+    {
+      "id": "n10",
+      "coordinates": [
+        28.4697939,
+        -15.3554477
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e7",
+        "e8"
+      ]
+    },
+    {
+      "id": "n11",
+      "coordinates": [
+        28.4698261,
+        -15.3553699
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e8",
+        "e11",
+        "e12"
+      ]
+    },
+    {
+      "id": "n12",
+      "coordinates": [
+        28.4700938,
+        -15.3555648
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e9",
+        "e34",
+        "e35"
+      ]
+    },
+    {
+      "id": "n13",
+      "coordinates": [
+        28.4700095,
+        -15.3555284
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e9",
+        "e10",
+        "e64"
+      ]
+    },
+    {
+      "id": "n14",
+      "coordinates": [
+        28.4698888,
+        -15.3554464
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e10",
+        "e11"
+      ]
+    },
+    {
+      "id": "n15",
+      "coordinates": [
+        28.4698096,
+        -15.3553289
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e12",
+        "e13"
+      ]
+    },
+    {
+      "id": "n16",
+      "coordinates": [
+        28.4698273,
+        -15.354952
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e13",
+        "e38",
+        "e39"
+      ]
+    },
+    {
+      "id": "n17",
+      "coordinates": [
+        28.4703486,
+        -15.3552737
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e14",
+        "e23"
+      ]
+    },
+    {
+      "id": "n18",
+      "coordinates": [
+        28.470383,
+        -15.3552634
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e14",
+        "e15",
+        "e24"
+      ]
+    },
+    {
+      "id": "n19",
+      "coordinates": [
+        28.4704196,
+        -15.3552779
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e15",
+        "e16"
+      ]
+    },
+    {
+      "id": "n20",
+      "coordinates": [
+        28.4704371,
+        -15.3553121
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e16",
+        "e17",
+        "e26"
+      ]
+    },
+    {
+      "id": "n21",
+      "coordinates": [
+        28.4704315,
+        -15.3553414
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e17",
+        "e18"
+      ]
+    },
+    {
+      "id": "n22",
+      "coordinates": [
+        28.4704106,
+        -15.3553633
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e18",
+        "e19"
+      ]
+    },
+    {
+      "id": "n23",
+      "coordinates": [
+        28.4703808,
+        -15.3553712
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e19",
+        "e20",
+        "e31"
+      ]
+    },
+    {
+      "id": "n24",
+      "coordinates": [
+        28.4703497,
+        -15.3553616
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e20",
+        "e21"
+      ]
+    },
+    {
+      "id": "n25",
+      "coordinates": [
+        28.4703294,
+        -15.3553368
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e21",
+        "e22",
+        "e37"
+      ]
+    },
+    {
+      "id": "n26",
+      "coordinates": [
+        28.4703278,
+        -15.3553021
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e22",
+        "e23"
+      ]
+    },
+    {
+      "id": "n27",
+      "coordinates": [
+        28.4704195,
+        -15.3551753
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e24",
+        "e25"
+      ]
+    },
+    {
+      "id": "n28",
+      "coordinates": [
+        28.470393,
+        -15.3548985
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e25",
+        "e40",
+        "e41"
+      ]
+    },
+    {
+      "id": "n29",
+      "coordinates": [
+        28.4706337,
+        -15.3553188
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e26",
+        "e27"
+      ]
+    },
+    {
+      "id": "n30",
+      "coordinates": [
+        28.4712463,
+        -15.3552747
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e27",
+        "e44",
+        "e45"
+      ]
+    },
+    {
+      "id": "n31",
+      "coordinates": [
+        28.4703968,
+        -15.3561001
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e28",
+        "e51",
+        "e52"
+      ]
+    },
+    {
+      "id": "n32",
+      "coordinates": [
+        28.4704036,
+        -15.3559338
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e28",
+        "e29"
+      ]
+    },
+    {
+      "id": "n33",
+      "coordinates": [
+        28.4704127,
+        -15.355763
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e29",
+        "e30"
+      ]
+    },
+    {
+      "id": "n34",
+      "coordinates": [
+        28.4704127,
+        -15.3555261
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e30",
+        "e31"
+      ]
+    },
+    {
+      "id": "n35",
+      "coordinates": [
+        28.4698045,
+        -15.3562459
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e32",
+        "e55",
+        "e56"
+      ]
+    },
+    {
+      "id": "n36",
+      "coordinates": [
+        28.4698774,
+        -15.3561024
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e32",
+        "e33"
+      ]
+    },
+    {
+      "id": "n37",
+      "coordinates": [
+        28.4700232,
+        -15.3557357
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e33",
+        "e34"
+      ]
+    },
+    {
+      "id": "n38",
+      "coordinates": [
+        28.4701426,
+        -15.3554387
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e35",
+        "e36"
+      ]
+    },
+    {
+      "id": "n39",
+      "coordinates": [
+        28.4702713,
+        -15.355347
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e36",
+        "e37"
+      ]
+    },
+    {
+      "id": "n40",
+      "coordinates": [
+        28.4693625,
+        -15.3549292
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e38",
+        "e123",
+        "e124"
+      ]
+    },
+    {
+      "id": "n41",
+      "coordinates": [
+        28.4702327,
+        -15.354911
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e39",
+        "e40"
+      ]
+    },
+    {
+      "id": "n42",
+      "coordinates": [
+        28.4711371,
+        -15.3548404
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e41",
+        "e42"
+      ]
+    },
+    {
+      "id": "n43",
+      "coordinates": [
+        28.4712191,
+        -15.354911
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e43",
+        "e44"
+      ]
+    },
+    {
+      "id": "n44",
+      "coordinates": [
+        28.471292,
+        -15.355886
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e45",
+        "e46"
+      ]
+    },
+    {
+      "id": "n45",
+      "coordinates": [
+        28.4712692,
+        -15.355943
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e46",
+        "e47"
+      ]
+    },
+    {
+      "id": "n46",
+      "coordinates": [
+        28.4712191,
+        -15.3559931
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e47",
+        "e48"
+      ]
+    },
+    {
+      "id": "n47",
+      "coordinates": [
+        28.4711303,
+        -15.3560341
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e48",
+        "e49"
+      ]
+    },
+    {
+      "id": "n48",
+      "coordinates": [
+        28.4708637,
+        -15.3560865
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e49",
+        "e50"
+      ]
+    },
+    {
+      "id": "n49",
+      "coordinates": [
+        28.4705949,
+        -15.3560819
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e50",
+        "e51"
+      ]
+    },
+    {
+      "id": "n50",
+      "coordinates": [
+        28.4703649,
+        -15.3561343
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e52",
+        "e53"
+      ]
+    },
+    {
+      "id": "n51",
+      "coordinates": [
+        28.4702419,
+        -15.3561844
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e53",
+        "e54"
+      ]
+    },
+    {
+      "id": "n52",
+      "coordinates": [
+        28.4700619,
+        -15.35623
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e54",
+        "e55"
+      ]
+    },
+    {
+      "id": "n53",
+      "coordinates": [
+        28.4695015,
+        -15.35632
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e57",
+        "e58"
+      ]
+    },
+    {
+      "id": "n54",
+      "coordinates": [
+        28.4694411,
+        -15.3563519
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e58",
+        "e59"
+      ]
+    },
+    {
+      "id": "n55",
+      "coordinates": [
+        28.4693826,
+        -15.3564362
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e59",
+        "e116",
+        "e117"
+      ]
+    },
+    {
+      "id": "n56",
+      "coordinates": [
+        28.4693615,
+        -15.3562538
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e60",
+        "e120",
+        "e121"
+      ]
+    },
+    {
+      "id": "n57",
+      "coordinates": [
+        28.4694673,
+        -15.3560637
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e60",
+        "e61"
+      ]
+    },
+    {
+      "id": "n58",
+      "coordinates": [
+        28.4695903,
+        -15.3555967
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e61",
+        "e62"
+      ]
+    },
+    {
+      "id": "n59",
+      "coordinates": [
+        28.4697316,
+        -15.3555603
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e62",
+        "e63"
+      ]
+    },
+    {
+      "id": "n60",
+      "coordinates": [
+        28.4678958,
+        -15.3560045
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e65",
+        "e103",
+        "e104"
+      ]
+    },
+    {
+      "id": "n61",
+      "coordinates": [
+        28.4678921,
+        -15.3560899
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e65",
+        "e66"
+      ]
+    },
+    {
+      "id": "n62",
+      "coordinates": [
+        28.4678784,
+        -15.3561958
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e66",
+        "e67"
+      ]
+    },
+    {
+      "id": "n63",
+      "coordinates": [
+        28.46785,
+        -15.3562926
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e67",
+        "e68"
+      ]
+    },
+    {
+      "id": "n64",
+      "coordinates": [
+        28.4678078,
+        -15.3563792
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e68",
+        "e69",
+        "e72"
+      ]
+    },
+    {
+      "id": "n65",
+      "coordinates": [
+        28.4677948,
+        -15.3564059
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e69",
+        "e89",
+        "e90"
+      ]
+    },
+    {
+      "id": "n66",
+      "coordinates": [
+        28.4693713,
+        -15.3563314
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e70",
+        "e118",
+        "e119"
+      ]
+    },
+    {
+      "id": "n67",
+      "coordinates": [
+        28.4681049,
+        -15.3563707
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e70",
+        "e71",
+        "e106",
+        "e107"
+      ]
+    },
+    {
+      "id": "n68",
+      "coordinates": [
+        28.4678602,
+        -15.3563747
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e71",
+        "e72"
+      ]
+    },
+    {
+      "id": "n69",
+      "coordinates": [
+        28.4678409,
+        -15.3564555
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e73",
+        "e92"
+      ]
+    },
+    {
+      "id": "n70",
+      "coordinates": [
+        28.4678441,
+        -15.3564785
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e73",
+        "e74"
+      ]
+    },
+    {
+      "id": "n71",
+      "coordinates": [
+        28.4678406,
+        -15.3565016
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e74",
+        "e75",
+        "e107"
+      ]
+    },
+    {
+      "id": "n72",
+      "coordinates": [
+        28.467826,
+        -15.3565278
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e75",
+        "e76"
+      ]
+    },
+    {
+      "id": "n73",
+      "coordinates": [
+        28.4678026,
+        -15.3565465
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e76",
+        "e77"
+      ]
+    },
+    {
+      "id": "n74",
+      "coordinates": [
+        28.4677739,
+        -15.356555
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e77",
+        "e78"
+      ]
+    },
+    {
+      "id": "n75",
+      "coordinates": [
+        28.4677441,
+        -15.3565521
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e78",
+        "e79"
+      ]
+    },
+    {
+      "id": "n76",
+      "coordinates": [
+        28.4677176,
+        -15.356538
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e79",
+        "e80",
+        "e95"
+      ]
+    },
+    {
+      "id": "n77",
+      "coordinates": [
+        28.4676984,
+        -15.3565151
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e80",
+        "e81"
+      ]
+    },
+    {
+      "id": "n78",
+      "coordinates": [
+        28.4676911,
+        -15.3564971
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e81",
+        "e82"
+      ]
+    },
+    {
+      "id": "n79",
+      "coordinates": [
+        28.4676888,
+        -15.3564725
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e82",
+        "e83"
+      ]
+    },
+    {
+      "id": "n80",
+      "coordinates": [
+        28.4676943,
+        -15.3564484
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e83",
+        "e84"
+      ]
+    },
+    {
+      "id": "n81",
+      "coordinates": [
+        28.4677079,
+        -15.3564279
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e84",
+        "e85",
+        "e108"
+      ]
+    },
+    {
+      "id": "n82",
+      "coordinates": [
+        28.4677174,
+        -15.3564172
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e85",
+        "e86"
+      ]
+    },
+    {
+      "id": "n83",
+      "coordinates": [
+        28.467738,
+        -15.3564052
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e86",
+        "e87"
+      ]
+    },
+    {
+      "id": "n84",
+      "coordinates": [
+        28.4677613,
+        -15.3563999
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e87",
+        "e88"
+      ]
+    },
+    {
+      "id": "n85",
+      "coordinates": [
+        28.4677763,
+        -15.3564006
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e88",
+        "e89"
+      ]
+    },
+    {
+      "id": "n86",
+      "coordinates": [
+        28.4678151,
+        -15.3564172
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e90",
+        "e91"
+      ]
+    },
+    {
+      "id": "n87",
+      "coordinates": [
+        28.4678309,
+        -15.3564344
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e91",
+        "e92"
+      ]
+    },
+    {
+      "id": "n88",
+      "coordinates": [
+        28.46705315410716,
+        -15.356142992134215
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e93"
+      ]
+    },
+    {
+      "id": "n89",
+      "coordinates": [
+        28.4670754,
+        -15.3561366
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e93",
+        "e94"
+      ]
+    },
+    {
+      "id": "n90",
+      "coordinates": [
+        28.4671438,
+        -15.3561161
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e94",
+        "e99",
+        "e100"
+      ]
+    },
+    {
+      "id": "n91",
+      "coordinates": [
+        28.4675219,
+        -15.3566241
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e95",
+        "e96"
+      ]
+    },
+    {
+      "id": "n92",
+      "coordinates": [
+        28.4673237,
+        -15.3566446
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e96",
+        "e97"
+      ]
+    },
+    {
+      "id": "n93",
+      "coordinates": [
+        28.4672076,
+        -15.3566309
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e97",
+        "e98"
+      ]
+    },
+    {
+      "id": "n94",
+      "coordinates": [
+        28.4671984,
+        -15.3565535
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e98",
+        "e99"
+      ]
+    },
+    {
+      "id": "n95",
+      "coordinates": [
+        28.4673351,
+        -15.3560227
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e100",
+        "e101"
+      ]
+    },
+    {
+      "id": "n96",
+      "coordinates": [
+        28.4675424,
+        -15.3559817
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e101",
+        "e102"
+      ]
+    },
+    {
+      "id": "n97",
+      "coordinates": [
+        28.4677862,
+        -15.3559771
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e102",
+        "e103",
+        "e112"
+      ]
+    },
+    {
+      "id": "n98",
+      "coordinates": [
+        28.467932,
+        -15.3560136
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e104",
+        "e105"
+      ]
+    },
+    {
+      "id": "n99",
+      "coordinates": [
+        28.4680322,
+        -15.3561161
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e105",
+        "e106"
+      ]
+    },
+    {
+      "id": "n100",
+      "coordinates": [
+        28.4677224,
+        -15.3563826
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e108",
+        "e109"
+      ]
+    },
+    {
+      "id": "n101",
+      "coordinates": [
+        28.467752,
+        -15.3562983
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e109",
+        "e110"
+      ]
+    },
+    {
+      "id": "n102",
+      "coordinates": [
+        28.4677862,
+        -15.3561411
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e110",
+        "e111"
+      ]
+    },
+    {
+      "id": "n103",
+      "coordinates": [
+        28.4678021,
+        -15.35605
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e111",
+        "e112"
+      ]
+    },
+    {
+      "id": "n104",
+      "coordinates": [
+        28.4694013,
+        -15.3566469
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e113",
+        "e114",
+        "e127"
+      ]
+    },
+    {
+      "id": "n105",
+      "coordinates": [
+        28.469415186907504,
+        -15.356779611672668
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e113"
+      ]
+    },
+    {
+      "id": "n106",
+      "coordinates": [
+        28.4693922,
+        -15.3565352
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e114",
+        "e115"
+      ]
+    },
+    {
+      "id": "n107",
+      "coordinates": [
+        28.4693894,
+        -15.3565062
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e115",
+        "e116"
+      ]
+    },
+    {
+      "id": "n108",
+      "coordinates": [
+        28.4693762,
+        -15.3563701
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e117",
+        "e118"
+      ]
+    },
+    {
+      "id": "n109",
+      "coordinates": [
+        28.4693284,
+        -15.3559931
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e121",
+        "e122"
+      ]
+    },
+    {
+      "id": "n110",
+      "coordinates": [
+        28.4693489,
+        -15.3554737
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e122",
+        "e123"
+      ]
+    },
+    {
+      "id": "n111",
+      "coordinates": [
+        28.469276,
+        -15.3540682
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e124",
+        "e125"
+      ]
+    },
+    {
+      "id": "n112",
+      "coordinates": [
+        28.4700892,
+        -15.3539884
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e125"
+      ]
+    },
+    {
+      "id": "n113",
+      "coordinates": [
+        28.46933509632949,
+        -15.356787821974335
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e126"
+      ]
+    },
+    {
+      "id": "n114",
+      "coordinates": [
+        28.4693272,
+        -15.356689
+      ],
+      "level": 0,
+      "edge_ids": [
+        "e126",
+        "e127"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "from": "n1",
+      "to": "n2",
+      "distance_m": 22.555724731834307,
+      "cost_m": 24.134625463062708,
+      "kind": "shared_road",
+      "source": "way/992236505",
+      "source_geometry_ref": "osm_way_992236505",
+      "accessible": null
+    },
+    {
+      "id": "e2",
+      "from": "n2",
+      "to": "n3",
+      "distance_m": 24.55770879497113,
+      "cost_m": 26.27674841061911,
+      "kind": "shared_road",
+      "source": "way/992236505",
+      "source_geometry_ref": "osm_way_992236505",
+      "accessible": null
+    },
+    {
+      "id": "e3",
+      "from": "n3",
+      "to": "n4",
+      "distance_m": 12.012392235623176,
+      "cost_m": 12.853259692116799,
+      "kind": "shared_road",
+      "source": "way/992236505",
+      "source_geometry_ref": "osm_way_992236505",
+      "accessible": null
+    },
+    {
+      "id": "e4",
+      "from": "n5",
+      "to": "n6",
+      "distance_m": 10.489875127128087,
+      "cost_m": 11.224166386027054,
+      "kind": "shared_road",
+      "source": "way/992236506",
+      "source_geometry_ref": "osm_way_992236506",
+      "accessible": null
+    },
+    {
+      "id": "e5",
+      "from": "n6",
+      "to": "n7",
+      "distance_m": 7.115857146913604,
+      "cost_m": 7.613967147197557,
+      "kind": "shared_road",
+      "source": "way/992236506",
+      "source_geometry_ref": "osm_way_992236506",
+      "accessible": null
+    },
+    {
+      "id": "e6",
+      "from": "n7",
+      "to": "n8",
+      "distance_m": 7.872682396480007,
+      "cost_m": 8.423770164233607,
+      "kind": "shared_road",
+      "source": "way/992236506",
+      "source_geometry_ref": "osm_way_992236506",
+      "accessible": null
+    },
+    {
+      "id": "e7",
+      "from": "n9",
+      "to": "n10",
+      "distance_m": 7.7209871892372295,
+      "cost_m": 8.261456292483835,
+      "kind": "shared_road",
+      "source": "way/992236507",
+      "source_geometry_ref": "osm_way_992236507",
+      "accessible": null
+    },
+    {
+      "id": "e8",
+      "from": "n10",
+      "to": "n11",
+      "distance_m": 9.314508127673072,
+      "cost_m": 9.966523696610187,
+      "kind": "shared_road",
+      "source": "way/992236507",
+      "source_geometry_ref": "osm_way_992236507",
+      "accessible": null
+    },
+    {
+      "id": "e9",
+      "from": "n12",
+      "to": "n13",
+      "distance_m": 9.903916513829413,
+      "cost_m": 10.597190669797474,
+      "kind": "shared_road",
+      "source": "way/992236508",
+      "source_geometry_ref": "osm_way_992236508",
+      "accessible": null
+    },
+    {
+      "id": "e10",
+      "from": "n13",
+      "to": "n14",
+      "distance_m": 15.831481758623804,
+      "cost_m": 16.939685481727473,
+      "kind": "shared_road",
+      "source": "way/992236508",
+      "source_geometry_ref": "osm_way_992236508",
+      "accessible": null
+    },
+    {
+      "id": "e11",
+      "from": "n14",
+      "to": "n11",
+      "distance_m": 10.84242898991376,
+      "cost_m": 11.601399019207724,
+      "kind": "shared_road",
+      "source": "way/992236508",
+      "source_geometry_ref": "osm_way_992236508",
+      "accessible": null
+    },
+    {
+      "id": "e12",
+      "from": "n11",
+      "to": "n15",
+      "distance_m": 4.890250490323235,
+      "cost_m": 5.232568024645862,
+      "kind": "shared_road",
+      "source": "way/992236508",
+      "source_geometry_ref": "osm_way_992236508",
+      "accessible": null
+    },
+    {
+      "id": "e13",
+      "from": "n15",
+      "to": "n16",
+      "distance_m": 41.95231951091085,
+      "cost_m": 44.888981876674606,
+      "kind": "shared_road",
+      "source": "way/992236508",
+      "source_geometry_ref": "osm_way_992236508",
+      "accessible": null
+    },
+    {
+      "id": "e14",
+      "from": "n17",
+      "to": "n18",
+      "distance_m": 3.8622783130207314,
+      "cost_m": 4.132637794932183,
+      "kind": "shared_road",
+      "source": "way/992236509",
+      "source_geometry_ref": "osm_way_992236509",
+      "accessible": null
+    },
+    {
+      "id": "e15",
+      "from": "n18",
+      "to": "n19",
+      "distance_m": 4.2427515756129255,
+      "cost_m": 4.539744185905831,
+      "kind": "shared_road",
+      "source": "way/992236509",
+      "source_geometry_ref": "osm_way_992236509",
+      "accessible": null
+    },
+    {
+      "id": "e16",
+      "from": "n19",
+      "to": "n20",
+      "distance_m": 4.240618551919131,
+      "cost_m": 4.537461850553471,
+      "kind": "shared_road",
+      "source": "way/992236509",
+      "source_geometry_ref": "osm_way_992236509",
+      "accessible": null
+    },
+    {
+      "id": "e17",
+      "from": "n20",
+      "to": "n21",
+      "distance_m": 3.312882972833786,
+      "cost_m": 3.5447847809321513,
+      "kind": "shared_road",
+      "source": "way/992236509",
+      "source_geometry_ref": "osm_way_992236509",
+      "accessible": null
+    },
+    {
+      "id": "e18",
+      "from": "n21",
+      "to": "n22",
+      "distance_m": 3.309408728962474,
+      "cost_m": 3.5410673399898474,
+      "kind": "shared_road",
+      "source": "way/992236509",
+      "source_geometry_ref": "osm_way_992236509",
+      "accessible": null
+    },
+    {
+      "id": "e19",
+      "from": "n22",
+      "to": "n23",
+      "distance_m": 3.313868372711654,
+      "cost_m": 3.5458391588014697,
+      "kind": "shared_road",
+      "source": "way/992236509",
+      "source_geometry_ref": "osm_way_992236509",
+      "accessible": null
+    },
+    {
+      "id": "e20",
+      "from": "n23",
+      "to": "n24",
+      "distance_m": 3.5014002353437275,
+      "cost_m": 3.7464982518177887,
+      "kind": "shared_road",
+      "source": "way/992236509",
+      "source_geometry_ref": "osm_way_992236509",
+      "accessible": null
+    },
+    {
+      "id": "e21",
+      "from": "n24",
+      "to": "n25",
+      "distance_m": 3.513185390615025,
+      "cost_m": 3.7591083679580772,
+      "kind": "shared_road",
+      "source": "way/992236509",
+      "source_geometry_ref": "osm_way_992236509",
+      "accessible": null
+    },
+    {
+      "id": "e22",
+      "from": "n25",
+      "to": "n26",
+      "distance_m": 3.8622761687781404,
+      "cost_m": 4.1326355005926105,
+      "kind": "shared_road",
+      "source": "way/992236509",
+      "source_geometry_ref": "osm_way_992236509",
+      "accessible": null
+    },
+    {
+      "id": "e23",
+      "from": "n26",
+      "to": "n17",
+      "distance_m": 3.866103613951933,
+      "cost_m": 4.136730866928569,
+      "kind": "shared_road",
+      "source": "way/992236509",
+      "source_geometry_ref": "osm_way_992236509",
+      "accessible": null
+    },
+    {
+      "id": "e24",
+      "from": "n18",
+      "to": "n27",
+      "distance_m": 10.549136076881464,
+      "cost_m": 11.287575602263168,
+      "kind": "shared_road",
+      "source": "way/992236510",
+      "source_geometry_ref": "osm_way_992236510",
+      "accessible": null
+    },
+    {
+      "id": "e25",
+      "from": "n27",
+      "to": "n28",
+      "distance_m": 30.909639439660403,
+      "cost_m": 33.073314200436634,
+      "kind": "shared_road",
+      "source": "way/992236510",
+      "source_geometry_ref": "osm_way_992236510",
+      "accessible": null
+    },
+    {
+      "id": "e26",
+      "from": "n20",
+      "to": "n29",
+      "distance_m": 21.09369659047296,
+      "cost_m": 22.57025535180607,
+      "kind": "shared_road",
+      "source": "way/992236511",
+      "source_geometry_ref": "osm_way_992236511",
+      "accessible": null
+    },
+    {
+      "id": "e27",
+      "from": "n29",
+      "to": "n30",
+      "distance_m": 65.86913986492557,
+      "cost_m": 70.47997965547036,
+      "kind": "shared_road",
+      "source": "way/992236511",
+      "source_geometry_ref": "osm_way_992236511",
+      "accessible": null
+    },
+    {
+      "id": "e28",
+      "from": "n31",
+      "to": "n32",
+      "distance_m": 18.50608558927614,
+      "cost_m": 19.80151158052547,
+      "kind": "shared_road",
+      "source": "way/992236512",
+      "source_geometry_ref": "osm_way_992236512",
+      "accessible": null
+    },
+    {
+      "id": "e29",
+      "from": "n32",
+      "to": "n33",
+      "distance_m": 19.017142315896255,
+      "cost_m": 20.348342278008992,
+      "kind": "shared_road",
+      "source": "way/992236512",
+      "source_geometry_ref": "osm_way_992236512",
+      "accessible": null
+    },
+    {
+      "id": "e30",
+      "from": "n33",
+      "to": "n34",
+      "distance_m": 26.342078121995467,
+      "cost_m": 28.18602359053515,
+      "kind": "shared_road",
+      "source": "way/992236512",
+      "source_geometry_ref": "osm_way_992236512",
+      "accessible": null
+    },
+    {
+      "id": "e31",
+      "from": "n34",
+      "to": "n23",
+      "distance_m": 17.560443686033263,
+      "cost_m": 18.789674744055592,
+      "kind": "shared_road",
+      "source": "way/992236512",
+      "source_geometry_ref": "osm_way_992236512",
+      "accessible": null
+    },
+    {
+      "id": "e32",
+      "from": "n35",
+      "to": "n36",
+      "distance_m": 17.768227792683685,
+      "cost_m": 19.012003738171543,
+      "kind": "shared_road",
+      "source": "way/992236513",
+      "source_geometry_ref": "osm_way_992236513",
+      "accessible": null
+    },
+    {
+      "id": "e33",
+      "from": "n36",
+      "to": "n37",
+      "distance_m": 43.66943500088969,
+      "cost_m": 46.72629545095197,
+      "kind": "shared_road",
+      "source": "way/992236513",
+      "source_geometry_ref": "osm_way_992236513",
+      "accessible": null
+    },
+    {
+      "id": "e34",
+      "from": "n37",
+      "to": "n12",
+      "distance_m": 20.455528728472895,
+      "cost_m": 21.887415739466,
+      "kind": "shared_road",
+      "source": "way/992236513",
+      "source_geometry_ref": "osm_way_992236513",
+      "accessible": null
+    },
+    {
+      "id": "e35",
+      "from": "n12",
+      "to": "n38",
+      "distance_m": 14.966216094528276,
+      "cost_m": 16.013851221145256,
+      "kind": "shared_road",
+      "source": "way/992236513",
+      "source_geometry_ref": "osm_way_992236513",
+      "accessible": null
+    },
+    {
+      "id": "e36",
+      "from": "n38",
+      "to": "n39",
+      "distance_m": 17.15831837105797,
+      "cost_m": 18.35940065703203,
+      "kind": "shared_road",
+      "source": "way/992236513",
+      "source_geometry_ref": "osm_way_992236513",
+      "accessible": null
+    },
+    {
+      "id": "e37",
+      "from": "n39",
+      "to": "n25",
+      "distance_m": 6.3322042593347385,
+      "cost_m": 6.775458557488171,
+      "kind": "shared_road",
+      "source": "way/992236513",
+      "source_geometry_ref": "osm_way_992236513",
+      "accessible": null
+    },
+    {
+      "id": "e38",
+      "from": "n40",
+      "to": "n16",
+      "distance_m": 49.90294978261156,
+      "cost_m": 53.39615626739437,
+      "kind": "shared_road",
+      "source": "way/992236514",
+      "source_geometry_ref": "osm_way_992236514",
+      "accessible": null
+    },
+    {
+      "id": "e39",
+      "from": "n16",
+      "to": "n41",
+      "distance_m": 43.707719571842226,
+      "cost_m": 46.76725994187118,
+      "kind": "shared_road",
+      "source": "way/992236514",
+      "source_geometry_ref": "osm_way_992236514",
+      "accessible": null
+    },
+    {
+      "id": "e40",
+      "from": "n41",
+      "to": "n28",
+      "distance_m": 17.244391038485404,
+      "cost_m": 18.451498411179383,
+      "kind": "shared_road",
+      "source": "way/992236514",
+      "source_geometry_ref": "osm_way_992236514",
+      "accessible": null
+    },
+    {
+      "id": "e41",
+      "from": "n28",
+      "to": "n42",
+      "distance_m": 80.04780264097143,
+      "cost_m": 85.65114882583943,
+      "kind": "shared_road",
+      "source": "way/992236514",
+      "source_geometry_ref": "osm_way_992236514",
+      "accessible": null
+    },
+    {
+      "id": "e42",
+      "from": "n42",
+      "to": "n1",
+      "distance_m": 6.365547433763744,
+      "cost_m": 6.811135754127207,
+      "kind": "shared_road",
+      "source": "way/992236514",
+      "source_geometry_ref": "osm_way_992236514",
+      "accessible": null
+    },
+    {
+      "id": "e43",
+      "from": "n1",
+      "to": "n43",
+      "distance_m": 6.636704042589288,
+      "cost_m": 7.1012733255705385,
+      "kind": "shared_road",
+      "source": "way/992236514",
+      "source_geometry_ref": "osm_way_992236514",
+      "accessible": null
+    },
+    {
+      "id": "e44",
+      "from": "n43",
+      "to": "n30",
+      "distance_m": 40.5466247706269,
+      "cost_m": 43.38488850457078,
+      "kind": "shared_road",
+      "source": "way/992236514",
+      "source_geometry_ref": "osm_way_992236514",
+      "accessible": null
+    },
+    {
+      "id": "e45",
+      "from": "n30",
+      "to": "n44",
+      "distance_m": 68.14985722472547,
+      "cost_m": 72.92034723045626,
+      "kind": "shared_road",
+      "source": "way/992236514",
+      "source_geometry_ref": "osm_way_992236514",
+      "accessible": null
+    },
+    {
+      "id": "e46",
+      "from": "n44",
+      "to": "n45",
+      "distance_m": 6.793259639206336,
+      "cost_m": 7.268787813950779,
+      "kind": "shared_road",
+      "source": "way/992236514",
+      "source_geometry_ref": "osm_way_992236514",
+      "accessible": null
+    },
+    {
+      "id": "e47",
+      "from": "n45",
+      "to": "n46",
+      "distance_m": 7.739039399601532,
+      "cost_m": 8.28077215757364,
+      "kind": "shared_road",
+      "source": "way/992236514",
+      "source_geometry_ref": "osm_way_992236514",
+      "accessible": null
+    },
+    {
+      "id": "e48",
+      "from": "n46",
+      "to": "n47",
+      "distance_m": 10.556758805597006,
+      "cost_m": 11.295731921988798,
+      "kind": "shared_road",
+      "source": "way/992236514",
+      "source_geometry_ref": "osm_way_992236514",
+      "accessible": null
+    },
+    {
+      "id": "e49",
+      "from": "n47",
+      "to": "n48",
+      "distance_m": 29.17398512809266,
+      "cost_m": 31.21616408705915,
+      "kind": "shared_road",
+      "source": "way/992236514",
+      "source_geometry_ref": "osm_way_992236514",
+      "accessible": null
+    },
+    {
+      "id": "e50",
+      "from": "n48",
+      "to": "n49",
+      "distance_m": 28.82665034499173,
+      "cost_m": 30.84451586914115,
+      "kind": "shared_road",
+      "source": "way/992236514",
+      "source_geometry_ref": "osm_way_992236514",
+      "accessible": null
+    },
+    {
+      "id": "e51",
+      "from": "n49",
+      "to": "n31",
+      "distance_m": 21.337483101558448,
+      "cost_m": 22.83110691866754,
+      "kind": "shared_road",
+      "source": "way/992236514",
+      "source_geometry_ref": "osm_way_992236514",
+      "accessible": null
+    },
+    {
+      "id": "e52",
+      "from": "n31",
+      "to": "n50",
+      "distance_m": 5.11482963276782,
+      "cost_m": 5.472867707061567,
+      "kind": "shared_road",
+      "source": "way/992236514",
+      "source_geometry_ref": "osm_way_992236514",
+      "accessible": null
+    },
+    {
+      "id": "e53",
+      "from": "n50",
+      "to": "n51",
+      "distance_m": 14.316981366883276,
+      "cost_m": 15.319170062565107,
+      "kind": "shared_road",
+      "source": "way/992236514",
+      "source_geometry_ref": "osm_way_992236514",
+      "accessible": null
+    },
+    {
+      "id": "e54",
+      "from": "n51",
+      "to": "n52",
+      "distance_m": 19.95543895531992,
+      "cost_m": 21.352319682192316,
+      "kind": "shared_road",
+      "source": "way/992236514",
+      "source_geometry_ref": "osm_way_992236514",
+      "accessible": null
+    },
+    {
+      "id": "e55",
+      "from": "n52",
+      "to": "n35",
+      "distance_m": 27.656295115805875,
+      "cost_m": 29.59223577391229,
+      "kind": "shared_road",
+      "source": "way/992236514",
+      "source_geometry_ref": "osm_way_992236514",
+      "accessible": null
+    },
+    {
+      "id": "e56",
+      "from": "n35",
+      "to": "n8",
+      "distance_m": 22.448930796038702,
+      "cost_m": 24.020355951761413,
+      "kind": "shared_road",
+      "source": "way/992236514",
+      "source_geometry_ref": "osm_way_992236514",
+      "accessible": null
+    },
+    {
+      "id": "e57",
+      "from": "n8",
+      "to": "n53",
+      "distance_m": 11.133983636691307,
+      "cost_m": 11.913362491259699,
+      "kind": "shared_road",
+      "source": "way/992236514",
+      "source_geometry_ref": "osm_way_992236514",
+      "accessible": null
+    },
+    {
+      "id": "e58",
+      "from": "n53",
+      "to": "n54",
+      "distance_m": 7.38414968980104,
+      "cost_m": 7.901040168087113,
+      "kind": "shared_road",
+      "source": "way/992236514",
+      "source_geometry_ref": "osm_way_992236514",
+      "accessible": null
+    },
+    {
+      "id": "e59",
+      "from": "n54",
+      "to": "n55",
+      "distance_m": 11.278879506721454,
+      "cost_m": 12.068401072191957,
+      "kind": "shared_road",
+      "source": "way/992236514",
+      "source_geometry_ref": "osm_way_992236514",
+      "accessible": null
+    },
+    {
+      "id": "e60",
+      "from": "n56",
+      "to": "n57",
+      "distance_m": 23.98994245612783,
+      "cost_m": 25.669238428056783,
+      "kind": "shared_road",
+      "source": "way/992236515",
+      "source_geometry_ref": "osm_way_992236515",
+      "accessible": null
+    },
+    {
+      "id": "e61",
+      "from": "n57",
+      "to": "n58",
+      "distance_m": 53.57669582104643,
+      "cost_m": 57.327064528519685,
+      "kind": "shared_road",
+      "source": "way/992236515",
+      "source_geometry_ref": "osm_way_992236515",
+      "accessible": null
+    },
+    {
+      "id": "e62",
+      "from": "n58",
+      "to": "n59",
+      "distance_m": 15.682263382294467,
+      "cost_m": 16.78002181905508,
+      "kind": "shared_road",
+      "source": "way/992236515",
+      "source_geometry_ref": "osm_way_992236515",
+      "accessible": null
+    },
+    {
+      "id": "e63",
+      "from": "n59",
+      "to": "n9",
+      "distance_m": 6.493649118021656,
+      "cost_m": 6.948204556283172,
+      "kind": "shared_road",
+      "source": "way/992236515",
+      "source_geometry_ref": "osm_way_992236515",
+      "accessible": null
+    },
+    {
+      "id": "e64",
+      "from": "n9",
+      "to": "n13",
+      "distance_m": 26.462297619681493,
+      "cost_m": 28.3146584530592,
+      "kind": "shared_road",
+      "source": "way/992236515",
+      "source_geometry_ref": "osm_way_992236515",
+      "accessible": null
+    },
+    {
+      "id": "e65",
+      "from": "n60",
+      "to": "n61",
+      "distance_m": 9.504330628034195,
+      "cost_m": 10.169633771996589,
+      "kind": "shared_road",
+      "source": "way/992236516",
+      "source_geometry_ref": "osm_way_992236516",
+      "accessible": null
+    },
+    {
+      "id": "e66",
+      "from": "n61",
+      "to": "n62",
+      "distance_m": 11.866815907833693,
+      "cost_m": 12.697493021382053,
+      "kind": "shared_road",
+      "source": "way/992236516",
+      "source_geometry_ref": "osm_way_992236516",
+      "accessible": null
+    },
+    {
+      "id": "e67",
+      "from": "n62",
+      "to": "n63",
+      "distance_m": 11.186141277876217,
+      "cost_m": 11.969171167327554,
+      "kind": "shared_road",
+      "source": "way/992236516",
+      "source_geometry_ref": "osm_way_992236516",
+      "accessible": null
+    },
+    {
+      "id": "e68",
+      "from": "n63",
+      "to": "n64",
+      "distance_m": 10.639622567951166,
+      "cost_m": 11.384396147707749,
+      "kind": "shared_road",
+      "source": "way/992236516",
+      "source_geometry_ref": "osm_way_992236516",
+      "accessible": null
+    },
+    {
+      "id": "e69",
+      "from": "n64",
+      "to": "n65",
+      "distance_m": 3.279850553899301,
+      "cost_m": 3.509440092672252,
+      "kind": "shared_road",
+      "source": "way/992236516",
+      "source_geometry_ref": "osm_way_992236516",
+      "accessible": null
+    },
+    {
+      "id": "e70",
+      "from": "n66",
+      "to": "n67",
+      "distance_m": 135.86001562631643,
+      "cost_m": 145.3702167201586,
+      "kind": "shared_road",
+      "source": "way/992236517",
+      "source_geometry_ref": "osm_way_992236517",
+      "accessible": null
+    },
+    {
+      "id": "e71",
+      "from": "n67",
+      "to": "n68",
+      "distance_m": 26.241719997628365,
+      "cost_m": 28.07864039746235,
+      "kind": "shared_road",
+      "source": "way/992236517",
+      "source_geometry_ref": "osm_way_992236517",
+      "accessible": null
+    },
+    {
+      "id": "e72",
+      "from": "n68",
+      "to": "n64",
+      "distance_m": 5.640825511453306,
+      "cost_m": 6.035683297255038,
+      "kind": "shared_road",
+      "source": "way/992236517",
+      "source_geometry_ref": "osm_way_992236517",
+      "accessible": null
+    },
+    {
+      "id": "e73",
+      "from": "n69",
+      "to": "n70",
+      "distance_m": 2.5803976553596724,
+      "cost_m": 2.7610254912348497,
+      "kind": "shared_road",
+      "source": "way/992236518",
+      "source_geometry_ref": "osm_way_992236518",
+      "accessible": null
+    },
+    {
+      "id": "e74",
+      "from": "n70",
+      "to": "n71",
+      "distance_m": 2.5958738114782003,
+      "cost_m": 2.7775849782816744,
+      "kind": "shared_road",
+      "source": "way/992236518",
+      "source_geometry_ref": "osm_way_992236518",
+      "accessible": null
+    },
+    {
+      "id": "e75",
+      "from": "n71",
+      "to": "n72",
+      "distance_m": 3.3072793574566055,
+      "cost_m": 3.538788912478568,
+      "kind": "shared_road",
+      "source": "way/992236518",
+      "source_geometry_ref": "osm_way_992236518",
+      "accessible": null
+    },
+    {
+      "id": "e76",
+      "from": "n72",
+      "to": "n73",
+      "distance_m": 3.258691453485293,
+      "cost_m": 3.486799855229264,
+      "kind": "shared_road",
+      "source": "way/992236518",
+      "source_geometry_ref": "osm_way_992236518",
+      "accessible": null
+    },
+    {
+      "id": "e77",
+      "from": "n73",
+      "to": "n74",
+      "distance_m": 3.21922807350545,
+      "cost_m": 3.4445740386508317,
+      "kind": "shared_road",
+      "source": "way/992236518",
+      "source_geometry_ref": "osm_way_992236518",
+      "accessible": null
+    },
+    {
+      "id": "e78",
+      "from": "n74",
+      "to": "n75",
+      "distance_m": 3.2115315119362577,
+      "cost_m": 3.436338717771796,
+      "kind": "shared_road",
+      "source": "way/992236518",
+      "source_geometry_ref": "osm_way_992236518",
+      "accessible": null
+    },
+    {
+      "id": "e79",
+      "from": "n75",
+      "to": "n76",
+      "distance_m": 3.2453104968054864,
+      "cost_m": 3.472482231581871,
+      "kind": "shared_road",
+      "source": "way/992236518",
+      "source_geometry_ref": "osm_way_992236518",
+      "accessible": null
+    },
+    {
+      "id": "e80",
+      "from": "n76",
+      "to": "n77",
+      "distance_m": 3.274490523497283,
+      "cost_m": 3.503704860142093,
+      "kind": "shared_road",
+      "source": "way/992236518",
+      "source_geometry_ref": "osm_way_992236518",
+      "accessible": null
+    },
+    {
+      "id": "e81",
+      "from": "n77",
+      "to": "n78",
+      "distance_m": 2.1491211456603336,
+      "cost_m": 2.299559625856557,
+      "kind": "shared_road",
+      "source": "way/992236518",
+      "source_geometry_ref": "osm_way_992236518",
+      "accessible": null
+    },
+    {
+      "id": "e82",
+      "from": "n78",
+      "to": "n79",
+      "distance_m": 2.746489935889569,
+      "cost_m": 2.938744231401839,
+      "kind": "shared_road",
+      "source": "way/992236518",
+      "source_geometry_ref": "osm_way_992236518",
+      "accessible": null
+    },
+    {
+      "id": "e83",
+      "from": "n79",
+      "to": "n80",
+      "distance_m": 2.743921595638141,
+      "cost_m": 2.935996107332811,
+      "kind": "shared_road",
+      "source": "way/992236518",
+      "source_geometry_ref": "osm_way_992236518",
+      "accessible": null
+    },
+    {
+      "id": "e84",
+      "from": "n80",
+      "to": "n81",
+      "distance_m": 2.7060343186003313,
+      "cost_m": 2.8954567209023545,
+      "kind": "shared_road",
+      "source": "way/992236518",
+      "source_geometry_ref": "osm_way_992236518",
+      "accessible": null
+    },
+    {
+      "id": "e85",
+      "from": "n81",
+      "to": "n82",
+      "distance_m": 1.5662730747175932,
+      "cost_m": 1.6759121899478249,
+      "kind": "shared_road",
+      "source": "way/992236518",
+      "source_geometry_ref": "osm_way_992236518",
+      "accessible": null
+    },
+    {
+      "id": "e86",
+      "from": "n82",
+      "to": "n83",
+      "distance_m": 2.580582974776678,
+      "cost_m": 2.761223783011046,
+      "kind": "shared_road",
+      "source": "way/992236518",
+      "source_geometry_ref": "osm_way_992236518",
+      "accessible": null
+    },
+    {
+      "id": "e87",
+      "from": "n83",
+      "to": "n84",
+      "distance_m": 2.566909344457352,
+      "cost_m": 2.7465929985693665,
+      "kind": "shared_road",
+      "source": "way/992236518",
+      "source_geometry_ref": "osm_way_992236518",
+      "accessible": null
+    },
+    {
+      "id": "e88",
+      "from": "n84",
+      "to": "n85",
+      "distance_m": 1.6102566764434185,
+      "cost_m": 1.722974643794458,
+      "kind": "shared_road",
+      "source": "way/992236518",
+      "source_geometry_ref": "osm_way_992236518",
+      "accessible": null
+    },
+    {
+      "id": "e89",
+      "from": "n85",
+      "to": "n65",
+      "distance_m": 2.069354280372208,
+      "cost_m": 2.2142090799982626,
+      "kind": "shared_road",
+      "source": "way/992236518",
+      "source_geometry_ref": "osm_way_992236518",
+      "accessible": null
+    },
+    {
+      "id": "e90",
+      "from": "n65",
+      "to": "n86",
+      "distance_m": 2.5132998282391417,
+      "cost_m": 2.689230816215882,
+      "kind": "shared_road",
+      "source": "way/992236518",
+      "source_geometry_ref": "osm_way_992236518",
+      "accessible": null
+    },
+    {
+      "id": "e91",
+      "from": "n86",
+      "to": "n87",
+      "distance_m": 2.5549982620779046,
+      "cost_m": 2.733848140423358,
+      "kind": "shared_road",
+      "source": "way/992236518",
+      "source_geometry_ref": "osm_way_992236518",
+      "accessible": null
+    },
+    {
+      "id": "e92",
+      "from": "n87",
+      "to": "n69",
+      "distance_m": 2.579618936559979,
+      "cost_m": 2.7601922621191775,
+      "kind": "shared_road",
+      "source": "way/992236518",
+      "source_geometry_ref": "osm_way_992236518",
+      "accessible": null
+    },
+    {
+      "id": "e93",
+      "from": "n88",
+      "to": "n89",
+      "distance_m": 2.488963533065973,
+      "cost_m": 2.6631909803805915,
+      "kind": "shared_road",
+      "source": "way/992236519",
+      "source_geometry_ref": "osm_way_992236519",
+      "accessible": null
+    },
+    {
+      "id": "e94",
+      "from": "n89",
+      "to": "n90",
+      "distance_m": 7.6802697045290715,
+      "cost_m": 8.217888583846108,
+      "kind": "shared_road",
+      "source": "way/992236519",
+      "source_geometry_ref": "osm_way_992236519",
+      "accessible": null
+    },
+    {
+      "id": "e95",
+      "from": "n76",
+      "to": "n91",
+      "distance_m": 23.064768446539432,
+      "cost_m": 24.679302237797195,
+      "kind": "shared_road",
+      "source": "way/992236520",
+      "source_geometry_ref": "osm_way_992236520",
+      "accessible": null
+    },
+    {
+      "id": "e96",
+      "from": "n91",
+      "to": "n92",
+      "distance_m": 21.373862894817783,
+      "cost_m": 22.87003329745503,
+      "kind": "shared_road",
+      "source": "way/992236520",
+      "source_geometry_ref": "osm_way_992236520",
+      "accessible": null
+    },
+    {
+      "id": "e97",
+      "from": "n92",
+      "to": "n93",
+      "distance_m": 12.541665012255821,
+      "cost_m": 13.419581563113729,
+      "kind": "shared_road",
+      "source": "way/992236520",
+      "source_geometry_ref": "osm_way_992236520",
+      "accessible": null
+    },
+    {
+      "id": "e98",
+      "from": "n93",
+      "to": "n94",
+      "distance_m": 8.662836978319701,
+      "cost_m": 9.269235566802081,
+      "kind": "shared_road",
+      "source": "way/992236520",
+      "source_geometry_ref": "osm_way_992236520",
+      "accessible": null
+    },
+    {
+      "id": "e99",
+      "from": "n94",
+      "to": "n90",
+      "distance_m": 48.98775125824252,
+      "cost_m": 52.416893846319496,
+      "kind": "shared_road",
+      "source": "way/992236520",
+      "source_geometry_ref": "osm_way_992236520",
+      "accessible": null
+    },
+    {
+      "id": "e100",
+      "from": "n90",
+      "to": "n95",
+      "distance_m": 22.991515816978218,
+      "cost_m": 24.600921924166695,
+      "kind": "shared_road",
+      "source": "way/992236520",
+      "source_geometry_ref": "osm_way_992236520",
+      "accessible": null
+    },
+    {
+      "id": "e101",
+      "from": "n95",
+      "to": "n96",
+      "distance_m": 22.690492078731502,
+      "cost_m": 24.27882652424271,
+      "kind": "shared_road",
+      "source": "way/992236520",
+      "source_geometry_ref": "osm_way_992236520",
+      "accessible": null
+    },
+    {
+      "id": "e102",
+      "from": "n96",
+      "to": "n97",
+      "distance_m": 26.146500784373217,
+      "cost_m": 27.976755839279342,
+      "kind": "shared_road",
+      "source": "way/992236520",
+      "source_geometry_ref": "osm_way_992236520",
+      "accessible": null
+    },
+    {
+      "id": "e103",
+      "from": "n97",
+      "to": "n60",
+      "distance_m": 12.140398454414127,
+      "cost_m": 12.990226346223116,
+      "kind": "shared_road",
+      "source": "way/992236520",
+      "source_geometry_ref": "osm_way_992236520",
+      "accessible": null
+    },
+    {
+      "id": "e104",
+      "from": "n60",
+      "to": "n98",
+      "distance_m": 4.01127468143853,
+      "cost_m": 4.292063909139227,
+      "kind": "shared_road",
+      "source": "way/992236520",
+      "source_geometry_ref": "osm_way_992236520",
+      "accessible": null
+    },
+    {
+      "id": "e105",
+      "from": "n98",
+      "to": "n99",
+      "distance_m": 15.663179178072221,
+      "cost_m": 16.75960172053728,
+      "kind": "shared_road",
+      "source": "way/992236520",
+      "source_geometry_ref": "osm_way_992236520",
+      "accessible": null
+    },
+    {
+      "id": "e106",
+      "from": "n99",
+      "to": "n67",
+      "distance_m": 29.363840169680444,
+      "cost_m": 31.419308981558075,
+      "kind": "shared_road",
+      "source": "way/992236520",
+      "source_geometry_ref": "osm_way_992236520",
+      "accessible": null
+    },
+    {
+      "id": "e107",
+      "from": "n67",
+      "to": "n71",
+      "distance_m": 31.858912298721346,
+      "cost_m": 34.089036159631846,
+      "kind": "shared_road",
+      "source": "way/992236520",
+      "source_geometry_ref": "osm_way_992236520",
+      "accessible": null
+    },
+    {
+      "id": "e108",
+      "from": "n81",
+      "to": "n100",
+      "distance_m": 5.271618800944048,
+      "cost_m": 5.6406321170101315,
+      "kind": "shared_road",
+      "source": "way/992236521",
+      "source_geometry_ref": "osm_way_992236521",
+      "accessible": null
+    },
+    {
+      "id": "e109",
+      "from": "n100",
+      "to": "n101",
+      "distance_m": 9.896476265344562,
+      "cost_m": 10.589229603918682,
+      "kind": "shared_road",
+      "source": "way/992236521",
+      "source_geometry_ref": "osm_way_992236521",
+      "accessible": null
+    },
+    {
+      "id": "e110",
+      "from": "n101",
+      "to": "n102",
+      "distance_m": 17.860360883106402,
+      "cost_m": 19.11058614492385,
+      "kind": "shared_road",
+      "source": "way/992236521",
+      "source_geometry_ref": "osm_way_992236521",
+      "accessible": null
+    },
+    {
+      "id": "e111",
+      "from": "n102",
+      "to": "n103",
+      "distance_m": 10.27232363356381,
+      "cost_m": 10.991386287913278,
+      "kind": "shared_road",
+      "source": "way/992236521",
+      "source_geometry_ref": "osm_way_992236521",
+      "accessible": null
+    },
+    {
+      "id": "e112",
+      "from": "n103",
+      "to": "n97",
+      "distance_m": 8.283455650777134,
+      "cost_m": 8.863297546331534,
+      "kind": "shared_road",
+      "source": "way/992236521",
+      "source_geometry_ref": "osm_way_992236521",
+      "accessible": null
+    },
+    {
+      "id": "e113",
+      "from": "n104",
+      "to": "n105",
+      "distance_m": 14.83179823871921,
+      "cost_m": 15.870024115429556,
+      "kind": "shared_road",
+      "source": "way/992236522",
+      "source_geometry_ref": "osm_way_992236522",
+      "accessible": null
+    },
+    {
+      "id": "e114",
+      "from": "n104",
+      "to": "n106",
+      "distance_m": 12.458741422082575,
+      "cost_m": 13.330853321628355,
+      "kind": "shared_road",
+      "source": "way/992236523",
+      "source_geometry_ref": "osm_way_992236523",
+      "accessible": null
+    },
+    {
+      "id": "e115",
+      "from": "n106",
+      "to": "n107",
+      "distance_m": 3.2385990837298078,
+      "cost_m": 3.4653010195908944,
+      "kind": "shared_road",
+      "source": "way/992236523",
+      "source_geometry_ref": "osm_way_992236523",
+      "accessible": null
+    },
+    {
+      "id": "e116",
+      "from": "n107",
+      "to": "n55",
+      "distance_m": 7.817720713475446,
+      "cost_m": 8.364961163418728,
+      "kind": "shared_road",
+      "source": "way/992236523",
+      "source_geometry_ref": "osm_way_992236523",
+      "accessible": null
+    },
+    {
+      "id": "e117",
+      "from": "n55",
+      "to": "n108",
+      "distance_m": 7.3819509153493135,
+      "cost_m": 7.898687479423766,
+      "kind": "shared_road",
+      "source": "way/992236523",
+      "source_geometry_ref": "osm_way_992236523",
+      "accessible": null
+    },
+    {
+      "id": "e118",
+      "from": "n108",
+      "to": "n66",
+      "distance_m": 4.335199384288327,
+      "cost_m": 4.63866334118851,
+      "kind": "shared_road",
+      "source": "way/992236523",
+      "source_geometry_ref": "osm_way_992236523",
+      "accessible": null
+    },
+    {
+      "id": "e119",
+      "from": "n66",
+      "to": "n5",
+      "distance_m": 5.679195805298556,
+      "cost_m": 6.076739511669455,
+      "kind": "shared_road",
+      "source": "way/992236523",
+      "source_geometry_ref": "osm_way_992236523",
+      "accessible": null
+    },
+    {
+      "id": "e120",
+      "from": "n5",
+      "to": "n56",
+      "distance_m": 3.0132784966868336,
+      "cost_m": 3.224207991454912,
+      "kind": "shared_road",
+      "source": "way/992236523",
+      "source_geometry_ref": "osm_way_992236523",
+      "accessible": null
+    },
+    {
+      "id": "e121",
+      "from": "n56",
+      "to": "n109",
+      "distance_m": 29.204975790103997,
+      "cost_m": 31.24932409541128,
+      "kind": "shared_road",
+      "source": "way/992236523",
+      "source_geometry_ref": "osm_way_992236523",
+      "accessible": null
+    },
+    {
+      "id": "e122",
+      "from": "n109",
+      "to": "n110",
+      "distance_m": 57.79645951939336,
+      "cost_m": 61.8422116857509,
+      "kind": "shared_road",
+      "source": "way/992236523",
+      "source_geometry_ref": "osm_way_992236523",
+      "accessible": null
+    },
+    {
+      "id": "e123",
+      "from": "n110",
+      "to": "n40",
+      "distance_m": 60.563196515913354,
+      "cost_m": 64.8026202720273,
+      "kind": "shared_road",
+      "source": "way/992236523",
+      "source_geometry_ref": "osm_way_992236523",
+      "accessible": null
+    },
+    {
+      "id": "e124",
+      "from": "n40",
+      "to": "n111",
+      "distance_m": 96.18705916184607,
+      "cost_m": 102.9201533031753,
+      "kind": "shared_road",
+      "source": "way/992236523",
+      "source_geometry_ref": "osm_way_992236523",
+      "accessible": null
+    },
+    {
+      "id": "e125",
+      "from": "n111",
+      "to": "n112",
+      "distance_m": 87.64665256756452,
+      "cost_m": 93.78191824729404,
+      "kind": "shared_road",
+      "source": "way/992236523",
+      "source_geometry_ref": "osm_way_992236523",
+      "accessible": null
+    },
+    {
+      "id": "e126",
+      "from": "n113",
+      "to": "n114",
+      "distance_m": 11.02107304618274,
+      "cost_m": 11.792548159415533,
+      "kind": "shared_road",
+      "source": "way/992236524",
+      "source_geometry_ref": "osm_way_992236524",
+      "accessible": null
+    },
+    {
+      "id": "e127",
+      "from": "n114",
+      "to": "n104",
+      "distance_m": 9.221895731618087,
+      "cost_m": 9.867428432831353,
+      "kind": "shared_road",
+      "source": "way/992236524",
+      "source_geometry_ref": "osm_way_992236524",
+      "accessible": null
+    }
+  ],
+  "access_points": {},
+  "stats": {
+    "source_shared_road_count": 21,
+    "local_walkway_count": 0,
+    "access_point_count": 0,
+    "node_count": 114,
+    "edge_count": 127,
+    "connected_component_count": 1,
+    "disconnected_components": [],
+    "total_network_length_m": 2233.752557135302,
+    "destinations_with_valid_access": [],
+    "destinations_without_valid_access": [
+      "knowledge_field_1",
+      "knowledge_field_2",
+      "p_c_school_of_business",
+      "unilus_library",
+      "cafeteria_school_of_medicine",
+      "the_growcery",
+      "unilus_hospital",
+      "hostel_school_of_medicine_side",
+      "unilus_hostel_school_of_medicine_side",
+      "running_track_athletics",
+      "sports_pitch_soccer",
+      "unilus_gym",
+      "unilus_swimming_pool",
+      "biochemistry_lab",
+      "foundation_labs",
+      "life_science_labs",
+      "basic_science_labs",
+      "school_of_business_hostels",
+      "unilus_basketball_court",
+      "unilus_volleyball_court",
+      "unilus_tennis_court",
+      "unilus_auditorium",
+      "unilus_chapel"
+    ]
+  },
+  "validation": {
+    "errors": [],
+    "warnings": []
+  }
+}

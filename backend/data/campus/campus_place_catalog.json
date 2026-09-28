@@ -1,0 +1,340 @@
+{
+  "places": [
+    {
+      "id": "knowledge_field_1",
+      "osm_ref": "way/1395302595",
+      "name": "Knowledge Field 1",
+      "category": "academic",
+      "description": "Academic building",
+      "search_aliases": [
+        "academic block",
+        "classroom",
+        "faculty",
+        "knowledge field",
+        "knowledge field 1",
+        "lecture",
+        "lecture hall",
+        "lecture theatre",
+        "school"
+      ]
+    },
+    {
+      "id": "knowledge_field_2",
+      "osm_ref": "way/1395302605",
+      "name": "Knowledge Field 2",
+      "category": "academic",
+      "description": "Academic building",
+      "search_aliases": [
+        "academic block",
+        "classroom",
+        "faculty",
+        "knowledge field",
+        "knowledge field 2",
+        "lecture",
+        "lecture hall",
+        "lecture theatre",
+        "school"
+      ]
+    },
+    {
+      "id": "p_c_school_of_business",
+      "osm_ref": "way/1558099005",
+      "name": "P.C. School of Business",
+      "category": "academic",
+      "description": "Academic building",
+      "search_aliases": [
+        "academic block",
+        "business school",
+        "classroom",
+        "faculty",
+        "lecture",
+        "p.c. school of business",
+        "pc school of business",
+        "school",
+        "school of business"
+      ]
+    },
+    {
+      "id": "unilus_library",
+      "osm_ref": "way/1395302603",
+      "name": "Unilus Library",
+      "category": "facility",
+      "description": "University library",
+      "search_aliases": [
+        "books",
+        "facility",
+        "library",
+        "reading",
+        "reading room",
+        "study",
+        "study area",
+        "unilus library"
+      ]
+    },
+    {
+      "id": "cafeteria_school_of_medicine",
+      "osm_ref": "relation/19253188",
+      "name": "Cafeteria School of Medicine",
+      "category": "food",
+      "description": "Cafeteria / food outlet",
+      "search_aliases": [
+        "cafe",
+        "cafeteria",
+        "cafeteria school of medicine",
+        "canteen",
+        "dining",
+        "eat",
+        "food",
+        "lunch"
+      ]
+    },
+    {
+      "id": "the_growcery",
+      "osm_ref": "way/1558097845",
+      "name": "The Growcery",
+      "category": "food",
+      "description": "Convenience store / shop",
+      "search_aliases": [
+        "cafeteria",
+        "canteen",
+        "convenience",
+        "eat",
+        "food",
+        "grocery",
+        "growcery",
+        "shop",
+        "snacks",
+        "store",
+        "the growcery"
+      ]
+    },
+    {
+      "id": "unilus_hospital",
+      "osm_ref": "way/1394080452",
+      "name": "Unilus Hospital",
+      "category": "healthcare",
+      "description": "Campus healthcare facility",
+      "search_aliases": [
+        "clinic",
+        "doctor",
+        "health centre",
+        "healthcare",
+        "hospital",
+        "infirmary",
+        "medical",
+        "nurse",
+        "sick bay",
+        "unilus hospital"
+      ]
+    },
+    {
+      "id": "hostel_school_of_medicine_side",
+      "osm_ref": "way/1384237914",
+      "name": "Lubambe Hostel",
+      "category": "hostel",
+      "description": "Student hostel",
+      "search_aliases": [
+        "accommodation",
+        "boarding",
+        "dorm",
+        "dormitory",
+        "hostel",
+        "hostel school of medicine side",
+        "residence",
+        "lubambe hostel"
+      ]
+    },
+    {
+      "id": "unilus_hostel_school_of_medicine_side",
+      "osm_ref": "way/1395302600",
+      "name": "Chipembele Hostel",
+      "category": "hostel",
+      "description": "Student hostel",
+      "search_aliases": [
+        "accommodation",
+        "boarding",
+        "dorm",
+        "dormitory",
+        "hostel",
+        "residence",
+        "unilus hostel school of medicine side",
+        "chipembele hostel"
+      ]
+    },
+    {
+      "id": "running_track_athletics",
+      "osm_ref": "relation/13319425",
+      "name": "Running track (athletics)",
+      "category": "sports",
+      "description": "Running track (athletics)",
+      "search_aliases": [
+        "athletics",
+        "fitness",
+        "recreation",
+        "running",
+        "running track",
+        "running track (athletics)",
+        "sports",
+        "track"
+      ]
+    },
+    {
+      "id": "sports_pitch_soccer",
+      "osm_ref": "relation/13319424",
+      "name": "Sports pitch (soccer)",
+      "category": "sports",
+      "description": "Sports pitch (soccer)",
+      "search_aliases": [
+        "field",
+        "fitness",
+        "football",
+        "pitch",
+        "recreation",
+        "soccer",
+        "sports",
+        "sports pitch (soccer)"
+      ]
+    },
+    {
+      "id": "unilus_gym",
+      "osm_ref": "way/1562747667",
+      "name": "Unilus Gym",
+      "category": "sports",
+      "description": "Gym / fitness centre",
+      "search_aliases": [
+        "fitness",
+        "fitness centre",
+        "gym",
+        "recreation",
+        "sports",
+        "unilus gym",
+        "workout"
+      ]
+    },
+    {
+      "id": "unilus_swimming_pool",
+      "osm_ref": "way/1558095380",
+      "name": "Unilus Swimming Pool",
+      "category": "sports",
+      "description": "Swimming pool",
+      "search_aliases": [
+        "fitness",
+        "pool",
+        "recreation",
+        "sports",
+        "swim",
+        "swimming",
+        "swimming pool",
+        "unilus swimming pool"
+      ]
+    },
+    {
+      "id": "biochemistry_lab",
+      "osm_ref": "way/1395333406",
+      "name": "Biochemistry Lab",
+      "category": "academic",
+      "description": "Biochemistry laboratory",
+      "search_aliases": [
+        "biochemistry lab"
+      ]
+    },
+    {
+      "id": "foundation_labs",
+      "osm_ref": "way/1395333408",
+      "name": "Foundation Labs",
+      "category": "academic",
+      "description": "Foundation laboratories",
+      "search_aliases": [
+        "foundation labs",
+        "foundation lab"
+      ]
+    },
+    {
+      "id": "life_science_labs",
+      "osm_ref": "way/1561928487",
+      "name": "Life Science Labs",
+      "category": "academic",
+      "description": "Life science laboratories",
+      "search_aliases": [
+        "life science labs",
+        "life science lab"
+      ]
+    },
+    {
+      "id": "basic_science_labs",
+      "osm_ref": "way/1562747669",
+      "name": "Basic Science Labs",
+      "category": "academic",
+      "description": "Basic science laboratories",
+      "search_aliases": [
+        "basic science labs",
+        "basic science lab"
+      ]
+    },
+    {
+      "id": "school_of_business_hostels",
+      "osm_ref": "way/1561928488",
+      "name": "School of Business Hostels",
+      "category": "hostel",
+      "description": "Student hostels",
+      "search_aliases": [
+        "school of business hostels"
+      ]
+    },
+    {
+      "id": "unilus_basketball_court",
+      "osm_ref": "way/1561928486",
+      "name": "Unilus Basketball Court",
+      "category": "sports",
+      "description": "Basketball court",
+      "search_aliases": [
+        "unilus basketball court",
+        "basketball court"
+      ]
+    },
+    {
+      "id": "unilus_volleyball_court",
+      "osm_ref": "way/1562747665",
+      "name": "Unilus Volleyball Court",
+      "category": "sports",
+      "description": "Volleyball court",
+      "search_aliases": [
+        "unilus volleyball court",
+        "volleyball court"
+      ]
+    },
+    {
+      "id": "unilus_tennis_court",
+      "osm_ref": "way/1562747666",
+      "name": "Unilus Tennis Court",
+      "category": "sports",
+      "description": "Tennis court",
+      "search_aliases": [
+        "unilus tennis court",
+        "tennis court"
+      ]
+    },
+    {
+      "id": "unilus_auditorium",
+      "osm_ref": "node/14222243205",
+      "name": "Auditorium",
+      "category": "facility",
+      "description": "Campus auditorium",
+      "search_aliases": [
+        "auditorium",
+        "sports hall"
+      ]
+    },
+    {
+      "id": "unilus_chapel",
+      "osm_ref": "node/14222243206",
+      "name": "Chapel",
+      "category": "facility",
+      "description": "Campus chapel",
+      "search_aliases": [
+        "chapel",
+        "place of worship"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "source_type": "onsite_photo",
+  "observed_date": "2026-09-27",
+  "place_id": "unilus_gym",
+  "place_ids": [
+    "unilus_gym",
+    "unilus_swimming_pool",
+    "sports_pitch_soccer",
+    "unilus_tennis_court",
+    "unilus_basketball_court",
+    "unilus_volleyball_court",
+    "running_track_athletics"
+  ],
+  "operational_information_may_change": true,
+  "source_image_filenames": [
+    "WhatsApp Image 2026-09-27 at 3.03.11 PM (2).jpeg"
+  ]
+}

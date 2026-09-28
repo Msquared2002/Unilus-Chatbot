@@ -1,0 +1,1103 @@
+/* Any element with the hidden attribute must stay hidden — author rules
+   elsewhere (e.g. display:flex on a panel) otherwise silently beat the
+   browser's built-in [hidden]{display:none}, which is what caused the
+   settings drawer/panel to render even while "hidden" was set. */
+[hidden]{ display:none !important; }
+
+/* NOTE (integration): the original standalone widget demo applied a global
+   `*{box-sizing:border-box}` and `body{margin:0; background:...}` reset here,
+   plus `.host-page`/`.host-nav`/`.host-hero` rules for its own mock host
+   page. Those are dropped when embedding into a real site so the widget
+   doesn't override the host page's existing box-sizing, margin, or
+   background. Everything below is scoped to the widget's own elements. */
+
+/* ================= widget root ================= */
+.unilus-widget{
+  position:fixed;
+  right:24px;
+  bottom:24px;
+  z-index:9999;
+  font-family:-apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+/* ----- launcher bubble -----
+   NOTE (integration): renamed from the original `.launcher` to
+   `.uw-launcher` (Unilus Widget). The host site's own css/shared.css
+   already defines a `.launcher` class (min-height:100vh, gradient
+   background) for its demo-hub page layout — reusing that name here
+   stretched the chat bubble into a full-height bar. This class is
+   local to the widget's own button and doesn't touch the host site's
+   `.launcher` rules at all now. */
+.uw-launcher{
+  position:relative;
+  width:64px; height:64px;
+  border-radius:50%;
+  background:#0d5c3d;
+  border:none;
+  box-shadow:0 8px 24px rgba(13,92,61,.35);
+  cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:transform .18s ease, opacity .18s ease;
+  animation:launcher-in .4s ease;
+}
+.uw-launcher:hover{ transform:scale(1.06); }
+.uw-launcher.is-hidden{ opacity:0; pointer-events:none; transition:opacity .12s ease; }
+.launcher-dot{
+  position:absolute; top:2px; right:2px;
+  width:13px; height:13px; border-radius:50%;
+  background:#3fce8f; border:2px solid #fff;
+}
+@keyframes launcher-in{
+  from{ transform:scale(.4); opacity:0; }
+  to{ transform:scale(1); opacity:1; }
+}
+
+/* ----- avatar slots: fixed footprint, avatar wrapper scaled+centered inside ----- */
+.avatar-slot{ position:relative; flex-shrink:0; }
+.avatar-slot .uni-avatar-wrapper{
+  position:absolute; top:50%; left:50%;
+  transform-origin:center;
+}
+.avatar-slot--bubble{ width:64px; height:64px; }
+.avatar-slot--bubble .uni-avatar-wrapper{ transform:translate(-50%,-58%) scale(.42); }
+
+.avatar-slot--hero{ width:150px; height:170px; margin:0 auto; }
+.avatar-slot--hero .uni-avatar-wrapper{ transform:translate(-50%,-50%) scale(1); transition:transform .3s ease; }
+
+.avatar-slot--inline{ width:44px; height:56px; }
+.avatar-slot--inline .uni-avatar-wrapper{ transform:translate(-50%,-45%) scale(.4); }
+.avatar-slot--inline:empty{ width:0; }
+
+.avatar-slot--settings{ width:110px; height:130px; margin:8px auto 4px; }
+.avatar-slot--settings .uni-avatar-wrapper{ transform:translate(-50%,-50%) scale(.72); }
+
+.avatar-slot--icon{ width:32px; height:32px; }
+.avatar-slot--icon .uni-avatar-wrapper{ transform:translate(-50%,-58%) scale(.2); }
+
+/* ----- chat panel -----
+   No CSS open/close animation here on purpose: widget.js drives the
+   bubble-to-panel morph directly via inline transforms (it needs the
+   bubble's live on-screen position, which CSS alone can't reach), then
+   clears its inline styles once the transition finishes.
+
+   Theme colors live on CSS custom properties scoped to the panel, so
+   .dark-mode below can swap the whole widget's palette in one place. */
+.chat-panel{
+  --bg:#fff;
+  --bg-raised:#fafcfb;
+  --bg-hover:#eef5f1;
+  --bg-accent-soft:#eaf5ef;
+  --bg-swatch-icon:#dde8e1;
+  --border:#eef1ef;
+  --border-strong:#dbe8e0;
+  --border-input:#dfe6e2;
+  --text:#12271c;
+  --text-muted:#4a5850;
+  --text-dim:#5b6b62;
+  --text-faint:#9caea3;
+  --brand:#0d5c3d;
+  --brand-accent:#3fce8f;
+  --shadow:rgba(0,0,0,.2);
+
+  position:absolute;
+  right:0; bottom:80px;
+  width:400px;
+  height:640px;
+  max-height:calc(100vh - 120px);
+  background:var(--bg);
+  border-radius:20px;
+  box-shadow:0 20px 60px var(--shadow);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  transition:background .2s ease, box-shadow .2s ease;
+}
+
+/* ----- dark mode palette (toggled from settings) ----- */
+.chat-panel.dark-mode{
+  --bg:#15201b;
+  --bg-raised:#1c2922;
+  --bg-hover:#233229;
+  --bg-accent-soft:#1e3a2c;
+  --bg-swatch-icon:#26362c;
+  --border:#26362c;
+  --border-strong:#2f4436;
+  --border-input:#2f4436;
+  --text:#eef3f0;
+  --text-muted:#b9c6bf;
+  --text-dim:#a3b3ab;
+  --text-faint:#6f8479;
+  --brand:#3fce8f;
+  --brand-accent:#3fce8f;
+  --shadow:rgba(0,0,0,.5);
+}
+.chat-panel.dark-mode .send-btn,
+.chat-panel.dark-mode .message-row.user .bubble{ color:#0a1a12; }
+
+/* ----- expanded desktop mode: true fullscreen, like a full-page chat ----- */
+.chat-panel.expanded{
+  position:fixed;
+  inset:0;
+  right:auto; bottom:auto;
+  width:100%; height:100%;
+  max-height:none;
+  border-radius:0;
+  transition:none;
+}
+.chat-panel.expanded .avatar-slot--hero{ width:190px; height:210px; }
+.chat-panel.expanded .avatar-slot--hero .uni-avatar-wrapper{ transform:translate(-50%,-50%) scale(1.25); }
+.chat-panel.expanded #view-chat{ max-width:720px; margin:0 auto; width:100%; height:100%; display:flex; flex-direction:column; }
+.chat-panel.expanded #view-settings-menu,
+.chat-panel.expanded #view-outfits,
+.chat-panel.expanded #view-glasses{ max-width:520px; margin:0 auto; width:100%; }
+.chat-panel.expanded #view-map{ max-width:none; margin:0 auto; width:100%; height:100%; }
+.chat-panel.expanded .panel-header{ padding:16px 24px; }
+.chat-panel.expanded .input-area{ padding:14px 24px 24px; }
+
+/* ----- header ----- */
+.panel-header{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 16px;
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+  transition:border-color .2s ease;
+}
+.panel-header-left{ display:flex; align-items:center; gap:6px; min-width:0; }
+.panel-title{ font-size:14px; font-weight:600; margin:0; color:var(--text); }
+.panel-subtitle{ font-size:12px; margin:2px 0 0; color:var(--brand-accent); }
+.panel-header-actions{ display:flex; gap:4px; flex-shrink:0; }
+.icon-btn{
+  width:32px; height:32px;
+  border-radius:8px;
+  border:none; background:transparent;
+  color:var(--text-dim);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer;
+  transition:background .15s ease, color .15s ease;
+  flex-shrink:0;
+}
+.icon-btn:hover{ background:var(--bg-hover); color:var(--brand); }
+.icon-btn.is-active{ background:var(--bg-accent-soft); color:var(--brand); }
+
+/* ----- panel body / views -----
+   Only one .panel-view is un-hidden at a time; the [hidden] rule above is
+   what actually enforces that now. */
+.panel-body{ flex:1; min-height:0; display:flex; flex-direction:column; }
+.panel-view{ flex:1; min-height:0; display:flex; flex-direction:column; animation:view-in .18s ease; }
+@keyframes view-in{
+  from{ opacity:0; transform:translateX(8px); }
+  to{ opacity:1; transform:translateX(0); }
+}
+
+/* ----- hero area (empty-state welcome, chat view only) ----- */
+.hero-area{
+  text-align:center;
+  padding:20px 20px 8px;
+  flex-shrink:0;
+  transition:opacity .2s ease, max-height .3s ease, padding .3s ease;
+}
+.hero-area.is-collapsed{
+  max-height:0; padding:0 20px; opacity:0; overflow:hidden;
+  pointer-events:none;
+}
+.hero-title{ font-size:17px; margin:8px 0 2px; color:var(--brand); }
+.hero-subtitle{ font-size:13px; margin:0; color:var(--text-dim); }
+
+/* ----- chat box ----- */
+.chat-box{
+  flex:1;
+  overflow-y:auto;
+  padding:8px 16px;
+  display:flex; flex-direction:column;
+}
+
+.message-row{
+  display:flex;
+  align-items:flex-end;
+  gap:6px;
+  margin-bottom:10px;
+  animation:msg-in .22s ease;
+}
+.message-row.user{ justify-content:flex-end; }
+@keyframes msg-in{
+  from{ transform:translateY(6px); opacity:0; }
+  to{ transform:translateY(0); opacity:1; }
+}
+
+.bubble{
+  padding:11px 14px;
+  border-radius:16px;
+  max-width:74%;
+  min-width:0;
+  font-size:14px;
+  line-height:1.45;
+  overflow-wrap:break-word;
+}
+
+/* Table-heavy bot messages need more horizontal room than normal chat text.
+   JS adds .bubble--table only when Markdown actually contains a table, so
+   ordinary messages keep the compact 74% chat-bubble width. */
+.message-row.bot .bubble.bubble--table{
+  width:calc(100% - 50px);
+  max-width:calc(100% - 50px);
+  padding:11px 12px;
+}
+
+/* In expanded desktop mode, widen the conversation only after a wide table
+   appears. This keeps ordinary chat compact while giving timetable tables
+   enough space to be readable without spilling outside the message card. */
+.chat-panel.expanded #view-chat.has-wide-table{
+  max-width:1040px;
+}
+.message-row.bot .bubble{ background:var(--bg-accent-soft); color:var(--text); border-bottom-left-radius:4px; }
+.message-row.user .bubble{ background:var(--brand); color:#fff; border-bottom-right-radius:4px; }
+
+/* ----- typing indicator (three bouncing dots, shown while "thinking") ----- */
+.typing-dots{ display:flex; gap:4px; align-items:center; padding:4px 2px; }
+.typing-dots span{
+  width:6px; height:6px; border-radius:50%;
+  background:var(--text-faint);
+  animation:typing-bounce 1.1s ease-in-out infinite;
+}
+.typing-dots span:nth-child(2){ animation-delay:.15s; }
+.typing-dots span:nth-child(3){ animation-delay:.3s; }
+@keyframes typing-bounce{
+  0%, 60%, 100%{ transform:translateY(0); opacity:.5; }
+  30%{ transform:translateY(-4px); opacity:1; }
+}
+
+/* ----- input ----- */
+.input-area{
+  display:flex; gap:8px;
+  padding:12px 16px 16px;
+  flex-shrink:0;
+  border-top:1px solid var(--border);
+}
+.input-area input{
+  flex:1;
+  padding:11px 16px;
+  border-radius:22px;
+  border:1px solid var(--border-input);
+  background:var(--bg);
+  color:var(--text);
+  font-size:14px;
+  outline:none;
+  transition:background .2s ease, color .2s ease, border-color .15s ease;
+}
+.input-area input:focus{ border-color:var(--brand); }
+.send-btn{
+  width:42px; height:42px;
+  border-radius:50%;
+  border:none;
+  background:var(--brand);
+  color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer;
+  transition:transform .12s ease, background .2s ease;
+}
+.send-btn:active{ transform:scale(.92); }
+
+/* ----- settings: persistent preview (spans menu + outfits + glasses views) ----- */
+.settings-preview{
+  display:flex; justify-content:center;
+  padding-top:6px;
+  flex-shrink:0;
+}
+
+/* ----- settings: menu list (gear icon lands here) ----- */
+.settings-menu-list{
+  display:flex; flex-direction:column;
+  gap:8px;
+  padding:4px 16px 16px;
+}
+.settings-row{
+  display:flex; align-items:center; gap:12px;
+  padding:12px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:var(--bg-raised);
+  cursor:pointer;
+  text-align:left;
+  font-size:14px;
+  color:var(--text);
+  transition:background .15s ease, border-color .15s ease;
+}
+.settings-row:hover{ background:var(--bg-hover); border-color:var(--border-strong); }
+.settings-row-icon{
+  width:32px; height:32px; border-radius:50%;
+  background:var(--bg-accent-soft); flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  overflow:hidden;
+}
+.settings-row-icon img{ width:22px; height:22px; object-fit:contain; }
+.settings-row-icon svg{ color:var(--brand); }
+.settings-row-label{ flex:1; font-weight:500; }
+.settings-row-chevron{ color:var(--text-faint); flex-shrink:0; }
+
+/* ----- settings: theme toggle row (not navigable, holds a switch instead of a chevron) ----- */
+.settings-row--static{ cursor:default; }
+.settings-row--static:hover{ background:var(--bg-raised); border-color:var(--border); }
+.theme-switch{
+  position:relative;
+  width:44px; height:26px;
+  flex-shrink:0;
+  border:none;
+  border-radius:999px;
+  background:var(--bg-swatch-icon);
+  cursor:pointer;
+  padding:0;
+  transition:background .2s ease;
+}
+.theme-switch::before{
+  content:"";
+  position:absolute;
+  top:3px; left:3px;
+  width:20px; height:20px;
+  border-radius:50%;
+  background:#fff;
+  box-shadow:0 1px 3px rgba(0,0,0,.25);
+  transition:transform .2s ease;
+}
+.theme-switch.is-on{ background:var(--brand); }
+.theme-switch.is-on::before{ transform:translateX(18px); }
+
+/* ----- settings: outfit / glasses swatch grids ----- */
+.swatch-grid{
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(78px,1fr));
+  gap:10px;
+  padding:8px 16px 16px;
+  overflow-y:auto;
+}
+.swatch{
+  border:2px solid var(--border);
+  border-radius:12px;
+  background:var(--bg-raised);
+  padding:10px 6px 8px;
+  display:flex; flex-direction:column; align-items:center; gap:6px;
+  cursor:pointer;
+  transition:border-color .15s ease, background .15s ease;
+}
+.swatch:hover{ background:var(--bg-hover); }
+.swatch.is-active{ border-color:var(--brand); background:var(--bg-accent-soft); }
+.swatch img{ width:36px; height:36px; object-fit:contain; }
+.swatch-icon{
+  width:36px; height:36px; border-radius:50%;
+  background:var(--bg-swatch-icon); display:flex; align-items:center; justify-content:center;
+  color:var(--text-dim); font-size:16px;
+}
+.swatch span{ font-size:11px; color:var(--text-muted); text-align:center; line-height:1.2; }
+
+/* ================= campus map view ================= */
+.map-toolbar{
+  display:flex; justify-content:center; align-items:center; gap:12px;
+  padding:8px 12px;
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+.map-campus-toggle{
+  display:flex;
+  background:var(--bg-raised);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:3px;
+  gap:3px;
+}
+.map-campus-btn{
+  display:flex; align-items:center; gap:6px;
+  border:none;
+  background:transparent;
+  color:var(--text-dim);
+  padding:5px 10px;
+  border-radius:9px;
+  cursor:pointer;
+  transition:background .15s ease, color .15s ease, opacity .15s ease;
+  text-align:left;
+}
+.map-campus-btn-icon{
+  display:flex; align-items:center; justify-content:center;
+  width:19px; height:19px; flex-shrink:0;
+  border-radius:50%;
+  background:var(--bg-hover);
+  color:var(--text-dim);
+}
+.map-campus-btn-text{ display:flex; flex-direction:column; line-height:1.2; }
+.map-campus-btn-label{ font-size:12px; font-weight:700; }
+.map-campus-btn-status{ font-size:10px; color:var(--text-dim); }
+.map-campus-btn.is-active{ background:var(--brand); color:#fff; }
+.map-campus-btn.is-active .map-campus-btn-icon{ background:rgba(255,255,255,.25); color:#fff; }
+.map-campus-btn.is-active .map-campus-btn-status{ color:rgba(255,255,255,.85); }
+.map-campus-btn.is-unavailable{ opacity:.6; }
+
+/* Brief "not available" message, shown near the toggle row rather than
+   over the map - it never blocks the map, the toggle buttons, or the
+   widget's own back/close controls. */
+.map-campus-toast{
+  max-height:0;
+  overflow:hidden;
+  opacity:0;
+  margin:0 16px;
+  font-size:12px;
+  color:var(--text-dim);
+  text-align:center;
+  transition:max-height .2s ease, opacity .2s ease, margin .2s ease;
+}
+.map-campus-toast.is-visible{
+  max-height:60px;
+  opacity:1;
+  margin:8px 16px;
+}
+
+.map-viewport{
+  flex:1;
+  min-height:0;
+  display:flex;
+  flex-direction:row;
+  gap:10px;
+  padding:0 10px 10px;
+  position:relative; /* containing block for the mobile bottom-sheet variant of the building card - see the mobile media query below */
+}
+.campus-map{
+  flex:1;
+  min-width:0; /* lets the map shrink below its content size when the panel takes space next to it, instead of overflowing */
+  min-height:0;
+  background:#0a0f1a;
+  border-radius:14px;
+  overflow:hidden;
+}
+/* Leaflet popups should inherit the widget's rounded, branded look */
+.leaflet-popup-content-wrapper{ border-radius:12px; }
+.leaflet-popup-content{ margin:10px 12px; font-size:13px; }
+
+/* Default Leaflet attribution control is light-background - a glaring
+   white strip against the dark satellite basemap. Required credit text
+   stays (Esri/OSM terms), just restyled to match. */
+.leaflet-control-attribution{
+  background:rgba(5,7,12,.75);
+  color:#c7ccd6;
+}
+.leaflet-control-attribution a{ color:#9fd3ff; }
+
+/* Guarantees the campus-boundary mask's hole renders correctly no
+   matter which winding direction a given boundary polygon uses - see
+   buildMask() in campus-map.js. Boundary line itself gets a soft glow
+   to read as a clear, vivid outline rather than a thin technical line. */
+.map-boundary-mask{ fill-rule:evenodd; }
+.map-boundary-outline{
+  filter:drop-shadow(0 0 4px rgba(46,222,140,.65));
+}
+
+/* ---- building markers: floating thumbnail + name card above a pin ---- */
+/* ---- building markers: cover-image pill + teardrop pin, per reference ---- */
+.map-marker{
+  display:flex; flex-direction:column; align-items:center;
+  cursor:pointer;
+  transition:opacity .15s ease;
+}
+.map-marker.is-dimmed{ opacity:.35; }
+.map-marker-card{
+  display:flex; align-items:center;
+  max-width:115px;
+  padding:3px;
+  background:#0a170f;
+  border:2px solid #2ede8c;
+  border-radius:12px;
+  box-shadow:0 4px 10px rgba(0,0,0,.4);
+}
+.map-marker-thumb{
+  width:26px; height:26px;
+  border-radius:7px;
+  object-fit:cover;
+  background:#fff;
+  flex-shrink:0;
+}
+.map-marker-label{
+  padding:0 7px;
+  font-size:10.5px; font-weight:700; color:#fff;
+  line-height:1.2;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+.map-marker-connector{
+  width:2px; height:6px;
+  background:#2ede8c;
+}
+.map-marker-pin{
+  display:flex; align-items:center; justify-content:center;
+  width:22px; height:22px;
+  background:linear-gradient(180deg,#3eec99,#1fae63);
+  border:2px solid #fff;
+  border-radius:50% 50% 50% 0;
+  transform:rotate(-45deg);
+  box-shadow:0 3px 6px rgba(0,0,0,.4);
+}
+.map-marker-pin-dot{
+  width:8px; height:8px;
+  background:#fff;
+  border-radius:50%;
+}
+
+/* ---- campus summary bar (bottom-left of the map) + buildings list ---- */
+.map-campus-summary{
+  position:absolute;
+  left:14px; bottom:14px;
+  display:flex; align-items:center; gap:10px;
+  max-width:calc(100% - 28px);
+  padding:10px 12px;
+  background:rgba(8,12,20,.9);
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:14px;
+  color:#fff;
+  cursor:pointer;
+  z-index:600;
+  text-align:left;
+}
+.map-campus-summary-icon{
+  display:flex; align-items:center; justify-content:center;
+  width:32px; height:32px; flex-shrink:0;
+  border-radius:50%;
+  background:rgba(46,222,140,.18);
+  color:#2ede8c;
+}
+.map-campus-summary-text{ display:flex; flex-direction:column; gap:1px; min-width:0; }
+.map-campus-summary-text strong{ font-size:13px; }
+.map-campus-summary-text span{ font-size:11px; color:rgba(255,255,255,.65); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.map-campus-summary-chevron{ flex-shrink:0; color:rgba(255,255,255,.6); }
+
+.map-buildings-list{
+  flex:0 0 clamp(190px, 20vw, 260px);
+  max-width:30%;
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:14px;
+  box-shadow:0 8px 24px rgba(0,0,0,.3);
+  display:flex; flex-direction:column;
+  min-height:0;
+}
+.map-buildings-list-header{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 14px;
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+.map-buildings-list-header h4{ margin:0; font-size:13px; color:var(--text); }
+.map-buildings-list-close{
+  width:24px; height:24px;
+  border:none; background:var(--bg-hover);
+  border-radius:50%;
+  color:var(--text-dim);
+  font-size:15px; line-height:1;
+  cursor:pointer;
+}
+.map-buildings-list-items{
+  list-style:none; margin:0; padding:8px;
+  overflow-y:auto;
+}
+.map-buildings-list-item{
+  display:flex; align-items:center; gap:10px;
+  padding:8px;
+  border-radius:10px;
+  cursor:pointer;
+}
+.map-buildings-list-item:hover{ background:var(--bg-hover); }
+.map-buildings-list-item img{
+  width:36px; height:36px;
+  border-radius:9px;
+  object-fit:cover;
+  background:var(--bg-raised);
+  flex-shrink:0;
+}
+.map-buildings-list-item span{ font-size:12.5px; color:var(--text); }
+
+/* ---- building info panel: sits beside the map on desktop, as its own
+   flex sibling (not floating on top of it - that was the bug: the map
+   didn't know to shrink, so it kept centering the campus using the
+   full width and the panel just covered part of it). A bottom sheet
+   OVERLAYING the map is the one place this is still position:absolute -
+   see the mobile media query below. */
+.map-building-card{
+  flex:0 1 300px;
+  max-width:32%;
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:14px;
+  box-shadow:0 8px 24px rgba(0,0,0,.3);
+  overflow-y:auto;
+  align-self:flex-start;
+  max-height:100%;
+}
+.map-buildings-list[hidden], .map-building-card[hidden], .map-search-results[hidden]{ display:none; }
+.map-search{ position:relative; width:min(360px, 36vw); order:-1; }
+.map-search-label{ position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }
+.map-search input{ width:100%; box-sizing:border-box; padding:9px 12px; border:1px solid var(--border); border-radius:10px; background:var(--bg-raised); color:var(--text); }
+.map-search-results{ position:absolute; z-index:1500; top:calc(100% + 5px); left:0; right:0; max-height:230px; overflow-y:auto; background:var(--bg); border:1px solid var(--border); border-radius:10px; box-shadow:0 8px 25px rgba(0,0,0,.35); }
+.map-search-results button{ display:block; width:100%; padding:10px 12px; text-align:left; color:var(--text); background:transparent; border:0; cursor:pointer; }
+.map-search-results button:hover, .map-search-results button:focus-visible{ background:var(--bg-hover); }
+.map-search-results p{ padding:10px; margin:0; color:var(--text-dim); }
+.map-category-filters{ display:flex; gap:4px; overflow-x:auto; padding:8px; border-bottom:1px solid var(--border); }
+.map-category-filters button{ flex:none; padding:5px 8px; border:1px solid var(--border); border-radius:999px; background:transparent; color:var(--text-dim); cursor:pointer; font-size:11px; }
+.map-category-filters button.is-active{ background:var(--brand); color:#fff; border-color:var(--brand); }
+.map-location-button{ position:absolute; right:22px; bottom:22px; z-index:700; padding:10px 14px; border:1px solid rgba(255,255,255,.35); border-radius:999px; background:rgba(5,18,15,.9); color:white; cursor:pointer; }
+.map-location-button:disabled{ opacity:.55; }
+.map-route-summary{ position:absolute; left:50%; bottom:20px; transform:translateX(-50%); z-index:710; padding:10px 18px; border-radius:999px; background:rgba(5,18,15,.94); border:1px solid #2ede8c; color:#fff; font-weight:700; box-shadow:0 8px 24px rgba(0,0,0,.35); pointer-events:none; }
+.map-marker-card{ animation:map-selected-glow 2.6s ease-in-out infinite; }
+@keyframes map-selected-glow{ 50%{ box-shadow:0 0 15px rgba(46,222,140,.8); } }
+@media (prefers-reduced-motion:reduce){ .map-marker-card{ animation:none; } }
+.map-building-grabber{ display:none; } /* desktop: no drag handle */
+
+.map-building-header{
+  position:relative;
+  height:170px;
+  flex-shrink:0;
+}
+#map-building-image{
+  display:block;
+  width:100%; height:100%;
+  object-fit:cover;
+  background:var(--bg-raised);
+}
+.map-building-tag{
+  position:absolute; top:10px; left:10px;
+  padding:4px 10px;
+  border-radius:999px;
+  background:rgba(8,12,20,.75);
+  color:#fff;
+  font-size:11px;
+  font-weight:600;
+}
+.map-building-close{
+  position:absolute; top:10px; right:10px;
+  width:28px; height:28px;
+  border:none; background:rgba(10,15,26,.55);
+  border-radius:50%;
+  color:#fff;
+  font-size:16px; line-height:1;
+  cursor:pointer;
+  z-index:1;
+}
+
+.map-building-body{ padding:14px 16px 20px; }
+.map-building-card h3{ margin:0 0 2px; font-size:15px; color:var(--text); }
+.map-building-card p{ margin:0; font-size:12.5px; color:var(--text-dim); line-height:1.4; }
+.map-building-location{
+  display:flex; align-items:center; gap:5px;
+  color:var(--text-dim);
+}
+.map-building-card .map-building-location{ margin:4px 0 0; }
+.map-building-divider{
+  border:none; border-top:1px solid var(--border);
+  margin:12px 0;
+}
+
+.map-building-section-heading{
+  margin:0 0 8px;
+  font-size:11px; font-weight:700; text-transform:uppercase;
+  letter-spacing:.03em;
+  color:var(--text-dim);
+}
+.map-building-facilities{ margin:0 0 14px; }
+.map-building-facilities ul{
+  margin:0; padding:0 0 0 18px;
+  font-size:12.5px; color:var(--text-dim); line-height:1.6;
+}
+.map-building-gallery{
+  display:flex; gap:6px; overflow-x:auto;
+  margin:0 0 14px; padding-bottom:2px;
+}
+.map-building-gallery-thumb{
+  width:76px; height:56px; flex:0 0 auto;
+  object-fit:cover; border-radius:8px;
+  background:var(--bg-raised);
+}
+.map-building-directions{
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  width:100%;
+  padding:11px 16px;
+  border-radius:999px;
+  background:var(--brand);
+  color:#fff;
+  font-size:13px;
+  font-weight:700;
+  text-decoration:none;
+  box-sizing:border-box;
+}
+
+/* "View on Map" confirmation button rendered inside a chat bubble by
+   app.js, once the chatbot has named a specific place. */
+.map-confirm-btn{
+  display:block;
+  margin-top:10px;
+  padding:7px 14px;
+  border:none;
+  border-radius:999px;
+  background:var(--brand);
+  color:#fff;
+  font-size:12.5px;
+  font-weight:600;
+  cursor:pointer;
+}
+.map-confirm-btn:disabled{ opacity:.6; cursor:default; }
+
+/* ================= mobile: bottom sheet, half-height by default ================= */
+@media (max-width:640px){
+  .unilus-widget{ right:16px; bottom:16px; }
+  .chat-panel,
+  .chat-panel.expanded{
+    position:fixed;
+    inset:0;
+    width:100%; height:100%;
+    max-height:none;
+    border-radius:0;
+    right:auto; bottom:auto;
+    transition:none;
+  }
+  .chat-panel.expanded .avatar-slot--hero{ width:150px; height:170px; }
+  .chat-panel.expanded .avatar-slot--hero .uni-avatar-wrapper{ transform:translate(-50%,-50%) scale(1); }
+  #expand-btn{ display:none; }
+
+  .message-row.bot .bubble.bubble--table{
+    width:calc(100% - 50px);
+    max-width:calc(100% - 50px);
+  }
+
+  .chat-table-scroll--timetable table{
+    min-width:860px;
+  }
+
+  /* Building info panel becomes a bottom sheet OVERLAYING the map
+     (unlike the desktop flex-sibling layout above) - half-height by
+     default, drag (or tap) the grabber to expand to near-fullscreen. */
+  .map-building-card{
+    position:absolute;
+    top:auto; left:0; right:0; bottom:0;
+    flex:none;
+    width:auto; max-width:none;
+    height:42%;
+    border-left:none;
+    border-top:1px solid var(--border);
+    border-radius:16px 16px 0 0;
+    box-shadow:0 -12px 30px rgba(0,0,0,.25);
+    z-index:1200;
+    transition:height .2s ease;
+  }
+  .map-building-card.is-full{ height:92%; }
+  .map-building-grabber{
+    display:block;
+    width:36px; height:4px;
+    margin:10px auto 4px;
+    border-radius:999px;
+    background:var(--border);
+    touch-action:none;
+    cursor:grab;
+  }
+
+  /* Buildings list becomes a full-width sheet sliding in from the left,
+     overlaying the map (mirrors the building-card treatment above) -
+     three flex columns would be far too cramped on a phone. */
+  .map-buildings-list{
+    position:absolute;
+    inset:0;
+    flex:none;
+    max-width:none;
+    border-radius:0;
+    z-index:1100;
+  }
+  .map-toolbar{ flex-direction:column; align-items:stretch; padding:6px 10px; }
+  .map-search{ width:100%; order:-1; }
+  .map-campus-toggle{ justify-content:center; }
+  .map-campus-btn{ flex:1; min-width:0; justify-content:center; padding:5px 4px; }
+  .map-campus-btn-label{ font-size:10px; }
+  .map-campus-btn-status{ font-size:9px; }
+  .map-viewport{ padding:0; gap:0; }
+  .campus-map{ border-radius:0; }
+  .map-location-button{ right:12px; bottom:calc(42% + 12px); min-height:44px; }
+  .map-campus-summary{ max-width:55%; }
+}
+
+.bubble h1,
+.bubble h2,
+.bubble h3 {
+    margin: 0 0 12px;
+}
+
+
+.bubble p {
+    margin: 8px 0;
+}
+
+
+.bubble ul,
+.bubble ol {
+    padding-left: 22px;
+    margin: 10px 0;
+}
+
+
+.bubble li {
+    margin-bottom: 6px;
+}
+
+
+.bubble strong {
+    font-weight: 700;
+}
+
+
+/* AI generated tables
+   Tables are wrapped by app.js in .chat-table-scroll so wide responses stay
+   inside the bot card instead of overflowing into the page. */
+.chat-table-scroll{
+    width:100%;
+    max-width:100%;
+    overflow-x:auto;
+    overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior-inline:contain;
+    scrollbar-width:thin;
+    margin:12px 0 2px;
+    padding-bottom:4px;
+}
+
+.chat-table-scroll table{
+    width:100%;
+    min-width:100%;
+    border-collapse:collapse;
+    margin:0;
+    table-layout:auto;
+}
+
+/* Timetables have seven information-dense columns. Give them a sensible
+   desktop minimum width and let the wrapper scroll only when the viewport
+   cannot provide that much room (compact widget/mobile). */
+.chat-table-scroll--timetable table{
+    min-width:900px;
+    table-layout:fixed;
+}
+
+.chat-table-scroll--timetable th:nth-child(1),
+.chat-table-scroll--timetable td:nth-child(1){ width:92px; }
+.chat-table-scroll--timetable th:nth-child(2),
+.chat-table-scroll--timetable td:nth-child(2){ width:108px; white-space:nowrap; }
+.chat-table-scroll--timetable th:nth-child(3),
+.chat-table-scroll--timetable td:nth-child(3){ width:82px; white-space:nowrap; }
+.chat-table-scroll--timetable th:nth-child(4),
+.chat-table-scroll--timetable td:nth-child(4){ width:245px; }
+.chat-table-scroll--timetable th:nth-child(5),
+.chat-table-scroll--timetable td:nth-child(5){ width:82px; white-space:nowrap; }
+.chat-table-scroll--timetable th:nth-child(6),
+.chat-table-scroll--timetable td:nth-child(6){ width:145px; }
+.chat-table-scroll--timetable th:nth-child(7),
+.chat-table-scroll--timetable td:nth-child(7){ width:180px; }
+
+.bubble th,
+.bubble td{
+    border:1px solid rgba(0,0,0,0.15);
+    padding:8px 10px;
+    text-align:left;
+    vertical-align:top;
+    overflow-wrap:normal;
+    word-break:normal;
+}
+
+.bubble th{
+    font-weight:700;
+}
+
+/* Keep the scroll affordance visible in dark mode without introducing a
+   custom theme colour outside the widget palette. */
+.chat-table-scroll::-webkit-scrollbar{ height:7px; }
+.chat-table-scroll::-webkit-scrollbar-thumb{
+    background:var(--border-strong);
+    border-radius:999px;
+}
+
+
+.bubble code {
+
+    background: rgba(0,0,0,0.08);
+    padding: 2px 5px;
+    border-radius: 5px;
+
+}
+
+
+.bubble pre {
+
+    overflow-x: auto;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+/* =========================================================
+   V5.6 — LARGE MARKDOWN TABLE / TIMETABLE CONTAINMENT
+   KEEP THIS AT THE VERY END OF widget.css
+   ========================================================= */
+
+/* Expanded chat can use more horizontal space */
+.chat-panel.expanded #view-chat {
+  width: min(1100px, calc(100vw - 48px)) !important;
+  max-width: 1100px !important;
+  min-width: 0 !important;
+}
+
+/* Allow flex children to shrink correctly */
+.chat-box,
+.message-row,
+.message-row.bot {
+  min-width: 0;
+}
+
+/* Any bot message containing a table uses the full row */
+.message-row.bot:has(table),
+.message-row.bot.message-row--table {
+  width: 100% !important;
+  max-width: 100% !important;
+  align-items: flex-start !important;
+  box-sizing: border-box !important;
+}
+
+/* Keep avatar width predictable */
+.message-row.bot:has(table) .avatar-slot,
+.message-row.bot.message-row--table .avatar-slot {
+  flex: 0 0 52px !important;
+  width: 52px !important;
+  min-width: 52px !important;
+}
+
+/*
+ * IMPORTANT:
+ * Override the normal 74% bubble width.
+ * The green response card fills all remaining row space.
+ */
+.message-row.bot:has(table) .bubble,
+.message-row.bot.message-row--table .bubble,
+.message-row.bot .bubble.bubble--table {
+  flex: 1 1 0 !important;
+
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: none !important;
+
+  box-sizing: border-box !important;
+
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+
+  -webkit-overflow-scrolling: touch;
+  scrollbar-gutter: stable;
+}
+
+/*
+ * The table remains readable.
+ * If it is wider than the green card, it scrolls INSIDE it.
+ */
+.message-row.bot:has(table) .bubble table,
+.message-row.bot.message-row--table .bubble table,
+.message-row.bot .bubble.bubble--table table {
+  width: max-content !important;
+  min-width: 100% !important;
+  max-width: none !important;
+
+  table-layout: auto !important;
+  border-collapse: collapse !important;
+
+  margin: 12px 0 4px !important;
+}
+
+/* 7-column timetable */
+.message-row.bot:has(table th:nth-child(7)) .bubble table,
+.message-row.bot.message-row--table .bubble table:has(th:nth-child(7)),
+.message-row.bot .bubble.bubble--table table:has(th:nth-child(7)) {
+  min-width: 960px !important;
+}
+
+/* Day */
+.message-row.bot table th:nth-child(1),
+.message-row.bot table td:nth-child(1) {
+  min-width: 105px;
+  white-space: nowrap;
+}
+
+/* Time */
+.message-row.bot table th:nth-child(2),
+.message-row.bot table td:nth-child(2) {
+  min-width: 110px;
+  white-space: nowrap;
+}
+
+/* Course code */
+.message-row.bot table th:nth-child(3),
+.message-row.bot table td:nth-child(3) {
+  min-width: 88px;
+  white-space: nowrap;
+}
+
+/* Course title */
+.message-row.bot table th:nth-child(4),
+.message-row.bot table td:nth-child(4) {
+  min-width: 235px;
+  max-width: 300px;
+  white-space: normal;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+/* Type */
+.message-row.bot table th:nth-child(5),
+.message-row.bot table td:nth-child(5) {
+  min-width: 90px;
+  white-space: nowrap;
+}
+
+/* Lecturer */
+.message-row.bot table th:nth-child(6),
+.message-row.bot table td:nth-child(6) {
+  min-width: 145px;
+  white-space: normal;
+  word-break: normal;
+}
+
+/* Venue */
+.message-row.bot table th:nth-child(7),
+.message-row.bot table td:nth-child(7) {
+  min-width: 185px;
+  max-width: 250px;
+  white-space: normal;
+  word-break: normal;
+}
+
+/* Stop ugly word-per-line wrapping */
+.message-row.bot table th,
+.message-row.bot table td {
+  overflow-wrap: normal !important;
+  word-break: normal !important;
+  vertical-align: top;
+}
+
+/* Slightly tighter table typography */
+.message-row.bot table {
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+/* Smaller windows/mobile */
+@media (max-width: 760px) {
+  .chat-panel.expanded #view-chat {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .message-row.bot:has(table) .bubble,
+  .message-row.bot.message-row--table .bubble,
+  .message-row.bot .bubble.bubble--table {
+    width: 0 !important;
+    max-width: none !important;
+  }
+
+  .message-row.bot:has(table th:nth-child(7)) .bubble table,
+  .message-row.bot.message-row--table .bubble table:has(th:nth-child(7)),
+  .message-row.bot .bubble.bubble--table table:has(th:nth-child(7)) {
+    min-width: 900px !important;
+  }
+}

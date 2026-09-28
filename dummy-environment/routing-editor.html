@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Silverest Pathway Editor · Development Only</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+html,body{margin:0;height:100%;font:14px system-ui,sans-serif;background:#071b18;color:white}#layout{display:grid;grid-template-columns:320px 1fr;height:100%}aside{padding:18px;overflow:auto;border-right:1px solid #2d6758}h1{font-size:19px;margin:0 0 8px}p{line-height:1.4;color:#bfd2cc}button,select{width:100%;padding:9px;margin:4px 0;border:1px solid #6b9c8b;border-radius:7px;background:#123e32;color:white}button{cursor:pointer}button.active{background:#0da969}button:disabled{opacity:.45}#map{height:100%}#status{white-space:pre-wrap;margin-top:12px;color:#d1e8dc}.swatch{display:inline-block;width:15px;height:4px;margin-right:5px;vertical-align:middle}#list button{text-align:left}
+</style></head><body><div id="layout"><aside>
+<h1>Silverest pathway editor</h1><p>Development tool. Trace only paths and entrances verified on site. Save exports into the campus data folder, then rebuild the graph.</p>
+<label>Path type<select id="kind"><option>footway</option><option>crossing</option><option>steps</option><option>shared_road</option></select></label>
+<button id="draw">Draw path</button><button id="finish">Finish path</button><button id="edit">Edit selected vertices</button><button id="delete">Delete selected path</button>
+<label>Entrance for<select id="place"></select></label><button id="access">Add entrance</button><button id="primary">Mark selected entrance primary</button>
+<button id="validate">Validate</button><button id="export-walkways">Export campus_walkways.geojson</button><button id="export-access">Export campus_access_points.json</button>
+<p><span class="swatch" style="background:#39ee92"></span>boundary <span class="swatch" style="background:#ffb84b"></span>service roads <span class="swatch" style="background:#1e94ff"></span>walkways</p>
+<p>Path endpoints snap to a visible network node within 3 m. A green ring confirms the snap. Click a path to select it; drag its vertex handles in edit mode.</p>
+<div id="list"></div><div id="status">Loading developer data…</div>
+</aside><div id="map"></div></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+(async function(){
+  const api='http://localhost:5000/api/campus', status=document.getElementById('status');
+  let data;
+  try {const res=await fetch(api+'/routing/editor-data');if(!res.ok)throw Error('Start backend with CAMPUS_ROUTING_EDITOR=true');data=await res.json();}
+  catch(e){status.textContent=e.message;return;}
+  const map=L.map('map').setView([data.boundary.coordinates.lat,data.boundary.coordinates.lng],17);
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Esri World Imagery'}).addTo(map);
+  const ring=data.boundary.geometry.coordinates[0].map(([lng,lat])=>[lat,lng]);
+  L.polygon(ring,{color:'#39ee92',weight:3,fillOpacity:0}).addTo(map);map.fitBounds(ring);
+  const roads=data.roads, walkways=structuredClone(data.walkways), access=structuredClone(data.access_points);
+  const roadLayer=L.layerGroup().addTo(map), pathLayer=L.layerGroup().addTo(map), accessLayer=L.layerGroup().addTo(map), editLayer=L.layerGroup().addTo(map);
+  for(const road of roads)L.polyline(road.coordinates.map(([lng,lat])=>[lat,lng]),{color:'#ffb84b',weight:3,opacity:.75}).addTo(roadLayer).bindTooltip(road.source);
+  for(const b of data.buildings){if(b.geometry?.type==='Polygon')L.polygon(b.geometry.coordinates[0].map(([lng,lat])=>[lat,lng]),{color:'#b8c6be',weight:1,fillOpacity:.17,interactive:false}).addTo(map);}
+  for(const p of data.places){L.circleMarker([p.coordinates.lat,p.coordinates.lng],{radius:4,color:'#fff',fillColor:'#15c789',fillOpacity:1}).addTo(map).bindTooltip(p.name);const o=document.createElement('option');o.value=p.id;o.textContent=p.name;document.getElementById('place').appendChild(o);}
+  let mode='',selected=null,draft=[],draftLine=null,snapRing=null;
+  const metres=(a,b)=>{const dLat=(a[1]-b[1])*Math.PI/180,dLng=(a[0]-b[0])*Math.PI/180;const h=Math.sin(dLat/2)**2+Math.cos(a[1]*Math.PI/180)*Math.cos(b[1]*Math.PI/180)*Math.sin(dLng/2)**2;return 12742000*Math.asin(Math.sqrt(h));};
+  const allNodes=()=>[...roads.flatMap(r=>r.coordinates),...walkways.features.flatMap(f=>f.geometry.coordinates)];
+  function nearest(p){let best=null;for(const node of allNodes()){const d=metres(p,node);if(!best||d<best.d)best={point:node,d};}
+    for(const path of [...roads.map(r=>r.coordinates),...walkways.features.map(f=>f.geometry.coordinates)])for(let i=0;i<path.length-1;i++){
+      const a=path[i],b=path[i+1],scale=Math.cos(p[1]*Math.PI/180),dx=(b[0]-a[0])*scale,dy=b[1]-a[1];
+      const t=Math.max(0,Math.min(1,((p[0]-a[0])*scale*dx+(p[1]-a[1])*dy)/(dx*dx+dy*dy||1)));
+      const q=[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t],d=metres(p,q);
+      if(!best||d<best.d)best={point:q,d};
+    }
+    return best&&best.d<=3?best:null;}
+  function snapped(p){const hit=nearest(p);if(snapRing)map.removeLayer(snapRing);if(hit){snapRing=L.circleMarker([hit.point[1],hit.point[0]],{radius:10,color:'#39ee92',weight:3,fillOpacity:0,interactive:false}).addTo(map);return [...hit.point];}return p;}
+  function setMode(value){mode=value;status.textContent=value?`Mode: ${value}`:'Ready';for(const id of ['draw','edit','access'])document.getElementById(id).classList.toggle('active',id===value);if(value!=='edit')editLayer.clearLayers();}
+  function render(){pathLayer.clearLayers();accessLayer.clearLayers();editLayer.clearLayers();const list=document.getElementById('list');list.replaceChildren();for(const f of walkways.features){const line=L.polyline(f.geometry.coordinates.map(([lng,lat])=>[lat,lng]),{color:f.properties.id===selected?'#62d5ff':'#1687ff',weight:5}).addTo(pathLayer);line.on('click',e=>{L.DomEvent.stopPropagation(e);selected=f.properties.id;render();});const btn=document.createElement('button');btn.textContent=`${f.properties.id} · ${f.properties.kind}`;btn.onclick=()=>{selected=f.properties.id;render();map.fitBounds(line.getBounds());};list.appendChild(btn);}
+    for(const a of access)L.circleMarker([a.lat,a.lng],{radius:6,color:'#fff',fillColor:'#ff4ab4',fillOpacity:1}).addTo(accessLayer).on('click',e=>{L.DomEvent.stopPropagation(e);selected=a.id;status.textContent=`Selected entrance ${a.id}`;}).bindTooltip(`${a.id} → ${a.place_id}`);
+    if(mode==='edit'){const f=walkways.features.find(x=>x.properties.id===selected);if(f)f.geometry.coordinates.forEach((p,i)=>{const marker=L.marker([p[1],p[0]],{draggable:true}).addTo(editLayer);marker.on('dragend',()=>{const v=marker.getLatLng();f.geometry.coordinates[i]=snapped([v.lng,v.lat]);render();});});}
+  }
+  map.on('mousemove',e=>{if(mode==='draw'||mode==='access'){const p=[e.latlng.lng,e.latlng.lat];const hit=nearest(p);if(snapRing)map.removeLayer(snapRing);snapRing=hit?L.circleMarker([hit.point[1],hit.point[0]],{radius:10,color:'#39ee92',weight:3,fillOpacity:0,interactive:false}).addTo(map):null;}});
+  map.on('click',e=>{const p=snapped([e.latlng.lng,e.latlng.lat]);if(mode==='draw'){draft.push(p);if(draftLine)map.removeLayer(draftLine);draftLine=L.polyline(draft.map(([lng,lat])=>[lat,lng]),{color:'#75d8ff',weight:4,dashArray:'7 5'}).addTo(map);status.textContent=`${draft.length} points. Finish when complete.`;}
+    else if(mode==='access'){const placeId=document.getElementById('place').value;const id=`${placeId}_entrance_${access.filter(a=>a.place_id===placeId).length+1}`;access.push({id,place_id:placeId,lat:p[1],lng:p[0],type:'entrance',primary:!access.some(a=>a.place_id===placeId&&a.primary),accessible:null});selected=id;setMode('');render();}});
+  document.getElementById('draw').onclick=()=>{draft=[];setMode('draw');};
+  document.getElementById('finish').onclick=()=>{if(draft.length<2){status.textContent='A path needs at least two points.';return;}const id=`walkway_${String(Date.now())}`;walkways.features.push({type:'Feature',properties:{id,kind:document.getElementById('kind').value,surface:null,accessible:null,source:'manual_survey'},geometry:{type:'LineString',coordinates:draft}});draft=[];if(draftLine)map.removeLayer(draftLine);draftLine=null;selected=id;setMode('');render();};
+  document.getElementById('edit').onclick=()=>{setMode('edit');render();};
+  document.getElementById('kind').onchange=()=>{const f=walkways.features.find(x=>x.properties.id===selected);if(f){f.properties.kind=document.getElementById('kind').value;render();}};
+  document.getElementById('delete').onclick=()=>{const i=walkways.features.findIndex(f=>f.properties.id===selected);if(i>=0)walkways.features.splice(i,1);else {const j=access.findIndex(a=>a.id===selected);if(j>=0)access.splice(j,1);}selected=null;setMode('');render();};
+  document.getElementById('access').onclick=()=>setMode('access');
+  document.getElementById('primary').onclick=()=>{const a=access.find(x=>x.id===selected);if(!a)return;for(const item of access)if(item.place_id===a.place_id)item.primary=false;a.primary=true;render();status.textContent=`Primary entrance: ${a.id}`;};
+  document.getElementById('validate').onclick=async()=>{const res=await fetch(api+'/routing/validate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({walkways,access_points:access})});const report=await res.json();status.textContent=[...report.errors.map(x=>'ERROR: '+x),...report.warnings.map(x=>'REVIEW: '+x)].join('\n')||'No validation findings.';};
+  function download(name,value){const blob=new Blob([JSON.stringify(value,null,2)+'\n'],{type:'application/json'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+  document.getElementById('export-walkways').onclick=()=>download('campus_walkways.geojson',walkways);
+  document.getElementById('export-access').onclick=()=>download('campus_access_points.json',{access_points:access});
+  render();status.textContent='Ready. No paths have been inferred from the imagery.';
+})();
+</script></body></html>

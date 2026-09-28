@@ -1,0 +1,10 @@
+{
+  "source_type": "openstreetmap",
+  "observed_date": "2026-09-27",
+  "place_id": "unilus_library",
+  "place_ids": [
+    "unilus_library"
+  ],
+  "operational_information_may_change": true,
+  "osm_ref": "way/1395302603"
+}

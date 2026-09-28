@@ -1,0 +1,200 @@
+.apply-page {
+  min-height: 100vh;
+  background: #f1faf8;
+  color: #102d3f;
+}
+
+.apply-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 66px;
+  padding: 0 24px;
+  background: #075a37;
+  color: #ffffff;
+}
+
+.apply-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.apply-brand img {
+  width: 27px;
+  height: 38px;
+  object-fit: contain;
+}
+
+.apply-nav {
+  display: flex;
+  gap: 12px;
+}
+
+.apply-nav a {
+  padding: 10px 16px;
+  border-radius: 12px;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.apply-nav a:hover,
+.apply-nav a:focus-visible {
+  background: #ffffff1f;
+}
+
+.apply-main {
+  width: min(980px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 64px 0 90px;
+}
+
+.apply-heading {
+  margin-bottom: 34px;
+  text-align: center;
+}
+
+.apply-heading h1 {
+  margin: 0 0 14px;
+  color: #075a37;
+  font-size: clamp(34px, 5vw, 54px);
+}
+
+.apply-heading p {
+  max-width: 720px;
+  margin: 0 auto;
+  color: #5f7381;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.apply-card {
+  padding: 42px;
+  background: #ffffff;
+  border: 1px solid #d8e8e5;
+  border-radius: 14px;
+  box-shadow: 0 16px 40px #16473c14;
+}
+
+.apply-card h2 {
+  margin: 0 0 28px;
+  color: #122d3c;
+  font-size: 28px;
+}
+
+.apply-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px 28px;
+}
+
+.apply-field {
+  display: grid;
+  gap: 8px;
+  color: #193344;
+  font-weight: 700;
+}
+
+.apply-field--wide {
+  grid-column: 1 / -1;
+}
+
+.apply-field input,
+.apply-field select,
+.apply-field textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 15px;
+  border: 1px solid #ccdce2;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #183244;
+  font: inherit;
+}
+
+.apply-field textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.apply-field input:focus,
+.apply-field select:focus,
+.apply-field textarea:focus {
+  outline: 3px solid #0fbd6233;
+  border-color: #0fbd62;
+}
+
+.apply-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 14px;
+  margin-top: 30px;
+}
+
+.apply-actions button,
+.apply-actions a {
+  padding: 13px 22px;
+  border-radius: 6px;
+  font: inherit;
+  font-weight: 800;
+}
+
+.apply-actions button {
+  border: 0;
+  background: #0fbd62;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.apply-actions a {
+  border: 1px solid #b5cbd0;
+  color: #075a37;
+}
+
+.apply-message {
+  min-height: 24px;
+  margin: 18px 0 0;
+  color: #087b45;
+  font-weight: 700;
+  text-align: right;
+}
+
+@media (max-width: 700px) {
+  .apply-topbar {
+    padding: 0 16px;
+  }
+
+  .apply-nav a {
+    padding: 9px 8px;
+    font-size: 13px;
+  }
+
+  .apply-main {
+    width: min(100% - 32px, 980px);
+    padding-top: 42px;
+  }
+
+  .apply-card {
+    padding: 28px 22px;
+  }
+
+  .apply-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .apply-field--wide {
+    grid-column: auto;
+  }
+
+  .apply-actions {
+    flex-direction: column-reverse;
+  }
+
+  .apply-actions button,
+  .apply-actions a {
+    text-align: center;
+  }
+}

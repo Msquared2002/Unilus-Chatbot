@@ -1,0 +1,14 @@
+{
+  "facilities": [
+    {
+      "id": "botanic_bloom",
+      "name": "Botanic Bloom",
+      "type": "food_outlet",
+      "parent_place_id": "p_c_school_of_business",
+      "search_aliases": ["botanic bloom"],
+      "searchable": true,
+      "map_focus_place_id": "p_c_school_of_business",
+      "image": "facilities/botanic_bloom/cover.jpg"
+    }
+  ]
+}
