@@ -4,9 +4,9 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const backend = path.resolve(__dirname, '..');
-const media = path.resolve(backend, '../dummy environment/chatbot-widget/campus-data');
+const media = path.resolve(backend, '../dummy-environment/chatbot-widget/campus-data');
 const catalog = require('../data/campus/campus_place_catalog.json').places;
-const presentation = require('../../dummy environment/chatbot-widget/campus-data/presentation.json');
+const presentation = require('../../dummy-environment/chatbot-widget/campus-data/presentation.json');
 const facilities = require('../data/campus/campus_facilities.json').facilities;
 const locationSearch = require('../services/locationSearchService');
 const navigation = require('../services/navigationService');

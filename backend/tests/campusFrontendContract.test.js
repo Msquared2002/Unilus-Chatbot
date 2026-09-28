@@ -4,7 +4,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const vm = require("node:vm");
 
-const widgetDir = path.resolve(__dirname, "../../dummy environment/chatbot-widget");
+const widgetDir = path.resolve(__dirname, "../../dummy-environment/chatbot-widget");
 const presentation = JSON.parse(fs.readFileSync(path.join(widgetDir, "campus-data/presentation.json"), "utf8"));
 const places = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../data/campus/campus_places.json"), "utf8")).places;
 
