@@ -24,6 +24,8 @@
  *     follow-up question in the same session can reference what was
  *     just discussed (see sessionService.js / aiService.js history
  *     support).
+ *   - Bare greetings ("hi", "hey", "hello") are answered with a short
+ *     canned intro instead of falling through to the fallback.
  */
 
 const retrievalService = require("./retrievalService");
@@ -34,6 +36,9 @@ const sessionService = require("./sessionService");
 const { logUnansweredQuestion } = require("./unansweredLogger");
 const { toDisplayTimetableEntry, harmonizeDisplayCourseNames } = require("./timetablePresentationService");
 
+// Matches a message that is ONLY a greeting (e.g. "hi", "Hey!", "good morning").
+// "hello there, when is my exam" will NOT match and goes through the normal pipeline.
+const GREETING = /^\s*(hi|hey|hello|yo|good (morning|afternoon|evening))\W*$/i;
 
 function isExplicitlyRevisedStructuredChunk(chunk = {}) {
     const label = [chunk.retrieval_title, chunk.title, chunk.source_file].filter(Boolean).join(" ");
@@ -323,6 +328,23 @@ async function answerQuestion(question, sessionId, audience = "public") {
     }
 
     sessionService.appendMessage(sessionId, "user", question);
+
+    // Bare greetings get a friendly canned intro. No retrieval, no LLM call,
+    // so it works even if the AI service is unreachable.
+    if (GREETING.test(question)) {
+        const greeting = 'Hi! I can help with timetables, exams, and course info. Try something like "when is my BIT101 exam?"';
+        sessionService.appendMessage(sessionId, "assistant", greeting);
+        return {
+            answer: greeting,
+            queryType: { isTimetable: false, isKnowledge: false, isMixed: false, entities: {} },
+            sources: [],
+            resources: [],
+            recommendedResources: [],
+            timetableMatches: 0,
+            usedFallback: false,
+            sessionId,
+        };
+    }
 
     // Campus navigation ("where is the library", "what's near the
     // gym") is handled entirely from the local campus dataset and
