@@ -15,3 +15,7 @@ backend/data/campus/backup/
 
 # Local editor settings
 .vscode/
+*.db
+backend/data/unanswered-questions-log.jsonl
+.env
+backend/.env

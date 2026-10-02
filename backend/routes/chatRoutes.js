@@ -15,11 +15,19 @@ router.post("/", async (req, res) => {
             req.body.sessionId ||
             crypto.randomUUID();
 
+        // Fail closed: anything other than exactly "student" is treated
+        // as "public". A request with no audience field at all (a raw
+        // curl call, an older client) gets the more restrictive tier,
+        // never the more permissive one.
+        const audience =
+            req.body.audience === "student" ? "student" : "public";
+
 
         const result =
             await chatService.answerQuestion(
                 question,
-                sessionId
+                sessionId,
+                audience
             );
 
 

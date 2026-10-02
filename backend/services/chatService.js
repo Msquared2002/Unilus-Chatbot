@@ -13,13 +13,32 @@
  *     source_file, page_number) instead of the old (topic, answer).
  *   - Every answer's context now includes its source, so the model
  *     can (and is instructed to) cite where information came from.
+ *   - When no evidence is found at all, or the model itself reports
+ *     it doesn't know, route to the closest UNILUS contact instead
+ *     of returning a dead-end message, and log the question for
+ *     later review (see unansweredLogger.js).
+ *   - Every call now carries a sessionId. If the caller doesn't have
+ *     one yet (first message), one is generated and returned so the
+ *     frontend can send it back on the next call. Each user question
+ *     and assistant answer is persisted via sessionService so a
+ *     follow-up question in the same session can reference what was
+ *     just discussed (see sessionService.js / aiService.js history
+ *     support).
+ *   - Bare greetings ("hi", "hey", "hello") are answered with a short
+ *     canned intro instead of falling through to the fallback.
  */
 
 const retrievalService = require("./retrievalService");
 const aiService = require("./aiService");
 const navigationService = require("./navigationService");
+const contactService = require("./contactService");
+const sessionService = require("./sessionService");
+const { logUnansweredQuestion } = require("./unansweredLogger");
 const { toDisplayTimetableEntry, harmonizeDisplayCourseNames } = require("./timetablePresentationService");
 
+// Matches a message that is ONLY a greeting (e.g. "hi", "Hey!", "good morning").
+// "hello there, when is my exam" will NOT match and goes through the normal pipeline.
+const GREETING = /^\s*(hi|hey|hello|yo|good (morning|afternoon|evening))\W*$/i;
 
 function isExplicitlyRevisedStructuredChunk(chunk = {}) {
     const label = [chunk.retrieval_title, chunk.title, chunk.source_file].filter(Boolean).join(" ");
@@ -265,7 +284,68 @@ function collectAllowedUrls({ knowledge = [], resources = [] }) {
     return [...new Set(urls)];
 }
 
-async function answerQuestion(question) {
+/**
+ * Builds the "I don't know, but here's who to ask" response, using
+ * the closest matching UNILUS contact when one is found (a loose
+ * topic match is enough — see contactService's threshold), or a
+ * generic message otherwise. Shape matches answerQuestion's normal
+ * return object so callers don't need to special-case it. Also logs
+ * the question to unanswered-questions-log.jsonl for later human
+ * review -- see unansweredLogger.js for why this is a review queue,
+ * not a self-learning mechanism.
+ */
+async function buildFallback(question, queryType, timetableMatches = 0) {
+    const fallback = await contactService.findFallbackContact(question);
+
+    let answer;
+    if (fallback) {
+        const c = fallback.contact;
+        answer = `I don't have that information yet. ${c.note}`;
+        if (c.phone) answer += ` Call ${c.phone}.`;
+        if (c.email) answer += ` Email ${c.email}.`;
+    } else {
+        answer = "I don't have that information yet. Try rephrasing, or check with the registry directly.";
+    }
+
+    logUnansweredQuestion(question, {
+        matchedContact: fallback ? fallback.contact.contact_id : null,
+    });
+
+    return {
+        answer,
+        queryType,
+        sources: [],
+        resources: [],
+        recommendedResources: [],
+        timetableMatches,
+        usedFallback: true,
+    };
+}
+
+async function answerQuestion(question, sessionId, audience = "public") {
+    if (!sessionId) {
+        sessionId = sessionService.createSessionId();
+    }
+
+    sessionService.appendMessage(sessionId, "user", question);
+
+    // Bare greetings get a friendly canned intro. No retrieval, no LLM call,
+    // so it works even if the AI service is unreachable.
+    if (GREETING.test(question)) {
+        const greeting = 'Hi! I can help with timetables, exams, and course info. Try something like "when is my BIT101 exam?"';
+        sessionService.appendMessage(sessionId, "assistant", greeting);
+        return {
+            answer: greeting,
+            queryType: { isTimetable: false, isKnowledge: false, isMixed: false, entities: {} },
+            sources: [],
+            resources: [],
+            recommendedResources: [],
+            timetableMatches: 0,
+            usedFallback: false,
+            sessionId,
+        };
+    }
+
     // Campus navigation ("where is the library", "what's near the
     // gym") is handled entirely from the local campus dataset and
     // never reaches the LLM or the timetable/knowledge retrieval
@@ -273,9 +353,13 @@ async function answerQuestion(question) {
     // navigation question naming a known place, so every other
     // question falls through unchanged.
     const navigationResult = navigationService.tryHandleNavigation(question);
-    if (navigationResult) return navigationResult;
+    if (navigationResult) {
+        sessionService.appendMessage(sessionId, "assistant", navigationResult.answer);
+        return { ...navigationResult, sessionId };
+    }
 
-    const { timetable, knowledge, resources, queryType } = await retrievalService.retrieveAnswer(question);
+    const priorHistory = sessionService.getRecentHistory(sessionId).slice(0, -1);
+    const { timetable, knowledge, resources, queryType } = await retrievalService.retrieveAnswer(question, priorHistory, audience);
 
     // Programme/cohort timetable requests are deterministic structured-data
     // lookups. If the user omitted year/semester (or the requested cohort is
@@ -284,13 +368,16 @@ async function answerQuestion(question) {
     const timetableEntities = queryType?.entities || {};
     if (queryType?.isTimetable && timetableEntities.programmeFamily && timetable.length === 0) {
         if (!timetableEntities.year || !timetableEntities.semester) {
+            const clarification = `I can look up the ${timetableEntities.programmeFamily} timetable, but I need the study year and semester (for example: "${timetableEntities.programmeFamily} 3rd year 2nd semester" or "${timetableEntities.programmeFamily} 3,2").`;
+            sessionService.appendMessage(sessionId, "assistant", clarification);
             return {
-                answer: `I can look up the ${timetableEntities.programmeFamily} timetable, but I need the study year and semester (for example: "${timetableEntities.programmeFamily} 3rd year 2nd semester" or "${timetableEntities.programmeFamily} 3,2").`,
+                answer: clarification,
                 queryType,
                 sources: [],
                 resources: [],
                 recommendedResources: [],
                 timetableMatches: 0,
+                sessionId,
             };
         }
 
@@ -299,14 +386,27 @@ async function answerQuestion(question) {
             : timetableEntities.studyMode === "full_time"
                 ? " full-time"
                 : "";
+        const notFound = `I couldn't find a ${timetableEntities.programmeFamily}${modeLabel} Year ${timetableEntities.year}, Semester ${timetableEntities.semester} cohort in the loaded UNILUS timetable records.`;
+        sessionService.appendMessage(sessionId, "assistant", notFound);
         return {
-            answer: `I couldn't find a ${timetableEntities.programmeFamily}${modeLabel} Year ${timetableEntities.year}, Semester ${timetableEntities.semester} cohort in the loaded UNILUS timetable records.`,
+            answer: notFound,
             queryType,
             sources: [],
             resources: [],
             recommendedResources: [],
             timetableMatches: 0,
+            sessionId,
         };
+    }
+
+    // No evidence of any kind found — redirect to a contact rather
+    // than asking the LLM to answer from nothing.
+    const hasAnyEvidence = timetable.length > 0 || knowledge.length > 0 || resources.length > 0;
+    if (!hasAnyEvidence) {
+        console.log("No matching records found. Checking contact fallback...");
+        const fallbackResult = await buildFallback(question, queryType, 0);
+        sessionService.appendMessage(sessionId, "assistant", fallbackResult.answer);
+        return { ...fallbackResult, sessionId };
     }
 
     const context = formatContext({ timetable, knowledge, resources });
@@ -314,7 +414,24 @@ async function answerQuestion(question) {
     const answer = await aiService.askAI(question, context, {
         allowedUrls: collectAllowedUrls({ knowledge, resources }),
         groundingText: buildPrimaryGroundingText(knowledge),
+        // Recent turns from THIS session, oldest first, so a follow-up
+        // like "what about Wednesday?" can be understood in context.
+        // Excludes the user message just appended above (it's added
+        // separately as the current question, not as history).
+        history: priorHistory,
     });
+
+    // Evidence existed but was a loose/irrelevant match — the model
+    // correctly said so per its system prompt. Redirect to a contact
+    // instead of returning that dead-end line as-is.
+    if (/i don.t have that information/i.test(answer)) {
+        console.log("LLM reported no answer. Checking contact fallback...");
+        const fallbackResult = await buildFallback(question, queryType, timetable.length);
+        sessionService.appendMessage(sessionId, "assistant", fallbackResult.answer);
+        return { ...fallbackResult, sessionId };
+    }
+
+    sessionService.appendMessage(sessionId, "assistant", answer);
 
     return {
         answer,
@@ -339,6 +456,8 @@ async function answerQuestion(question) {
         // unchanged for any existing consumer.
         recommendedResources: buildRecommendedResources(resources),
         timetableMatches: timetable.length,
+        usedFallback: false,
+        sessionId,
     };
 }
 
@@ -352,4 +471,5 @@ module.exports = {
     buildPrimaryGroundingText,
     isExplicitlyRevisedStructuredChunk,
     sameEvidenceScope,
+    buildFallback,
 };
