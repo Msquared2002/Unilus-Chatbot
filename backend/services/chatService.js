@@ -332,7 +332,7 @@ async function answerQuestion(question, sessionId, audience = "public") {
     // Bare greetings get a friendly canned intro. No retrieval, no LLM call,
     // so it works even if the AI service is unreachable.
     if (GREETING.test(question)) {
-        const greeting = 'Hi! I can help with timetables, exams, and course info. Try something like "when is my BIT101 exam?"';
+        const greeting = "Hi! How can I help you today?";
         sessionService.appendMessage(sessionId, "assistant", greeting);
         return {
             answer: greeting,
