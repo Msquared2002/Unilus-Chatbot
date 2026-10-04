@@ -9,6 +9,8 @@ const chatRoutes = require("./routes/chatRoutes");
 
 const campusRoutes = require("./routes/campusRoutes");
 
+const supportRoutes = require("./routes/supportRoutes");
+
 
 const app = express();
 
@@ -37,6 +39,14 @@ app.use(
 app.use(
     "/api/campus",
     campusRoutes
+);
+
+
+// Tickets, feedback and admin API routes
+// (/api/tickets/:ref, /api/feedback, /api/admin/...)
+app.use(
+    "/api",
+    supportRoutes
 );
 
 

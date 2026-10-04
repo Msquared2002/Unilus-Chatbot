@@ -33,12 +33,50 @@ const aiService = require("./aiService");
 const navigationService = require("./navigationService");
 const contactService = require("./contactService");
 const sessionService = require("./sessionService");
+const supportService = require("./supportService");
 const { logUnansweredQuestion } = require("./unansweredLogger");
 const { toDisplayTimetableEntry, harmonizeDisplayCourseNames } = require("./timetablePresentationService");
 
 // Matches a message that is ONLY a greeting (e.g. "hi", "Hey!", "good morning").
 // "hello there, when is my exam" will NOT match and goes through the normal pipeline.
 const GREETING = /^\s*(hi|hey|hello|yo|good (morning|afternoon|evening))\W*$/i;
+
+// Ticket references look like UNI-2026-0042.
+const TICKET_REF = /\bUNI-\d{4}-\d{4}\b/i;
+
+function formatTicketStatus(ticket) {
+    const opened = String(ticket.created_at || "").slice(0, 10);
+    const updated = String(ticket.updated_at || "").slice(0, 10);
+    let text = `Ticket ${ticket.ref} is currently **${ticket.status}**. ` +
+        `It is with the ${ticket.department} (priority: ${ticket.priority}). ` +
+        `Opened ${opened}, last updated ${updated}.`;
+    if (ticket.status === "Resolved" || ticket.status === "Closed") {
+        text += " This ticket has been marked as finished by the staff handling it.";
+    }
+    return text;
+}
+
+// "status of UNI-2026-0042", or "what's the status of my ticket" (uses the
+// most recent ticket opened in this session). Returns null when the message
+// isn't about a ticket, so normal handling continues.
+function handleTicketStatusQuestion(question, sessionId) {
+    const refMatch = question.match(TICKET_REF);
+    if (refMatch) {
+        const ticket = supportService.getTicketByRef(refMatch[0]);
+        return ticket
+            ? formatTicketStatus(ticket)
+            : `I couldn't find a ticket with reference ${refMatch[0].toUpperCase()}. Please check the number and try again.`;
+    }
+
+    const asksAboutTicket = /\b(ticket|reference (number|no))\b/i.test(question)
+        && /\b(status|update|progress|resolved|follow ?up)\b/i.test(question);
+    if (!asksAboutTicket) return null;
+
+    const latest = supportService.getLatestTicketForSession(sessionId);
+    return latest
+        ? formatTicketStatus(latest)
+        : "Please send me your ticket reference number (it looks like UNI-2026-0001) and I'll check its status.";
+}
 
 function isExplicitlyRevisedStructuredChunk(chunk = {}) {
     const label = [chunk.retrieval_title, chunk.title, chunk.source_file].filter(Boolean).join(" ");
@@ -294,22 +332,44 @@ function collectAllowedUrls({ knowledge = [], resources = [] }) {
  * review -- see unansweredLogger.js for why this is a review queue,
  * not a self-learning mechanism.
  */
-async function buildFallback(question, queryType, timetableMatches = 0) {
+async function buildFallback(question, queryType, timetableMatches = 0, sessionId = null) {
     const fallback = await contactService.findFallbackContact(question);
+    const contact = fallback ? fallback.contact : null;
 
     let answer;
-    if (fallback) {
-        const c = fallback.contact;
-        answer = `I don't have that information yet. ${c.note}`;
-        if (c.phone) answer += ` Call ${c.phone}.`;
-        if (c.email) answer += ` Email ${c.email}.`;
+    if (contact) {
+        answer = `I don't have that information yet. ${contact.note}`;
+        if (contact.phone) answer += ` Call ${contact.phone}.`;
+        if (contact.email) answer += ` Email ${contact.email}.`;
     } else {
         answer = "I don't have that information yet. Try rephrasing, or check with the registry directly.";
     }
 
     logUnansweredQuestion(question, {
-        matchedContact: fallback ? fallback.contact.contact_id : null,
+        matchedContact: contact ? contact.contact_id : null,
     });
+
+    // Escalate: open a ticket carrying the question, a summary and the
+    // recent conversation, so the student never has to repeat themselves.
+    // If ticketing fails for any reason, the plain contact answer above
+    // is still returned.
+    let ticket = null;
+    if (sessionId) {
+        try {
+            const result = supportService.createTicket({
+                sessionId,
+                question,
+                history: sessionService.getRecentHistory(sessionId, 12),
+                contact,
+            });
+            ticket = result.ticket;
+            answer += result.created
+                ? ` I've logged this as ticket ${ticket.ref} and passed it to the ${ticket.department}. Ask me for the "status of ${ticket.ref}" any time to check progress.`
+                : ` You already have an open ticket for this (${ticket.ref}), currently ${ticket.status}.`;
+        } catch (err) {
+            console.log("Failed to create ticket:", err.message);
+        }
+    }
 
     return {
         answer,
@@ -319,6 +379,7 @@ async function buildFallback(question, queryType, timetableMatches = 0) {
         recommendedResources: [],
         timetableMatches,
         usedFallback: true,
+        ticket,
     };
 }
 
@@ -336,6 +397,22 @@ async function answerQuestion(question, sessionId, audience = "public") {
         sessionService.appendMessage(sessionId, "assistant", greeting);
         return {
             answer: greeting,
+            queryType: { isTimetable: false, isKnowledge: false, isMixed: false, entities: {} },
+            sources: [],
+            resources: [],
+            recommendedResources: [],
+            timetableMatches: 0,
+            usedFallback: false,
+            sessionId,
+        };
+    }
+
+    // Ticket status ("status of UNI-2026-0042", "any update on my ticket").
+    const ticketStatusAnswer = handleTicketStatusQuestion(question, sessionId);
+    if (ticketStatusAnswer) {
+        sessionService.appendMessage(sessionId, "assistant", ticketStatusAnswer);
+        return {
+            answer: ticketStatusAnswer,
             queryType: { isTimetable: false, isKnowledge: false, isMixed: false, entities: {} },
             sources: [],
             resources: [],
@@ -404,7 +481,7 @@ async function answerQuestion(question, sessionId, audience = "public") {
     const hasAnyEvidence = timetable.length > 0 || knowledge.length > 0 || resources.length > 0;
     if (!hasAnyEvidence) {
         console.log("No matching records found. Checking contact fallback...");
-        const fallbackResult = await buildFallback(question, queryType, 0);
+        const fallbackResult = await buildFallback(question, queryType, 0, sessionId);
         sessionService.appendMessage(sessionId, "assistant", fallbackResult.answer);
         return { ...fallbackResult, sessionId };
     }
@@ -426,7 +503,7 @@ async function answerQuestion(question, sessionId, audience = "public") {
     // instead of returning that dead-end line as-is.
     if (/i don.t have that information/i.test(answer)) {
         console.log("LLM reported no answer. Checking contact fallback...");
-        const fallbackResult = await buildFallback(question, queryType, timetable.length);
+        const fallbackResult = await buildFallback(question, queryType, timetable.length, sessionId);
         sessionService.appendMessage(sessionId, "assistant", fallbackResult.answer);
         return { ...fallbackResult, sessionId };
     }

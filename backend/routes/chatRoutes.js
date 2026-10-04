@@ -65,6 +65,11 @@ router.post("/", async (req, res) => {
             navigation: result.navigation,
             routeIntent: result.routeIntent,
 
+            // Present only when the question was escalated:
+            // { ref, status, department, category, priority, ... }
+            ticket: result.ticket || null,
+            usedFallback: Boolean(result.usedFallback),
+
             sessionId
 
         });
@@ -86,6 +91,8 @@ router.post("/", async (req, res) => {
             resources: [],
             recommendedResources: [],
             timetableMatches: 0,
+            ticket: null,
+            usedFallback: false,
             sessionId
         });
 
