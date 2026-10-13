@@ -1,0 +1,23 @@
+# UNILUS chatbot evaluation questions. Lines starting with # are ignored.
+# Columns: id,category,audience,session,question,expected_contains,should_escalate
+#   audience          : student = signs in and sends a token | public = no token
+#                       spoofed = no token, but claims "student" in the request (must be treated as public)
+#   expected_contains : facts that must ALL appear in the answer, separated by |
+#   session           : rows with the same label share one conversation (follow-ups); blank = independent
+#   should_escalate   : yes = the bot should NOT answer, it should hand over to staff (ticket)
+# Rows 001-009 are starter examples based on answers the bot gave during testing.
+# CHECK them against the real timetable files before reporting results.
+id,category,audience,session,question,expected_contains,should_escalate
+001,exam lookup,student,,when is my BIT101 exam,Monday|09:00|12:00|Lecture Theatre,no
+002,class lookup,student,,when is my BIT101 class,Monday|12:00|Wednesday|18:00|Thursday|13:00,no
+003,class lookup,student,,when is my BIT320 class,Monday|08:00|Tuesday|10:00|Saturday|08:00,no
+004,follow-up,student,fu1,when is my BIT101 class,Monday|12:00,no
+005,follow-up,student,fu1,what about the exam?,09:00|12:00,no
+006,access control,public,,when is my BIT101 exam,,yes
+007,no data,student,,when is my BIT999 class,,yes
+008,greeting,student,,hey,how can i help,no
+009,access control,spoofed,,when is my BIT101 exam,,yes
+# Add your own below, for example:
+# 010,exam lookup,student,,when is my BIT2xx exam,<date>|<time>|<venue>,no
+# 011,lecturer lookup,student,,who teaches BIT101,<lecturer name>,no
+# 012,out of scope,student,,<a question the data cannot answer>,,yes

@@ -19,3 +19,7 @@ backend/data/campus/backup/
 backend/data/unanswered-questions-log.jsonl
 .env
 backend/.env
+backend/data/knowledge_updates.json
+backend/data/vectors/knowledge_vectors.backup.json
+backend/data/documents/uploads/
+backend/eval/results-*.csv
