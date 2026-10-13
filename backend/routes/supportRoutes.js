@@ -7,40 +7,24 @@
  *     GET   /api/tickets/:ref        ticket status only (no question text, no history)
  *     POST  /api/feedback            { sessionId, rating: "up"|"down", comment? }
  *
- *   Admin (header  x-admin-key: <ADMIN_API_KEY from .env>):
+ *   Staff (signed in as role "staff" or "admin", OR header x-admin-key):
  *     GET   /api/admin/tickets       ?status=Open&limit=50
  *     GET   /api/admin/tickets/:ref  full ticket including conversation history
  *     PATCH /api/admin/tickets/:ref  { status: "In Progress" | "Resolved" | ... }
  *     GET   /api/admin/stats         escalation and feedback statistics
  *
- * Admin routes fail closed: if ADMIN_API_KEY is not set, they are disabled.
+ * Staff access works two ways:
+ *   1. a sign-in token (Authorization: Bearer ...) for a staff or admin
+ *      account, from POST /api/auth/login
+ *   2. the shared ADMIN_API_KEY from .env, sent as x-admin-key
+ * Both fail closed. Students and anonymous users get 401.
  */
 
 const express = require("express");
-const crypto = require("crypto");
 
 const router = express.Router();
 const support = require("../services/supportService");
-
-
-function requireAdmin(req, res, next) {
-    const expected = process.env.ADMIN_API_KEY;
-
-    if (!expected) {
-        return res.status(503).json({
-            error: "Admin access is not configured on this server."
-        });
-    }
-
-    const provided = Buffer.from(req.get("x-admin-key") || "");
-    const wanted = Buffer.from(expected);
-
-    if (provided.length !== wanted.length || !crypto.timingSafeEqual(provided, wanted)) {
-        return res.status(401).json({ error: "Unauthorized" });
-    }
-
-    next();
-}
+const { requireStaff } = require("../middleware/requireStaff");
 
 
 /* ----------------------------- Public ----------------------------- */
@@ -80,9 +64,9 @@ router.post("/feedback", (req, res) => {
 });
 
 
-/* ------------------------------ Admin ----------------------------- */
+/* ------------------------------ Staff ----------------------------- */
 
-router.get("/admin/tickets", requireAdmin, (req, res) => {
+router.get("/admin/tickets", requireStaff, (req, res) => {
     try {
         res.json(
             support.listTickets({
@@ -97,7 +81,7 @@ router.get("/admin/tickets", requireAdmin, (req, res) => {
 });
 
 
-router.get("/admin/tickets/:ref", requireAdmin, (req, res) => {
+router.get("/admin/tickets/:ref", requireStaff, (req, res) => {
     try {
         const ticket = support.getTicketForAdmin(req.params.ref);
 
@@ -113,7 +97,7 @@ router.get("/admin/tickets/:ref", requireAdmin, (req, res) => {
 });
 
 
-router.patch("/admin/tickets/:ref", requireAdmin, (req, res) => {
+router.patch("/admin/tickets/:ref", requireStaff, (req, res) => {
     try {
         if (!support.normalizeStatus(req.body.status)) {
             return res.status(400).json({
@@ -135,7 +119,7 @@ router.patch("/admin/tickets/:ref", requireAdmin, (req, res) => {
 });
 
 
-router.get("/admin/stats", requireAdmin, (req, res) => {
+router.get("/admin/stats", requireStaff, (req, res) => {
     try {
         res.json(support.getStats());
     } catch (error) {

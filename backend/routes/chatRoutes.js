@@ -18,25 +18,32 @@ router.post("/", async (req, res) => {
         req.body.sessionId ||
         crypto.randomUUID();
 
+    // The access level comes from the signed token (see attachUser), never
+    // from the request body. A "student" value sent in the body is ignored,
+    // so it can't be used to claim access. Anyone without a valid token,
+    // including expired or tampered tokens, is treated as public.
+    const audience = req.user ? "student" : "public";
+
+    // Tells the frontend whether the user is signed in, and whether a token
+    // it sent was refused ("expired" | "invalid" | "disabled") so it can
+    // ask the user to sign in again.
+    const authInfo = {
+        authenticated: Boolean(req.user),
+        authProblem: req.authProblem || null
+    };
+
     // Empty or missing question: answer politely instead of crashing
     // somewhere deeper in the pipeline.
     if (!question) {
         return res.status(400).json({
             question,
             answer: "Please type a question and I'll do my best to help.",
+            ...authInfo,
             sessionId
         });
     }
 
     try {
-
-        // Fail closed: anything other than exactly "student" is treated
-        // as "public". A request with no audience field at all (a raw
-        // curl call, an older client) gets the more restrictive tier,
-        // never the more permissive one.
-        const audience =
-            req.body.audience === "student" ? "student" : "public";
-
 
         const result =
             await chatService.answerQuestion(
@@ -70,6 +77,8 @@ router.post("/", async (req, res) => {
             ticket: result.ticket || null,
             usedFallback: Boolean(result.usedFallback),
 
+            ...authInfo,
+
             sessionId
 
         });
@@ -93,6 +102,7 @@ router.post("/", async (req, res) => {
             timetableMatches: 0,
             ticket: null,
             usedFallback: false,
+            ...authInfo,
             sessionId
         });
 

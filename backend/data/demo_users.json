@@ -1,0 +1,26 @@
+{
+  "_note": "DEMO ACCOUNTS ONLY. Passwords are stored as scrypt hashes. Create a hash with: node scripts/hash-password.js \"password\". Roles: student, staff, admin.",
+  "users": [
+    {
+      "username": "demo",
+      "name": "Luka Hamududu",
+      "role": "student",
+      "programme": "BIT",
+      "password_hash": "scrypt$f640073dd6b62582066863c866d4e689$8ae9581c121661dbabb8114992b00501c42ed89ce2d53288dcee6270169feb76d5cd7153b53c279a82d0613936b9afdeb81c5dbdebf639bf6879e04a74098458"
+    },
+    {
+      "username": "BIT2424001",
+      "name": "Luka Hamududu",
+      "role": "student",
+      "programme": "BIT",
+      "password_hash": "scrypt$e3ab8a8a272cabdaa22d18ea6a3e23aa$29aa5935627455fd681bbd0aa0400fe9739a817bc74d87e792f314b01a14c83092a95a04356b83b1ccaf1255aabf37650e4a2f50855b2b6e14013fdb5c298762"
+    },
+    {
+      "username": "staff.demo",
+      "name": "Demo Staff",
+      "role": "staff",
+      "programme": null,
+      "password_hash": "scrypt$eb2962885e47cf8d8fdefad60327f12e$6f3b085b478bbdc8946c13afe016bb2c3527bc5c9903c82d59708aee2dafc03cf1df57792c49281d48c4e78efddd85530b1ec87998ffefa4b8047671e01e53d5"
+    }
+  ]
+}
