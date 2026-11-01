@@ -20,11 +20,11 @@ test('Haversine measures metres and walking time derives from route length', () 
   assert.equal(routing.WALKING_SPEED_MPS, 1.4);
 });
 
-test('local graph connects explicit vertices and same-level intersections', () => {
+test('local graph does not connect a walkway merely because lines cross', () => {
   const graph = builder.buildGraph({ boundary, roads: [line('road', 'shared_road', [A, B])],
     walkways: [line('cross', 'footway', [[x + .00025, y - .0001], [x + .00025, y + .0001]])] });
-  assert.equal(graph.stats.connected_component_count, 1);
-  assert.ok(graph.stats.edge_count >= 4);
+  assert.equal(graph.stats.connected_component_count, 2);
+  assert.ok(graph.stats.edge_count >= 2);
   assert.ok(graph.edges.every(e => e.distance_m > 0 && e.cost_m >= e.distance_m));
 });
 

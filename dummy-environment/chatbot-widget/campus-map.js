@@ -1,5 +1,8 @@
 // campus-map.js
 // ---------------------------------------------------------------------
+// Changes: Executes confirmed campus map, building, and route display actions.
+// Affects: Campus map view and building information panel in the chatbot widget.
+// Purpose: Leaves place/route decisions to the chatbot flow while this module owns map presentation.
 // Owns everything about the campus map: the Leaflet instance, tile
 // layer, buildings.json data, campus boundary/lock, marker rendering,
 // and the building info panel. It NEVER decides which campus/building
@@ -798,7 +801,7 @@ window.CampusMap = (function () {
       return;
     }
     els.buildingDirections.removeAttribute("href");
-    els.buildingDirections.innerHTML = `${DIRECTIONS_ICON}<span>Route from my location</span>`;
+    els.buildingDirections.innerHTML = `${DIRECTIONS_ICON}<span>Directions in Google Maps</span>`;
     els.buildingDirections.onclick = (event) => { event.preventDefault(); routeFromCurrentLocation(building.id); };
     els.buildingDirections.hidden = false;
   }
@@ -891,11 +894,44 @@ window.CampusMap = (function () {
     }
   }
 
-  async function routeFromCurrentLocation(placeId) {
+  async function routeFromCurrentLocation(placeId, reservedTab) {
+    const campus = getCampus("silverest");
+    if (!leafletMap || !campus) return;
+    const destination = findBuilding(placeId, "silverest");
+    if (!destination?.coordinates) {
+      showToast("This destination is not available for directions.");
+      return;
+    }
+    const [destinationLat, destinationLng] = destination.coordinates;
+    const mapsUrl = (position) => `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(`${position.lat},${position.lng}`)}&destination=${encodeURIComponent(`${destinationLat},${destinationLng}`)}&travelmode=walking&dir_action=navigate`;
+    // Reserve the tab during the user gesture; the GPS callback fills in the exact origin.
+    const mapsTab = reservedTab || window.open("about:blank", "_blank");
+    const run = (position) => {
+      if (!position) {
+        mapsTab?.close();
+        return;
+      }
+      const url = mapsUrl(position);
+      if (mapsTab && !mapsTab.closed) mapsTab.location.href = url;
+      else window.location.assign(url);
+    };
+    const current = CampusLocation.getCurrent();
+    if (current) run(current);
+    else CampusLocation.request(leafletMap, campus.boundary, (message) => {
+      showToast(message);
+      if (message === "Location permission was denied." || message === "Location request timed out." ||
+          message === "Location is unavailable." || message === "Location is unavailable in this browser.") mapsTab?.close();
+    }, run, { allowOutside: true });
+  }
+
+  async function routeOnCampusFromCurrentLocation(placeId) {
     const campus = getCampus("silverest");
     if (!leafletMap || !campus) return;
     const run = async (position) => {
-      if (!position?.onCampus) return;
+      if (!position?.onCampus) {
+        showToast("Campus walking routes are only available inside Silverest Campus.");
+        return;
+      }
       try {
         const response = await fetch(`${CampusDataClient.API_BASE}/route`, { method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -906,7 +942,7 @@ window.CampusMap = (function () {
       } catch (_) { showToast("The local campus route service is unavailable."); }
     };
     const current = CampusLocation.getCurrent();
-    if (current?.onCampus) run(current);
+    if (current) run(current);
     else CampusLocation.request(leafletMap, campus.boundary, showToast, run);
   }
 
@@ -918,6 +954,7 @@ window.CampusMap = (function () {
     openBuildingCard,
     closeBuildingCard,
     showRoute,
-    routeFromCurrentLocation
+    routeFromCurrentLocation,
+    routeOnCampusFromCurrentLocation
   };
 })();

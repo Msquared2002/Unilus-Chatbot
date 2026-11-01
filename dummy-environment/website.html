@@ -9,11 +9,12 @@
     />
     <title>University Of Lusaka Home</title>
     <link rel="stylesheet" href="css/shared.css" />
+    <script src="js/global-navigation.js" defer></script>
     <link rel="stylesheet" href="css/website.css" />
   <!-- ================= UNILUS Chatbot Widget: styles ================= -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <link rel="stylesheet" href="chatbot-widget/widget.css">
-<link rel="stylesheet" href="chatbot-widget/avatar.css">
+<link rel="stylesheet" href="chatbot-widget/avatar.css?v=hair-refit-2">
 <link rel="stylesheet" href="chatbot-widget/integration.css">
 </head>
   <body class="website-page">
@@ -34,10 +35,14 @@
       </button>
       <nav class="site-nav" id="website-nav" aria-label="Main navigation">
         <a class="is-active" href="#top">HOME</a>
-        <a class="has-menu" href="#audiences"
-          >PORTAL <span>⌄</span
-          ><em><b>Students</b><b>Staff</b><b>Applicants</b></em></a
-        >
+        <div class="site-nav__menu">
+          <button class="has-menu site-nav__dropdown-toggle" type="button" aria-haspopup="true" aria-expanded="false">PORTAL <span>⌄</span></button>
+          <div class="site-nav__dropdown">
+            <a href="portal-login.html">Students</a>
+            <a href="portal-login.html">Staff</a>
+            <a href="portal-login.html">Applicants</a>
+          </div>
+        </div>
         <a class="has-menu" href="#apply">APPLY NOW <span>⌄</span></a>
         <a class="has-menu" href="#programmes">PROGRAMMES <span>⌄</span></a>
         <a class="has-menu" href="#fees">FEES AND TUITION <span>⌄</span></a>
@@ -506,6 +511,6 @@
 <!-- ================= UNILUS Chatbot Widget (end) ================= -->
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="chatbot-widget/dist/chatbot-widget.js"></script>
+<script src="chatbot-widget/dist/chatbot-widget.js?v=hair-refit-2"></script>
 </body>
 </html>

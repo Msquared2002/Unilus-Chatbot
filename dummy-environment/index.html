@@ -5,14 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>UNILUS Dummy Environment</title>
     <link rel="stylesheet" href="css/shared.css" />
+    <script src="js/global-navigation.js" defer></script>
   </head>
   <body class="launcher">
     <main class="launcher__inner">
-      <img
-        class="launcher__logo"
-        src="assets/unilus-logo.png"
-        alt="University of Lusaka crest"
-      />
+      <a class="launcher__brand global-brand-trigger" href="website.html" aria-label="UNILUS navigation"><img class="launcher__logo" src="assets/unilus-logo.png" alt="University of Lusaka crest" /></a>
       <p class="kicker">University of Lusaka</p>
       <h1>Dummy environment</h1>
       <p class="launcher__intro">
@@ -39,6 +36,11 @@
           ><span
             ><strong>E-learning Platform</strong
             ><small>LMS dashboard, calendar, events, announcements</small></span
+          ><span>→</span></a
+        >
+        <a class="launcher-card" href="admin.html"
+          ><span class="launcher-card__number">04</span
+          ><span><strong>Support Centre Admin Dashboard</strong><small>Staff ticket queue and department workspace</small></span
           ><span>→</span></a
         >
       </div>

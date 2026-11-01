@@ -1,6 +1,9 @@
 /**
  * navigationService.js
  * ======================
+ * Changes: Classifies campus navigation intent and builds deterministic place or route responses.
+ * Affects: chatService.js navigation handling and frontend map payloads.
+ * Purpose: Resolves map questions from campus data without diverting them through general answer generation.
  *
  * The single entry point chatService.js calls for campus navigation.
  * Ties together:

@@ -9,6 +9,13 @@
     const open = nav.classList.toggle("is-open");
     menuButton.setAttribute("aria-expanded", String(open));
   });
+  document.querySelectorAll(".site-nav__dropdown-toggle").forEach((button) => {
+    button.addEventListener("click", () => {
+      const menu = button.closest(".site-nav__menu");
+      const open = menu.classList.toggle("is-open");
+      button.setAttribute("aria-expanded", String(open));
+    });
+  });
   const toast = document.querySelector(".demo-toast");
   let toastTimer;
   window.showDemoToast = function (message) {
@@ -27,3 +34,4 @@
     }),
   );
 })();
+/* Shared page helpers for the dummy environment. Global logo navigation is in global-navigation.js. */

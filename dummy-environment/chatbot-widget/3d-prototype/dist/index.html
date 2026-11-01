@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>UNILUS · 3D Avatar Studio</title>  <script type="module" crossorigin src="./assets/index-DduF6Ih1.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-Bvj8Ti4h.css">
+</head>
+<body>
+<header><a class="brand" href="#">U<span>UNILUS<small>STUDENT COMPANION</small></span></a><span class="badge">EXPERIMENT 01 · LOCAL PREVIEW</span></header>
+<main>
+  <div class="intro"><p class="eyebrow">THE SAME COMPANION. ANOTHER DIMENSION.</p><h1>A familiar face,<br>with room to grow.</h1><p class="lede">An editable 3D study of the UNILUS mascot. Compare the silhouette, try a new angle, and see how everything moves together.</p></div>
+  <section class="comparison" aria-label="Avatar comparison">
+    <article class="stage-card"><div class="card-heading"><span class="number">01</span><div><h2>Original companion</h2><p>Current 2D renderer · reference</p></div><span class="tag">REFERENCE</span></div><div class="reference-stage"><iframe title="Original 2D UNILUS avatar" src="./reference-2d.html"></iframe></div><footer>Approved proportions. Familiar personality.</footer></article>
+    <article class="stage-card"><div class="card-heading"><span class="number">02</span><div><h2>Into three dimensions</h2><p>Blender model · Three.js preview</p></div><span class="live-dot" aria-hidden="true"></span></div><div id="viewport" class="viewport"><canvas id="avatar-canvas" aria-label="Interactive 3D UNILUS mascot"></canvas><p id="load-status" role="status">Loading the Blender model…</p></div><footer><span id="render-stats">Preparing geometry</span><button id="theme" class="text-button">Dark background</button></footer></article>
+  </section>
+  <section class="controls" aria-label="Prototype controls">
+    <div class="control-group"><h2><span>01</span> Appearance</h2><label for="hair">Hairstyle</label><select id="hair"><option value="none">None</option><option value="low-afro" selected>Low Afro</option></select><label for="outfit">Outfit</label><select id="outfit"><option value="none">No outfit</option><option value="black-spirit-hoodie" selected>Black Spirit Hoodie</option></select><label class="check"><input type="checkbox" id="compact"> See at widget size</label></div>
+    <div class="control-group"><h2><span>02</span> Personality</h2><p class="helper">Float, react and blink — with eyes that look independently.</p><div class="button-grid" id="animations"><button data-state="idle" aria-pressed="true">Idle</button><button data-state="thinking" aria-pressed="false">Thinking</button><button data-state="happy" aria-pressed="false">Happy</button><button id="blink">Blink</button></div><label class="check"><input id="follow" type="checkbox" checked> Follow mouse / touch</label></div>
+    <div class="control-group"><h2><span>03</span> Explore the form</h2><div class="button-grid"><button id="front">Front view</button><button id="left">Left view</button><button id="right">Right view</button><button id="reset">Reset view</button></div><label class="check"><input id="orbit" type="checkbox"> Manual orbit · drag to rotate</label><label for="rotation">Rotate character <output id="rotation-value">0°</output></label><input id="rotation" type="range" min="-180" max="180" value="0" step="1"></div>
+  </section>
+  <aside><strong>A prototype, kept separate.</strong><p>The working chatbot still uses its 2D avatar. This model has one experimental hairstyle and outfit; it does not read or change your saved profile.</p><a href="../README.md">Model notes & rebuilding instructions ↗</a></aside>
+</main><div class="page-footer">UNIVERSITY OF LUSAKA <span>Avatar development studio / V1</span></div></body></html>

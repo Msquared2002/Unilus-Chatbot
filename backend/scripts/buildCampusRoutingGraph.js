@@ -11,6 +11,12 @@ function main() {
     placeIds: new Set(repository.getAllPlaces().map(p => p.id)) });
   if (report.errors.length) throw new Error(report.errors.join('\n'));
   const graph = buildGraph(sources);
+  for (const access of sources.accessPoints) {
+    if (!graph.access_points[access.id]?.connected)
+      report.warnings.push(`Entrance not connected to a routable path: ${access.id}`);
+  }
+  if (graph.stats.connected_component_count > 1 && graph.stats.osm_pedestrian_way_count)
+    report.warnings.push(`Disconnected pedestrian network: ${graph.stats.connected_component_count} components`);
   const places = repository.getAllPlaces();
   const accessible = new Set(sources.accessPoints.filter(a => graph.access_points[a.id]?.connected).map(a => a.place_id));
   graph.stats.destinations_with_valid_access = [...accessible].filter(id => places.some(p => p.id === id));

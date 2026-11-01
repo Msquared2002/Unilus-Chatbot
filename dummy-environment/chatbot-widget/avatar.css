@@ -68,6 +68,33 @@
      gap - and no extra transform is needed, which keeps the art crisp at
      any display size instead of being blurred by runtime upscaling. */
 }
+
+/* These approved wraps taper slightly faster than the spherical body at its
+   lower edge. A fabric-coloured backing fills the lower edge beneath their
+   transparent pixels; the artwork and open neckline stay untouched. */
+.uni-avatar-wrapper:is(.outfit-tech-hoodie, .outfit-tech-circuit,
+  .outfit-spirit-hoodie, .outfit-green-polo, .outfit-white-varsity-tee,
+  .outfit-gray-spirit-hoodie, .outfit-black-spirit-hoodie,
+  .outfit-maroon-spirit-hoodie) .uni-body::before {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 32%;
+  background: var(--uni-wrap-backing);
+  z-index: 0;
+  pointer-events: none;
+}
+.uni-avatar-wrapper.outfit-green-polo { --uni-wrap-backing: linear-gradient(#075c3d, #002b16); }
+.uni-avatar-wrapper.outfit-white-varsity-tee { --uni-wrap-backing: linear-gradient(#f3f5f9, #e7ebf3); }
+.uni-avatar-wrapper.outfit-gray-spirit-hoodie { --uni-wrap-backing: linear-gradient(#c1bfc1, #aaa8aa); }
+.uni-avatar-wrapper.outfit-black-spirit-hoodie { --uni-wrap-backing: linear-gradient(#242424, #10100f); }
+.uni-avatar-wrapper.outfit-maroon-spirit-hoodie { --uni-wrap-backing: linear-gradient(#771b2b, #540d17); }
+.uni-avatar-wrapper.outfit-tech-hoodie { --uni-wrap-backing: linear-gradient(#123f83, #071c3c); }
+.uni-avatar-wrapper.outfit-tech-circuit { --uni-wrap-backing: linear-gradient(#252525, #111111); }
+.uni-avatar-wrapper.outfit-spirit-hoodie { --uni-wrap-backing: linear-gradient(#075c3d, #002b16); }
+.uni-avatar-wrapper:is(.outfit-tech-hoodie, .outfit-tech-circuit,
+  .outfit-spirit-hoodie, .outfit-gray-spirit-hoodie, .outfit-black-spirit-hoodie,
+  .outfit-maroon-spirit-hoodie) .uni-body::before { height: 24%; }
 .uni-eyes { z-index: 3; } /* keep eyes above every outfit layer */
 
 /* ----- Small chest accessory (kept for future reuse; unused by current outfits) -----
@@ -84,23 +111,8 @@
   display: none;
 }
 
-/* ----- Accessory layers (wig, glasses, laptop) -----
-   Live OUTSIDE .uni-body (siblings) so they are NOT clipped by the circle.
-
-   Head-worn accessories are split into two layers each:
-   - the -wrap element handles POSITION + the idle/happy float, so it
-     bounces in the same phase as the cap and body (see visibility note below).
-   - the inner <img> handles the pointer-tracking tilt/eye-offset set from JS.
-
-   CSS animations always win over inline styles on the same property, so
-   putting both jobs on one element meant the float animation was silently
-   erasing the JS tracking transform every frame - glasses would float but
-   never actually track the eyes. Splitting them into parent/child lets both
-   apply at once, since transforms compose across nested elements.
-
-   The wig (.uni-accessory-top-wrap) and glasses (.uni-glasses-wrap) are two
-   INDEPENDENT layers/classes, not tied to setOutfit() at all - any glasses
-   can be worn together with any outfit (including the wig, or none). */
+/* Head accessories share the character motion and expression ancestors.
+   These wrappers only position the approved artwork outside the body clip. */
 .uni-accessory-top-wrap {
   position: absolute;
   bottom: 40px;
@@ -109,10 +121,6 @@
   transform: translateX(-50%);
   z-index: 9; /* above body, below cap */
   pointer-events: none;
-  /* visibility (not display) keeps the float animation running continuously
-     in the background, in the same phase as the cap and body - display:none
-     would reset the animation to frame 0 every time an outfit is switched
-     on, so it would drift out of sync with the head's bounce. */
   visibility: hidden;
   opacity: 0;
 }
@@ -135,6 +143,30 @@
    and z-index (above the wig, since they sit on the face and should stay
    visible even if wig ringlets swing close to eye level), toggled by
    setGlasses() rather than setOutfit(). */
+/* Hair fit stays beneath shared motion, preserving the original proportions. */
+.uni-hair-wrap {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 8;
+  visibility: hidden;
+  pointer-events: none;
+}
+.uni-hair {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  transition: transform 0.12s ease-out;
+  /* Keep approved pixels outside this face opening. No PNG is rewritten. */
+  -webkit-mask-image: radial-gradient(ellipse var(--hair-opening-rx) var(--hair-opening-ry) at var(--hair-opening-x) var(--hair-opening-y), transparent calc(100% - .7px), #000 100%);
+  mask-image: radial-gradient(ellipse var(--hair-opening-rx) var(--hair-opening-ry) at var(--hair-opening-x) var(--hair-opening-y), transparent calc(100% - .7px), #000 100%);
+}
+.uni-avatar-wrapper.has-hair .uni-hair-wrap { visibility: visible; }
+/* Keep the Law wig intact and retain the selected hair for other outfits. */
+.uni-avatar-wrapper.outfit-law-wig .uni-hair-wrap { visibility: hidden; }
+.uni-avatar-wrapper.has-hair:not(.outfit-law-wig) .uni-cap-img { top: var(--uni-hair-cap-top, -14px); }
+
 .uni-glasses-wrap {
   position: absolute;
   bottom: 25px;
@@ -154,29 +186,10 @@
   transition: transform 0.12s ease-out;
 }
 .uni-avatar-wrapper.has-glasses .uni-glasses-wrap { visibility: visible; opacity: 1; }
-/* Each pair is cropped tight to its own art (frame + temple tips), and each
-   image's own lens-hole centers were used to size/place it so the lenses
-   frame the eyes generously (deliberately bigger than the raw eye-to-eye
-   gap, like a real pair of glasses sitting slightly proud of the face)
-   rather than shrinking the frame down to exactly the eyes' own width. */
-.uni-avatar-wrapper.glasses-round-gold .uni-glasses-wrap {
-  width: 91px;
-  bottom: 18px;
-}
-.uni-avatar-wrapper.glasses-square-black .uni-glasses-wrap {
-  width: 94px;
-  bottom: 33px;
-}
-.uni-avatar-wrapper.glasses-cateye-black .uni-glasses-wrap {
-  width: 95px;
-  bottom: 28px;
-}
-/* Glasses float in sync with the cap/wig too, same as the wig does below */
-.uni-avatar-wrapper.idle .uni-glasses-wrap {
-  animation: uni-cap-float 3s ease-in-out infinite;
-}
-.uni-avatar-wrapper.happy .uni-glasses-wrap {
-  animation: uni-cap-happy 0.55s ease infinite;
+/* Compact proportional frames, aligned using the original lens windows. */
+.uni-avatar-wrapper.has-glasses .uni-glasses-wrap {
+  width: var(--uni-glasses-width, 74px);
+  bottom: var(--uni-glasses-bottom);
 }
 
 .uni-accessory-bottom {
@@ -200,34 +213,48 @@
   top: -14px;
 }
 
-/* Wig floats in sync with the cap - same keyframes, same timing */
-.uni-avatar-wrapper.idle .uni-accessory-top-wrap {
-  animation: uni-cap-float 3s ease-in-out infinite;
-}
-.uni-avatar-wrapper.happy .uni-accessory-top-wrap {
-  animation: uni-cap-happy 0.55s ease infinite;
-}
 
 /* ----- Eyes ----- */
-.uni-eyes {
+.uni-gaze {
+  position: absolute;
+  top: 16px;
+  left: 0;
+  width: 100%;
+  height: 19px;
   display: flex;
-  gap: 14px;
+  justify-content: center;
   align-items: center;
-  margin-top: 16px; /* fixed distance from top of the 78px ball - clears the tallest outfit's collar */
+  z-index: 3;
+  transition: transform .07s ease-out;
+}
+.uni-eyes {
+  display: grid;
+  grid-template-columns: repeat(2, 16px);
+  grid-template-rows: 19px;
+  column-gap: var(--uni-eye-gap, 14px);
+  align-items: center;
+  justify-items: center;
+  height: 19px;
   transition: transform 0.07s ease-out;
 }
 
 .uni-eye {
   width: 16px;
   height: 19px;
-  background: #fff;
   border-radius: 50%;
   position: relative;
   overflow: hidden;
   transition: width 0.25s ease, height 0.25s ease, transform 0.25s ease;
 }
 
-.uni-eye::after {
+.uni-eye-white {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  border-radius: inherit;
+  animation: uni-eye-blink 5.5s ease-in-out infinite;
+}
+.uni-eye-white::after {
   content: "";
   position: absolute;
   top: 4px;
@@ -272,6 +299,19 @@
   transform: scale(1) scaleX(-1);
 }
 
+/* An inline avatar sits at the mobile viewport edge. Keep the GIF above its
+   head there, within the narrow strip before the reply bubble. */
+@media (max-width: 640px) {
+  .avatar-slot--inline .uni-avatar-wrapper.bubble-left .uni-thinking-bubble {
+    left: 30px;
+    top: -65px;
+    transform: scale(0.55);
+  }
+  .avatar-slot--inline .uni-avatar-wrapper.bubble-left.thinking .uni-thinking-bubble {
+    transform: scale(1);
+  }
+}
+
 /* ----- Gavel (only present in the law-wig/lawyer outfit) -----
    Sits at rest (gavel-rest.png) beside the avatar whenever the lawyer
    outfit is on, and .gavel-active (added briefly on click) swaps in the
@@ -312,42 +352,23 @@
    ANIMATION STATES
    ============================================ */
 
-.uni-avatar-wrapper.idle .uni-body {
-  animation: uni-idle-bounce 3s ease-in-out infinite;
-}
-.uni-avatar-wrapper.idle .uni-cap-img {
-  animation: uni-cap-float 3s ease-in-out infinite;
-}
-
 @keyframes uni-idle-bounce {
   0%, 100% { transform: translateY(0); }
   50%      { transform: translateY(-8px); }
 }
-@keyframes uni-cap-float {
-  0%, 100% { transform: translateX(-50%) translateY(0); }
-  50%      { transform: translateX(-50%) translateY(-7px); }
-}
+
 
 .uni-avatar-wrapper.happy .uni-eye {
   width: 18px;
   height: 21px;
   transform: scaleY(1.12);
 }
-.uni-avatar-wrapper.happy .uni-body {
-  animation: uni-happy-bounce 0.55s ease infinite;
-}
-.uni-avatar-wrapper.happy .uni-cap-img {
-  animation: uni-cap-happy 0.55s ease infinite;
-}
 
 @keyframes uni-happy-bounce {
   0%, 100% { transform: translateY(0) scale(1); }
   50%      { transform: translateY(-16px) scale(1.05); }
 }
-@keyframes uni-cap-happy {
-  0%, 100% { transform: translateX(-50%) translateY(0); }
-  50%      { transform: translateX(-50%) translateY(-13px); }
-}
+
 
 .uni-avatar-wrapper.worry .uni-eye {
   width: 14px;
@@ -355,23 +376,101 @@
   border-radius: 50% 50% 40% 40%;
   transform: translateY(4px);
 }
-.uni-avatar-wrapper.worry .uni-body {
-  animation: uni-worry-shake 0.45s ease-in-out infinite;
+
+.uni-avatar-wrapper.sad .uni-eyes { transform: translateY(8px); }
+.uni-avatar-wrapper.sad .uni-eye { height: 11px; transform: rotate(8deg); }
+.uni-avatar-wrapper.sad .uni-eye:last-child { transform: rotate(-8deg); }
+
+@keyframes uni-sad-dip {
+  0%, 100% { transform: translateY(3px); }
+  50% { transform: translateY(6px); }
 }
+.uni-avatar-wrapper.surprised .uni-eye { width: 16px; height: 21px; }
+
+
+@keyframes uni-startle {
+  0%, 100% { transform: translateY(0); }
+  35% { transform: translateY(-10px) scale(1.05); }
+}
+
 @keyframes uni-worry-shake {
   0%, 100% { transform: translateX(0); }
   25%      { transform: translateX(-4px); }
   75%      { transform: translateX(4px); }
 }
 
-.uni-avatar-wrapper.look-left .uni-eyes  { transform: translateX(-9px); }
-.uni-avatar-wrapper.look-right .uni-eyes { transform: translateX(9px); }
-.uni-avatar-wrapper.look-up .uni-eyes    { transform: translateY(-8px); }
-
-.uni-avatar-wrapper.thinking .uni-body {
-  animation: uni-think 1.6s ease-in-out infinite;
+/* Fixed lens anchors; emotion shape changes stay centred in their grid cells. */
+.uni-avatar-wrapper.has-glasses.happy .uni-eye { width: 18px; height: 19px; transform: scaleY(1.02); }
+.uni-avatar-wrapper.has-glasses.surprised .uni-eye { width: 19px; height: 20px; }
+.uni-avatar-wrapper.has-glasses.sad .uni-eyes { transform: translateY(2px); }
+.uni-avatar-wrapper.has-glasses.worry .uni-eye { transform: translateY(1px); }
+@keyframes uni-eye-blink {
+  0%, 91%, 97%, 100% { transform: scaleY(1); }
+  94% { transform: scaleY(.06); }
 }
+@keyframes uni-eye-blink-once {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(.06); }
+}
+.uni-avatar-wrapper.is-blinking .uni-eye-white { animation: uni-eye-blink-once .24s ease-in-out both; }
+
+
 @keyframes uni-think {
   0%, 100% { transform: scale(1); }
   50%      { transform: scale(1.04); }
+}
+
+/* Float translates the complete assembly vertically. Only the inner motion
+   and expression layers turn: cap and laptop remain level siblings of motion. */
+.uni-motion, .uni-float, .uni-expression {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  transform-origin: 50% 100px;
+}
+.uni-motion { transition: transform .12s ease-out; }
+.uni-float { animation: uni-idle-bounce 3s ease-in-out infinite; }
+.uni-avatar-wrapper.happy .uni-expression { animation: uni-happy-bounce .55s ease infinite; }
+.uni-avatar-wrapper.worry .uni-expression { animation: uni-worry-shake .45s ease-in-out infinite; }
+.uni-avatar-wrapper.sad .uni-expression { animation: uni-sad-dip 1.8s ease-in-out infinite; }
+.uni-avatar-wrapper.surprised .uni-expression { animation: uni-startle .7s ease-out both; }
+.uni-avatar-wrapper.thinking .uni-expression { animation: uni-think 1.6s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .uni-expression { animation: none !important; }
+  .uni-eye-white { animation: none; }
+  /* Keep the explicitly requested reference hover; suppress other effects above. */
+  .uni-float { animation: uni-idle-bounce 3s ease-in-out infinite; }
+  .uni-motion, .uni-gaze, .uni-eyes, .uni-eye { transition: none; }
+}
+@keyframes uni-gentle-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+
+/* TEST_MAP_VERSION reference: independent cap hover, never cursor rotation. */
+.uni-avatar-wrapper.idle .uni-cap-img { animation: uni-cap-float 3s ease-in-out infinite; }
+.uni-avatar-wrapper.happy .uni-cap-img { animation: uni-cap-happy .55s ease infinite; }
+@keyframes uni-cap-float {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-7px); }
+}
+@keyframes uni-cap-happy {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-13px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .uni-avatar-wrapper.idle .uni-cap-img { animation: uni-cap-float 3s ease-in-out infinite; }
+  .uni-avatar-wrapper.happy .uni-cap-img { animation: none; }
+}
+@keyframes uni-cap-float-reduced {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-2px); }
+}
+
+/* Latest low-profile Cornrows: true transparent partings reveal the sphere.
+   A short alpha transition tapers the forehead edge; no scalp or filler layer. */
+.uni-avatar-wrapper[data-hairstyle="cornrows"] .uni-hair {
+  -webkit-mask-image: radial-gradient(ellipse var(--hair-opening-rx) var(--hair-opening-ry) at var(--hair-opening-x) var(--hair-opening-y), transparent calc(100% - 2px), #000 100%);
+  mask-image: radial-gradient(ellipse var(--hair-opening-rx) var(--hair-opening-ry) at var(--hair-opening-x) var(--hair-opening-y), transparent calc(100% - 2px), #000 100%);
 }

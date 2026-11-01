@@ -37,6 +37,7 @@
   position: relative;
   white-space: nowrap;
 }
+.site-nav__dropdown-toggle { padding: 0; border: 0; background: none; color: inherit; font-size: inherit; font-weight: inherit; cursor: pointer; }
 .site-nav a.is-active {
   color: var(--gold);
 }
@@ -44,10 +45,11 @@
   font-size: 18px;
   font-weight: 400;
 }
-.site-nav em {
+.site-nav__menu { position: relative; }
+.site-nav__dropdown {
   position: absolute;
   display: none;
-  top: 27px;
+  top: calc(100% + 12px);
   left: -10px;
   min-width: 215px;
   padding: 18px 0;
@@ -56,16 +58,19 @@
   font-style: normal;
   box-shadow: 0 6px 12px #0004;
 }
-.site-nav .has-menu:hover em,
-.site-nav .has-menu:focus-within em {
+.site-nav__menu:hover .site-nav__dropdown,
+.site-nav__menu:focus-within .site-nav__dropdown,
+.site-nav__menu.is-open .site-nav__dropdown {
   display: block;
 }
-.site-nav em b {
+.site-nav__dropdown a {
   display: block;
   padding: 10px 38px;
   font-size: 17px;
+  color: inherit;
 }
-.site-nav em b:hover {
+.site-nav__dropdown a:hover,
+.site-nav__dropdown a:focus {
   background: #ffffff18;
 }
 .site-hero {
@@ -507,7 +512,8 @@
   .site-header__brand {
     left: 2vw;
   }
-  .site-nav em b {
+  .global-brand-menu--site { left: 2vw; }
+  .site-nav__dropdown a {
     font-size: 15px;
   }
   .site-hero p {
@@ -555,7 +561,7 @@
   .site-nav.is-open {
     display: flex;
   }
-  .site-nav em {
+  .site-nav__dropdown {
     position: static;
     margin-top: 8px;
   }

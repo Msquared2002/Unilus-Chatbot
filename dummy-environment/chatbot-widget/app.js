@@ -1,3 +1,31 @@
+let avatarReactionTimer = null;
+let latestAvatarRequest = 0;
+
+function reactAvatar(state, duration = 1800) {
+  clearTimeout(avatarReactionTimer);
+  const request = latestAvatarRequest;
+  UniAvatar[state]();
+  if (state !== "thinking" && state !== "idle") {
+    avatarReactionTimer = setTimeout(() => {
+      if (request === latestAvatarRequest) UniAvatar.idle();
+      avatarReactionTimer = null;
+    }, duration);
+  }
+}
+
+function responseEmotion(data, answer) {
+  if (!answer || !String(answer).trim()) return "sad";
+  const message = String(answer || "").trim();
+  const status = String(data?.status || data?.answerStatus || "").toLowerCase();
+  if (["not_found", "no_answer", "unanswered"].includes(status) ||
+      /^(sorry,?\s*)?(i (couldn.t|cannot|can.t|wasn.t able to) (find|locate|answer)|i (don.t|do not) have (that|enough) information|no (relevant )?(information|answer) (was )?found)/i.test(message)) return "sad";
+  if (["uncertain", "warning"].includes(status)) return "worry";
+  if (data?.emotion === "surprised" || data?.reaction === "surprised") return "surprised";
+  if (/^(hi|hello|hey|good (morning|afternoon|evening))[!, .]/i.test(message) ||
+      /^(congratulations|great news|well done)[!, .]/i.test(message)) return "happy";
+  return "idle";
+}
+
 document.getElementById("input-area").addEventListener("submit", function (e) {
   e.preventDefault();
   sendMessage();
@@ -23,7 +51,8 @@ async function sendMessage() {
 
   input.value = "";
 
-  UniAvatar.thinking();
+  const request = ++latestAvatarRequest;
+  reactAvatar("thinking");
 
 
   const typingRow = addTypingIndicator();
@@ -46,19 +75,21 @@ async function sendMessage() {
       }
     );
 
+    if (!response.ok) throw new Error(`Chat request failed: ${response.status}`);
+
 
     const data = await response.json();
 
 
     removeTypingIndicator(typingRow);
 
-    UniAvatar.idle();
-
-
     const botRow = addMessage(
       data.answer || "I received your message.",
-      "bot"
+      "bot",
+      request === latestAvatarRequest
     );
+
+    if (request === latestAvatarRequest) reactAvatar(responseEmotion(data, data.answer), 2200);
 
 
     // Chatbot found a place - offer to show it, don't force the map open.
@@ -72,19 +103,19 @@ async function sendMessage() {
 
     removeTypingIndicator(typingRow);
 
-    UniAvatar.idle();
-
     addMessage(
       "Sorry, I am having trouble connecting right now. Please try again.",
-      "bot"
+      "bot",
+      request === latestAvatarRequest
     );
+    if (request === latestAvatarRequest) reactAvatar("worry", 2600);
 
   }
 
 }
     
 
-function addMessage(text, type) {
+function addMessage(text, type, moveAvatar = true) {
 
   const box = document.getElementById("chat-box");
 
@@ -139,7 +170,7 @@ function addMessage(text, type) {
 
   if (type === "bot") {
 
-    if (typeof UnilusWidget !== "undefined") {
+    if (moveAvatar && typeof UnilusWidget !== "undefined") {
 
         UnilusWidget.onBotMessage(row);
 
@@ -275,10 +306,11 @@ function addMapConfirmButton(row, navigation, route, routeIntent) {
     const gpsButton = document.createElement("button");
     gpsButton.type = "button";
     gpsButton.className = "map-confirm-btn";
-    gpsButton.textContent = "Route from my location";
+    gpsButton.textContent = "Directions in Google Maps";
     gpsButton.addEventListener("click", () => {
       if (typeof UnilusWidget === "undefined") return;
-      UnilusWidget.showBuildingOnMap({ buildingId: navigation.placeId, campus: "silverest", routeFromGps: true });
+      const mapsTab = window.open("about:blank", "_blank");
+      UnilusWidget.showBuildingOnMap({ buildingId: navigation.placeId, campus: "silverest", routeFromGps: true, mapsTab });
     });
     bubble.appendChild(gpsButton);
   }

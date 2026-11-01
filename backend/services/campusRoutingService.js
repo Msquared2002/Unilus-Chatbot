@@ -2,6 +2,11 @@ const fs = require('node:fs');
 const path = require('node:path');
 const repository = require('./campusRepository');
 const { projectOnSegment, distance, inside } = require('./campusGraphBuilder');
+/*
+Changes: Resolves campus endpoints and searches mapped pedestrian connections.
+Affects: Campus route API results, including route geometry and walking estimates.
+Purpose: Enforces mapped entrances, campus boundaries, and graph connectivity when routing.
+*/
 const DATA = path.resolve(__dirname, '../data/campus');
 const WALKING_SPEED_MPS = Number(process.env.CAMPUS_WALKING_SPEED_MPS) > 0 ? Number(process.env.CAMPUS_WALKING_SPEED_MPS) : 1.4;
 const GPS_SNAP_LIMIT_M = 25;
@@ -16,7 +21,23 @@ function loadGraph() {
   return fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : null;
 }
 function loadAccessPoints() {
-  return JSON.parse(fs.readFileSync(path.join(DATA, 'campus_access_points.json'), 'utf8')).access_points;
+  const local = JSON.parse(fs.readFileSync(path.join(DATA, 'campus_access_points.json'), 'utf8')).access_points;
+  const importedFile = path.join(DATA, 'campus_osm_access_points.json');
+  if (!fs.existsSync(importedFile)) return local;
+  const imported = JSON.parse(fs.readFileSync(importedFile, 'utf8')).access_points;
+  const osmIds = new Set(imported.map(a => a.id));
+  return [...local.filter(a => !osmIds.has(a.id) && !imported.some(b => b.place_id === a.place_id &&
+    distance([a.lng, a.lat], [b.lng, b.lat]) < 0.5)), ...imported];
+}
+function publicAccess(access) {
+  return access.entrance !== 'service' && !['private', 'no'].includes(access.osm_tags?.access) &&
+    access.osm_tags?.foot !== 'no';
+}
+function accessRank(access) {
+  if (access.entrance === 'main') return 0;
+  if (access.entrance === 'yes') return 1;
+  if (access.barrier === 'gate') return 2;
+  return 3;
 }
 function endpoint(value) {
   if (value?.place_id || value?.placeId) return { type: 'place', placeId: value.place_id || value.placeId };
@@ -88,19 +109,21 @@ function route(payload = {}, options = {}) {
     return fail(legacy ? 'ORIGIN_NOT_FOUND' : 'unknown_place', 'Start place was not found.', 404);
   if (from.type === 'coordinates') {
     if (!Number.isFinite(from.lat) || !Number.isFinite(from.lng)) return fail('invalid_request', 'Valid coordinates are required.', 400);
-    if (!insideCampus(from)) return fail(legacy ? 'ORIGIN_OUTSIDE_CAMPUS' : 'outside_routing_area', 'Start is outside Silverest Campus.');
+    if (!insideCampus(from)) return fail(legacy ? 'ORIGIN_OUTSIDE_CAMPUS' : 'outside_routing_area', 'Campus walking routes are only available inside Silverest Campus.');
   }
   const graph = options.graph || loadGraph();
   if (!graph?.nodes?.length || !graph?.edges?.length) return fail('routing_graph_unavailable', 'Local routing graph unavailable.', 503);
   const accessPoints = options.accessPoints || loadAccessPoints();
-  const destinations = accessPoints.filter(a => a.place_id === target.id && graph.access_points?.[a.id]?.connected);
+  const destinations = accessPoints.filter(a => a.place_id === target.id && publicAccess(a) &&
+    graph.access_points?.[a.id]?.connected);
   if (!destinations.length) return legacy
     ? { statusCode: 503, body: { status: 'unavailable', campus: 'silverest', code: 'PEDESTRIAN_NETWORK_REQUIRED',
       message: 'A verified Silverest pedestrian path network is required before walking routes can be calculated.' } }
     : fail('destination_access_unmapped', `A verified entrance for ${target.name} has not been mapped.`);
   let starts, snap;
   if (from.type === 'place') {
-    starts = accessPoints.filter(a => a.place_id === from.placeId && graph.access_points?.[a.id]?.connected)
+    starts = accessPoints.filter(a => a.place_id === from.placeId && publicAccess(a) &&
+      graph.access_points?.[a.id]?.connected)
       .map(a => ({ access: a, node_id: graph.access_points[a.id].node_id }));
     if (!starts.length) return fail('start_access_unmapped', 'The start place has no verified entrance.');
   } else {
@@ -116,12 +139,14 @@ function route(payload = {}, options = {}) {
     const startOffset = start.access ? distance([start.access.lng, start.access.lat], result.coordinates[0]) : 0;
     const endOffset = distance(result.coordinates.at(-1), [destination.lng, destination.lat]);
     const total = result.distance_m + startOffset + endOffset;
-    if (!best || result.cost_m + startOffset + endOffset < best.cost_m) {
+    const rank = accessRank(destination);
+    if (!best || rank < best.access_rank ||
+        (rank === best.access_rank && result.cost_m + startOffset + endOffset < best.cost_m)) {
       const coords = [...result.coordinates];
       if (startOffset > 0.05) coords.unshift([start.access.lng, start.access.lat]);
       if (endOffset > 0.05) coords.push([destination.lng, destination.lat]);
       best = { ...result, coordinates: coords, distance_m: total, cost_m: result.cost_m + startOffset + endOffset,
-        start_access: start.access?.id || null, destination_access: destination.id };
+        access_rank: rank, start_access: start.access?.id || null, destination_access: destination.id };
     }
   }
   if (!best) return fail('no_route', 'No connected route exists between these access points.');

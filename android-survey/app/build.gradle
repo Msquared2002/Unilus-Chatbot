@@ -1,0 +1,24 @@
+apply plugin: 'com.android.application'
+
+android {
+    namespace 'zm.ac.unilus.silverestsurvey'
+    compileSdk 35
+    defaultConfig { applicationId 'zm.ac.unilus.silverestsurvey'; minSdk 26; targetSdk 35; versionCode 1; versionName '1.0' }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+}
+
+def projectRoot = rootProject.projectDir.parentFile
+tasks.register('bundleSurveyAssets', Sync) {
+    into layout.projectDirectory.dir('src/main/assets/web')
+    from(projectRoot) {
+        include 'dummy-environment/campus-survey.html'
+        include 'dummy-environment/campus-survey.js'
+        include 'dummy-environment/campus-survey-core.js'
+        include 'backend/data/campus/campus_boundary.json'
+        include 'backend/data/campus/campus_buildings.json'
+        include 'backend/data/campus/campus_places.json'
+        include 'backend/data/campus/campus_routing_graph.json'
+        include 'backend/data/campus/campus_place_catalog.json'
+    }
+}
+tasks.named('preBuild').configure { dependsOn tasks.named('bundleSurveyAssets') }

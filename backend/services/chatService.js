@@ -13,70 +13,19 @@
  *     source_file, page_number) instead of the old (topic, answer).
  *   - Every answer's context now includes its source, so the model
  *     can (and is instructed to) cite where information came from.
- *   - When no evidence is found at all, or the model itself reports
- *     it doesn't know, route to the closest UNILUS contact instead
- *     of returning a dead-end message, and log the question for
- *     later review (see unansweredLogger.js).
- *   - Every call now carries a sessionId. If the caller doesn't have
- *     one yet (first message), one is generated and returned so the
- *     frontend can send it back on the next call. Each user question
- *     and assistant answer is persisted via sessionService so a
- *     follow-up question in the same session can reference what was
- *     just discussed (see sessionService.js / aiService.js history
- *     support).
- *   - Bare greetings ("hi", "hey", "hello") are answered with a short
- *     canned intro instead of falling through to the fallback.
  */
 
 const retrievalService = require("./retrievalService");
 const aiService = require("./aiService");
 const navigationService = require("./navigationService");
-const contactService = require("./contactService");
-const sessionService = require("./sessionService");
-const supportService = require("./supportService");
-const { logUnansweredQuestion } = require("./unansweredLogger");
 const { toDisplayTimetableEntry, harmonizeDisplayCourseNames } = require("./timetablePresentationService");
 
-// Matches a message that is ONLY a greeting (e.g. "hi", "Hey!", "good morning").
-// "hello there, when is my exam" will NOT match and goes through the normal pipeline.
-const GREETING = /^\s*(hi|hey|hello|yo|good (morning|afternoon|evening))\W*$/i;
+/*
+Changes: Coordinates navigation, retrieval evidence, and final answer composition.
+Affects: POST /api/chat response content and supporting metadata.
+Purpose: Preserves one place for combining structured results before answer generation.
+*/
 
-// Ticket references look like UNI-2026-0042.
-const TICKET_REF = /\bUNI-\d{4}-\d{4}\b/i;
-
-function formatTicketStatus(ticket) {
-    const opened = String(ticket.created_at || "").slice(0, 10);
-    const updated = String(ticket.updated_at || "").slice(0, 10);
-    let text = `Ticket ${ticket.ref} is currently **${ticket.status}**. ` +
-        `It is with the ${ticket.department} (priority: ${ticket.priority}). ` +
-        `Opened ${opened}, last updated ${updated}.`;
-    if (ticket.status === "Resolved" || ticket.status === "Closed") {
-        text += " This ticket has been marked as finished by the staff handling it.";
-    }
-    return text;
-}
-
-// "status of UNI-2026-0042", or "what's the status of my ticket" (uses the
-// most recent ticket opened in this session). Returns null when the message
-// isn't about a ticket, so normal handling continues.
-function handleTicketStatusQuestion(question, sessionId) {
-    const refMatch = question.match(TICKET_REF);
-    if (refMatch) {
-        const ticket = supportService.getTicketByRef(refMatch[0]);
-        return ticket
-            ? formatTicketStatus(ticket)
-            : `I couldn't find a ticket with reference ${refMatch[0].toUpperCase()}. Please check the number and try again.`;
-    }
-
-    const asksAboutTicket = /\b(ticket|reference (number|no))\b/i.test(question)
-        && /\b(status|update|progress|resolved|follow ?up)\b/i.test(question);
-    if (!asksAboutTicket) return null;
-
-    const latest = supportService.getLatestTicketForSession(sessionId);
-    return latest
-        ? formatTicketStatus(latest)
-        : "Please send me your ticket reference number (it looks like UNI-2026-0001) and I'll check its status.";
-}
 
 function isExplicitlyRevisedStructuredChunk(chunk = {}) {
     const label = [chunk.retrieval_title, chunk.title, chunk.source_file].filter(Boolean).join(" ");
@@ -152,10 +101,12 @@ function formatTimetableContext(entries) {
     const semesters = new Set(ordered.map((e) => e.semester).filter((v) => v != null));
     const isSingleCohort = programmeCodes.size === 1 && years.size <= 1 && semesters.size <= 1;
 
-    // A programme/cohort timetable is usually around 10–15 sessions and must
-    // be complete. Broad searches (e.g. all Monday classes) stay capped so we
-    // do not flood the LLM with hundreds of unrelated records.
-    const limit = isSingleCohort ? 24 : 8;
+    // Specific entity lookups must stay complete so lecturer and course
+    // schedules cannot lose later records to an arbitrary context cap. The
+    // retrieval layer applies explicit day filters before this point.
+    // Only truly broad searches are capped to protect the model context.
+    const hasSpecificEntity = entries.some((e) => e.course_code || e.lecturer_name || e.venue_code);
+    const limit = hasSpecificEntity || isSingleCohort ? ordered.length : 8;
     const selected = ordered.slice(0, limit);
 
     const cohort = isSingleCohort ? selected[0] : null;
@@ -191,7 +142,7 @@ function formatTimetableContext(entries) {
         "Timetable display note: internal Mimosa scheduling/resource codes have been removed for readability. A trailing #number on the human-readable room name is preserved as room capacity. Course-level Group A/B/C/D labels are official class-group labels and may legitimately differ from the programme cohort row label; preserve them as published.",
         cohortLabel ? `Cohort: ${cohortLabel}` : null,
         ...lines,
-        omitted > 0 ? `- ${omitted} additional timetable entries were omitted from this broad search.` : null,
+        omitted > 0 ? `- ${omitted} additional timetable entries were omitted from this broad search. The complete result set should be retained for follow-up requests.` : null,
     ].filter(Boolean).join("\n");
 }
 
@@ -322,107 +273,7 @@ function collectAllowedUrls({ knowledge = [], resources = [] }) {
     return [...new Set(urls)];
 }
 
-/**
- * Builds the "I don't know, but here's who to ask" response, using
- * the closest matching UNILUS contact when one is found (a loose
- * topic match is enough — see contactService's threshold), or a
- * generic message otherwise. Shape matches answerQuestion's normal
- * return object so callers don't need to special-case it. Also logs
- * the question to unanswered-questions-log.jsonl for later human
- * review -- see unansweredLogger.js for why this is a review queue,
- * not a self-learning mechanism.
- */
-async function buildFallback(question, queryType, timetableMatches = 0, sessionId = null) {
-    const fallback = await contactService.findFallbackContact(question);
-    const contact = fallback ? fallback.contact : null;
-
-    let answer;
-    if (contact) {
-        answer = `I don't have that information yet. ${contact.note}`;
-        if (contact.phone) answer += ` Call ${contact.phone}.`;
-        if (contact.email) answer += ` Email ${contact.email}.`;
-    } else {
-        answer = "I don't have that information yet. Try rephrasing, or check with the registry directly.";
-    }
-
-    logUnansweredQuestion(question, {
-        matchedContact: contact ? contact.contact_id : null,
-    });
-
-    // Escalate: open a ticket carrying the question, a summary and the
-    // recent conversation, so the student never has to repeat themselves.
-    // If ticketing fails for any reason, the plain contact answer above
-    // is still returned.
-    let ticket = null;
-    if (sessionId) {
-        try {
-            const result = supportService.createTicket({
-                sessionId,
-                question,
-                history: sessionService.getRecentHistory(sessionId, 12),
-                contact,
-            });
-            ticket = result.ticket;
-            answer += result.created
-                ? ` I've logged this as ticket ${ticket.ref} and passed it to the ${ticket.department}. Ask me for the "status of ${ticket.ref}" any time to check progress.`
-                : ` You already have an open ticket for this (${ticket.ref}), currently ${ticket.status}.`;
-        } catch (err) {
-            console.log("Failed to create ticket:", err.message);
-        }
-    }
-
-    return {
-        answer,
-        queryType,
-        sources: [],
-        resources: [],
-        recommendedResources: [],
-        timetableMatches,
-        usedFallback: true,
-        ticket,
-    };
-}
-
-async function answerQuestion(question, sessionId, audience = "public") {
-    if (!sessionId) {
-        sessionId = sessionService.createSessionId();
-    }
-
-    sessionService.appendMessage(sessionId, "user", question);
-
-    // Bare greetings get a friendly canned intro. No retrieval, no LLM call,
-    // so it works even if the AI service is unreachable.
-    if (GREETING.test(question)) {
-        const greeting = "Hi! How can I help you today?";
-        sessionService.appendMessage(sessionId, "assistant", greeting);
-        return {
-            answer: greeting,
-            queryType: { isTimetable: false, isKnowledge: false, isMixed: false, entities: {} },
-            sources: [],
-            resources: [],
-            recommendedResources: [],
-            timetableMatches: 0,
-            usedFallback: false,
-            sessionId,
-        };
-    }
-
-    // Ticket status ("status of UNI-2026-0042", "any update on my ticket").
-    const ticketStatusAnswer = handleTicketStatusQuestion(question, sessionId);
-    if (ticketStatusAnswer) {
-        sessionService.appendMessage(sessionId, "assistant", ticketStatusAnswer);
-        return {
-            answer: ticketStatusAnswer,
-            queryType: { isTimetable: false, isKnowledge: false, isMixed: false, entities: {} },
-            sources: [],
-            resources: [],
-            recommendedResources: [],
-            timetableMatches: 0,
-            usedFallback: false,
-            sessionId,
-        };
-    }
-
+async function answerQuestion(question) {
     // Campus navigation ("where is the library", "what's near the
     // gym") is handled entirely from the local campus dataset and
     // never reaches the LLM or the timetable/knowledge retrieval
@@ -430,13 +281,9 @@ async function answerQuestion(question, sessionId, audience = "public") {
     // navigation question naming a known place, so every other
     // question falls through unchanged.
     const navigationResult = navigationService.tryHandleNavigation(question);
-    if (navigationResult) {
-        sessionService.appendMessage(sessionId, "assistant", navigationResult.answer);
-        return { ...navigationResult, sessionId };
-    }
+    if (navigationResult) return navigationResult;
 
-    const priorHistory = sessionService.getRecentHistory(sessionId).slice(0, -1);
-    const { timetable, knowledge, resources, queryType } = await retrievalService.retrieveAnswer(question, priorHistory, audience);
+    const { timetable, knowledge, resources, queryType } = await retrievalService.retrieveAnswer(question);
 
     // Programme/cohort timetable requests are deterministic structured-data
     // lookups. If the user omitted year/semester (or the requested cohort is
@@ -445,16 +292,13 @@ async function answerQuestion(question, sessionId, audience = "public") {
     const timetableEntities = queryType?.entities || {};
     if (queryType?.isTimetable && timetableEntities.programmeFamily && timetable.length === 0) {
         if (!timetableEntities.year || !timetableEntities.semester) {
-            const clarification = `I can look up the ${timetableEntities.programmeFamily} timetable, but I need the study year and semester (for example: "${timetableEntities.programmeFamily} 3rd year 2nd semester" or "${timetableEntities.programmeFamily} 3,2").`;
-            sessionService.appendMessage(sessionId, "assistant", clarification);
             return {
-                answer: clarification,
+                answer: `I can look up the ${timetableEntities.programmeFamily} timetable, but I need the study year and semester (for example: "${timetableEntities.programmeFamily} 3rd year 2nd semester" or "${timetableEntities.programmeFamily} 3,2").`,
                 queryType,
                 sources: [],
                 resources: [],
                 recommendedResources: [],
                 timetableMatches: 0,
-                sessionId,
             };
         }
 
@@ -463,27 +307,14 @@ async function answerQuestion(question, sessionId, audience = "public") {
             : timetableEntities.studyMode === "full_time"
                 ? " full-time"
                 : "";
-        const notFound = `I couldn't find a ${timetableEntities.programmeFamily}${modeLabel} Year ${timetableEntities.year}, Semester ${timetableEntities.semester} cohort in the loaded UNILUS timetable records.`;
-        sessionService.appendMessage(sessionId, "assistant", notFound);
         return {
-            answer: notFound,
+            answer: `I couldn't find a ${timetableEntities.programmeFamily}${modeLabel} Year ${timetableEntities.year}, Semester ${timetableEntities.semester} cohort in the loaded UNILUS timetable records.`,
             queryType,
             sources: [],
             resources: [],
             recommendedResources: [],
             timetableMatches: 0,
-            sessionId,
         };
-    }
-
-    // No evidence of any kind found — redirect to a contact rather
-    // than asking the LLM to answer from nothing.
-    const hasAnyEvidence = timetable.length > 0 || knowledge.length > 0 || resources.length > 0;
-    if (!hasAnyEvidence) {
-        console.log("No matching records found. Checking contact fallback...");
-        const fallbackResult = await buildFallback(question, queryType, 0, sessionId);
-        sessionService.appendMessage(sessionId, "assistant", fallbackResult.answer);
-        return { ...fallbackResult, sessionId };
     }
 
     const context = formatContext({ timetable, knowledge, resources });
@@ -491,24 +322,7 @@ async function answerQuestion(question, sessionId, audience = "public") {
     const answer = await aiService.askAI(question, context, {
         allowedUrls: collectAllowedUrls({ knowledge, resources }),
         groundingText: buildPrimaryGroundingText(knowledge),
-        // Recent turns from THIS session, oldest first, so a follow-up
-        // like "what about Wednesday?" can be understood in context.
-        // Excludes the user message just appended above (it's added
-        // separately as the current question, not as history).
-        history: priorHistory,
     });
-
-    // Evidence existed but was a loose/irrelevant match — the model
-    // correctly said so per its system prompt. Redirect to a contact
-    // instead of returning that dead-end line as-is.
-    if (/i don.t have that information/i.test(answer)) {
-        console.log("LLM reported no answer. Checking contact fallback...");
-        const fallbackResult = await buildFallback(question, queryType, timetable.length, sessionId);
-        sessionService.appendMessage(sessionId, "assistant", fallbackResult.answer);
-        return { ...fallbackResult, sessionId };
-    }
-
-    sessionService.appendMessage(sessionId, "assistant", answer);
 
     return {
         answer,
@@ -533,8 +347,6 @@ async function answerQuestion(question, sessionId, audience = "public") {
         // unchanged for any existing consumer.
         recommendedResources: buildRecommendedResources(resources),
         timetableMatches: timetable.length,
-        usedFallback: false,
-        sessionId,
     };
 }
 
@@ -548,5 +360,4 @@ module.exports = {
     buildPrimaryGroundingText,
     isExplicitlyRevisedStructuredChunk,
     sameEvidenceScope,
-    buildFallback,
 };

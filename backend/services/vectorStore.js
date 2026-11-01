@@ -47,12 +47,6 @@ class VectorStore {
   async clear() {
     throw new Error("clear() not implemented");
   }
-
-  // Removes every record for which predicate(record) is true; returns how many.
-  // eslint-disable-next-line no-unused-vars
-  async removeWhere(predicate) {
-    throw new Error("removeWhere() not implemented");
-  }
 }
 
 /**
@@ -80,11 +74,7 @@ class JsonVectorStore extends VectorStore {
 
   _persist() {
     fs.mkdirSync(path.dirname(this.filePath), { recursive: true });
-    // Write to a temporary file and rename it into place, so a crash or
-    // power cut part-way through a save can never leave a half-written index.
-    const tempPath = `${this.filePath}.tmp`;
-    fs.writeFileSync(tempPath, JSON.stringify(this._records, null, 2));
-    fs.renameSync(tempPath, this.filePath);
+    fs.writeFileSync(this.filePath, JSON.stringify(this._records, null, 2));
   }
 
   async upsert(records) {
@@ -132,22 +122,6 @@ class JsonVectorStore extends VectorStore {
   async clear() {
     this._records = [];
     this._persist();
-  }
-
-  // Forget the in-memory copy; the file is re-read on the next access.
-  reload() {
-    this._records = null;
-  }
-
-  async removeWhere(predicate) {
-    const records = this._load();
-    const kept = records.filter((record) => !predicate(record));
-    const removed = records.length - kept.length;
-    if (removed > 0) {
-      this._records = kept;
-      this._persist();
-    }
-    return removed;
   }
 }
 

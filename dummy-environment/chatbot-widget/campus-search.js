@@ -1,4 +1,8 @@
-// Search uses the existing campus API rather than a second browser-side index.
+/*
+Changes: Debounces campus place searches and presents selectable API results.
+Affects: Campus map search controls and selected-place behavior.
+Purpose: Uses the canonical campus search endpoint instead of duplicating its index in the browser.
+*/
 window.CampusSearch = (function () {
   function mount(view, onPick, onStatus) {
     if (!view || view.querySelector(".map-search")) return;

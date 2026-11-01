@@ -1,0 +1,13 @@
+{
+  "blender": "4.2.23 LTS",
+  "objects": 42,
+  "meshes": 29,
+  "triangles": 58596,
+  "glb_bytes": 2061812,
+  "blend_bytes": 4859736,
+  "anchors": [
+    "HairAnchor",
+    "OutfitAnchor",
+    "AccessoryAnchor"
+  ]
+}

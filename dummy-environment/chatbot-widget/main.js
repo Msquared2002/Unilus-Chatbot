@@ -2,7 +2,11 @@ import { marked } from "marked";
 
 window.marked = marked;
 
+import "./avatar-hairstyles.js";
 import "./avatar.js";
+import "../js/demo-programmes.js";
+import "../js/demo-session.js";
+import "./avatar-entitlements.js";
 import "./campus-data-client.js";
 import "./campus-location.js";
 import "./campus-search.js";

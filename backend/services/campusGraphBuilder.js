@@ -2,6 +2,12 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { distanceMeters } = require('./campusRepository');
 
+/*
+Changes: Builds campus graph edges from approved path geometry and access points.
+Affects: campus_routing_graph.json consumed by campusRoutingService.js.
+Purpose: Keeps geometry validation and graph construction consistent with the local walking network.
+*/
+
 const DATA = path.resolve(__dirname, '../data/campus');
 const METRES_PER_DEGREE = 111195;
 const point = ([lng, lat]) => ({ lat, lng });
@@ -56,8 +62,11 @@ function parseOsmServiceRoads(xml) {
     if (!/<tag\s+k="highway"\s+v="service"\s*\/>/.test(match[2])) continue;
     const coordinates = [...match[2].matchAll(/<nd\s+ref="([^"]+)"\s*\/>/g)].map(m => nodes.get(m[1])).filter(Boolean);
     if (coordinates.length < 2) continue;
+    const osm_tags = Object.fromEntries([...match[2].matchAll(/<tag\s+k="([^"]+)"\s+v="([^"]*)"\s*\/>/g)]
+      .map(m => [m[1], m[2]]));
     roads.push({ id: `osm_way_${match[1]}`, kind: 'shared_road', source: `way/${match[1]}`,
-      coordinates, level: 0, accessible: null });
+      provenance: 'osm:shared_road', node_ids: [...match[2].matchAll(/<nd\s+ref="([^"]+)"\s*\/>/g)].map(m => m[1]),
+      coordinates, osm_tags, level: 0, accessible: null });
   }
   return roads;
 }
@@ -71,30 +80,57 @@ function projectOnSegment(p, a, b) {
 }
 
 function routingMultiplier(kind) {
-  return ({ footway: 1, crossing: 1, shared_road: 1.07, steps: 1.12 })[kind] || 1.07;
+  return ({ footway: 1, path: 1.03, pedestrian: 1, crossing: 1, shared_road: 1.07, steps: 1.12 })[kind] || 1.07;
+}
+
+function layerOf(line) {
+  const tags = line.osm_tags || {};
+  const numeric = Number(tags.layer);
+  return Number.isFinite(numeric) ? numeric : (line.level || 0);
+}
+
+function sameGrade(a, b) {
+  if (layerOf(a) !== layerOf(b)) return false;
+  const at = a.osm_tags || {}, bt = b.osm_tags || {};
+  const active = value => Boolean(value && !['no', 'false', '0'].includes(value));
+  return active(at.bridge) === active(bt.bridge) && active(at.tunnel) === active(bt.tunnel);
+}
+
+function duplicateLine(a, b) {
+  if (a.coordinates.length !== b.coordinates.length) return false;
+  const matches = (coords) => coords.every((p, i) => distance(p, b.coordinates[i]) < 0.5);
+  return matches(a.coordinates) || matches([...a.coordinates].reverse());
 }
 
 function buildGraph({ roads = [], walkways = [], accessPoints = [], boundary, snapMeters = 2.5 } = {}) {
   const ring = boundary?.geometry?.coordinates?.[0];
   if (!ring) throw new Error('Campus boundary is required');
   const segments = [];
-  for (const line of [...roads, ...walkways]) {
+  const selectedWalkways = [];
+  for (const line of walkways) {
+    if (line.pedestrian_allowed === false) continue;
+    if ([...roads, ...selectedWalkways].some(other => other.id === line.id || duplicateLine(line, other))) continue;
+    selectedWalkways.push(line);
+  }
+  for (const line of [...roads, ...selectedWalkways]) {
     if (!Array.isArray(line.coordinates) || line.coordinates.length < 2) throw new Error(`Invalid line ${line.id}`);
     for (let i = 0; i < line.coordinates.length - 1; i++) {
       for (const [a, b] of clipSegment(line.coordinates[i], line.coordinates[i + 1], ring)) {
-        segments.push({ a, b, line, cuts: [{ t: 0, p: a }, { t: 1, p: b }] });
+        const unchanged = distance(a, line.coordinates[i]) < 0.05 && distance(b, line.coordinates[i + 1]) < 0.05;
+        const nodeIds = unchanged && line.node_ids ? [line.node_ids[i], line.node_ids[i + 1]] : [null, null];
+        segments.push({ a, b, line, nodeIds, cuts: [{ t: 0, p: a, osmId: nodeIds[0] }, { t: 1, p: b, osmId: nodeIds[1] }] });
       }
     }
   }
   // A manually traced walkway endpoint within tolerance of an existing line
   // joins that line at the projected point, rather than leaving a tiny gap.
   for (const segment of segments) {
-    if (segment.line.kind === 'shared_road' && String(segment.line.source).startsWith('way/')) continue;
+    if (segment.line.node_ids) continue;
     for (const end of ['a', 'b']) {
       let best = null;
       for (const other of segments) {
         if (other === segment || other.line.id === segment.line.id ||
-            (other.line.level || 0) !== (segment.line.level || 0)) continue;
+            !sameGrade(other.line, segment.line)) continue;
         const candidate = projectOnSegment(segment[end], other.a, other.b);
         if (!best || candidate.distance_m < best.distance_m) best = { ...candidate, other };
       }
@@ -105,9 +141,11 @@ function buildGraph({ roads = [], walkways = [], accessPoints = [], boundary, sn
       }
     }
   }
-  // Split true same-level intersections. Bridges and tunnels remain separate.
+  // Rendered line crossings are not pedestrian junctions. Preserve the
+  // historical service-road intersection handling for the existing network.
   for (let i = 0; i < segments.length; i++) for (let j = i + 1; j < segments.length; j++) {
-    if ((segments[i].line.level || 0) !== (segments[j].line.level || 0)) continue;
+    if (!sameGrade(segments[i].line, segments[j].line)) continue;
+    if (!(segments[i].line.kind === 'shared_road' && segments[j].line.kind === 'shared_road')) continue;
     const hit = intersection(segments[i].a, segments[i].b, segments[j].a, segments[j].b);
     if (hit) {
       segments[i].cuts.push({ t: hit.t, p: hit.p });
@@ -119,22 +157,27 @@ function buildGraph({ roads = [], walkways = [], accessPoints = [], boundary, sn
     const p = [access.lng, access.lat];
     let best = null;
     for (const segment of segments) {
+      if (access.osm_node_id && !segment.nodeIds.includes(String(access.osm_node_id))) continue;
+      if (access.osm_node_id && !sameGrade(access, segment.line)) continue;
       const candidate = projectOnSegment(p, segment.a, segment.b);
       if (!best || candidate.distance_m < best.distance_m) best = { ...candidate, segment };
     }
-    if (!best || best.distance_m > snapMeters || !inside(p, ring)) {
+    if (!best || best.distance_m > (access.osm_node_id ? 0.35 : snapMeters) || !inside(p, ring)) {
       accessStatus[access.id] = { connected: false, reason: 'not_on_network' };
       continue;
     }
-    best.segment.cuts.push({ t: best.t, p: best.p });
+    if (!best.segment.cuts.some(c => Math.abs(c.t - best.t) < 1e-9))
+      best.segment.cuts.push({ t: best.t, p: best.p, osmId: access.osm_node_id || null });
     accessStatus[access.id] = { connected: true, snapped: best.p, place_id: access.place_id };
   }
   const nodes = [], edges = [];
-  const nodeFor = (p, level = 0) => {
-    const found = nodes.find(n => n.level === level && distance(n.coordinates, p) < 0.35);
+  const nodeFor = (p, level = 0, osmId = null) => {
+    const found = nodes.find(n => n.level === level && (osmId ?
+      n.osm_node_id === osmId || distance(n.coordinates, p) < 0.01 :
+      distance(n.coordinates, p) < 0.35));
     if (found) return found.id;
     const id = `n${nodes.length + 1}`;
-    nodes.push({ id, coordinates: p, level, edge_ids: [] });
+    nodes.push({ id, coordinates: p, level, osm_node_id: osmId, edge_ids: [] });
     return id;
   };
   for (const segment of segments) {
@@ -142,11 +185,13 @@ function buildGraph({ roads = [], walkways = [], accessPoints = [], boundary, sn
     for (let i = 0; i < cuts.length - 1; i++) {
       const a = cuts[i].p, b = cuts[i + 1].p, length = distance(a, b);
       if (length < 0.05) continue;
-      const from = nodeFor(a, segment.line.level || 0), to = nodeFor(b, segment.line.level || 0);
+      const from = nodeFor(a, layerOf(segment.line), cuts[i].osmId),
+        to = nodeFor(b, layerOf(segment.line), cuts[i + 1].osmId);
       if (from === to) continue;
       const id = `e${edges.length + 1}`;
       edges.push({ id, from, to, distance_m: length, cost_m: length * routingMultiplier(segment.line.kind),
         kind: segment.line.kind, source: segment.line.source, source_geometry_ref: segment.line.id,
+        provenance: segment.line.provenance || 'local_override', osm_tags: segment.line.osm_tags || null,
         accessible: segment.line.accessible ?? null });
       nodes[Number(from.slice(1)) - 1].edge_ids.push(id);
       nodes[Number(to.slice(1)) - 1].edge_ids.push(id);
@@ -155,8 +200,11 @@ function buildGraph({ roads = [], walkways = [], accessPoints = [], boundary, sn
   for (const access of accessPoints) {
     const status = accessStatus[access.id];
     if (status?.connected) {
-      const node = nodes.find(n => distance(n.coordinates, status.snapped) < 0.35);
+      const node = nodes.find(n => (access.osm_node_id ? n.osm_node_id === String(access.osm_node_id) :
+        distance(n.coordinates, status.snapped) < 0.35));
       status.node_id = node?.id || null;
+      status.osm_node_id = access.osm_node_id || null;
+      status.entrance = access.entrance || null;
       if (!node) status.connected = false;
     }
   }
@@ -175,6 +223,7 @@ function buildGraph({ roads = [], walkways = [], accessPoints = [], boundary, sn
   }
   return { schema_version: 1, nodes, edges, access_points: accessStatus,
     stats: { source_shared_road_count: roads.length, local_walkway_count: walkways.length,
+      osm_pedestrian_way_count: selectedWalkways.filter(w => w.node_ids).length,
       access_point_count: accessPoints.length, node_count: nodes.length, edge_count: edges.length,
       connected_component_count: components.length, disconnected_components: components.slice(1).map(c => c.length),
       total_network_length_m: edges.reduce((sum, e) => sum + e.distance_m, 0) } };
@@ -182,14 +231,37 @@ function buildGraph({ roads = [], walkways = [], accessPoints = [], boundary, sn
 
 function loadSources() {
   const boundary = JSON.parse(fs.readFileSync(path.join(DATA, 'campus_boundary.json')));
-  const xml = fs.readFileSync(path.join(DATA, 'source/map(4).osm'), 'utf8');
-  const roads = parseOsmServiceRoads(xml);
+  const latest = path.join(DATA, 'source/silverest_latest.osm');
+  const xml = fs.readFileSync(fs.existsSync(latest) ? latest : path.join(DATA, 'source/map(4).osm'), 'utf8');
+  const generatedRoads = path.join(DATA, 'campus_osm_service_roads.json');
+  const roads = fs.existsSync(generatedRoads) ?
+    JSON.parse(fs.readFileSync(generatedRoads)).roads : parseOsmServiceRoads(xml);
   const walkwayGeojson = JSON.parse(fs.readFileSync(path.join(DATA, 'campus_walkways.geojson')));
   const walkways = walkwayGeojson.features.map(f => ({ id: f.properties.id, kind: f.properties.kind,
     source: f.properties.source || 'manual_survey', accessible: f.properties.accessible,
     level: f.properties.level || 0, coordinates: f.geometry.coordinates }));
+  const importedPath = path.join(DATA, 'campus_osm_pedestrian.geojson');
+  let osmWalkwayGeojson = { type: 'FeatureCollection', features: [] };
+  if (fs.existsSync(importedPath)) {
+    osmWalkwayGeojson = JSON.parse(fs.readFileSync(importedPath));
+    for (const f of osmWalkwayGeojson.features) walkways.push({ ...f.properties, coordinates: f.geometry.coordinates,
+      provenance: `osm:${f.properties.kind}` });
+  }
   const accessPoints = JSON.parse(fs.readFileSync(path.join(DATA, 'campus_access_points.json'))).access_points;
-  return { boundary, roads, walkways, accessPoints, walkwayGeojson };
+  const importedAccessPath = path.join(DATA, 'campus_osm_access_points.json');
+  if (fs.existsSync(importedAccessPath)) {
+    const imported = JSON.parse(fs.readFileSync(importedAccessPath));
+    for (const a of imported.access_points) {
+      for (let i = accessPoints.length - 1; i >= 0; i--) {
+        const local = accessPoints[i];
+        if (local.id === a.id || (local.place_id === a.place_id &&
+            distance([local.lng, local.lat], [a.lng, a.lat]) < 0.5)) accessPoints.splice(i, 1);
+        else if (a.primary && local.place_id === a.place_id) local.primary = false;
+      }
+      accessPoints.push(a);
+    }
+  }
+  return { boundary, roads, walkways, accessPoints, walkwayGeojson, osmWalkwayGeojson };
 }
 
 module.exports = { buildGraph, loadSources, parseOsmServiceRoads, inside, clipSegment,

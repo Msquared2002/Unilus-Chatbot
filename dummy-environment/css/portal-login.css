@@ -105,7 +105,10 @@
   font-weight: 700;
 }
 
-.portal-auth-form input {
+.portal-auth-form [hidden] { display: none; }
+
+.portal-auth-form input,
+.portal-auth-form select {
   display: block;
   width: 100%;
   box-sizing: border-box;

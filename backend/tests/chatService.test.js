@@ -280,6 +280,20 @@ test("programme timetable context includes the complete cohort rather than trunc
   assert.doesNotMatch(context, /additional timetable entries were omitted/i);
 });
 
+test("specific lecturer and course timetable context is not capped at eight rows", () => {
+  const timetable = Array.from({ length: 12 }, (_, i) => ({
+    day: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"][i % 5],
+    time: "08:00-10:00",
+    course_code: i < 6 ? "BIT326" : `BIT${320 + i}`,
+    course_name: `Course ${i + 1}`,
+    lecturer_name: "Mrs Rabecca Mumba",
+  }));
+
+  const context = formatContext({ timetable, knowledge: [] });
+  assert.match(context, /Course 12/);
+  assert.doesNotMatch(context, /additional timetable entries were omitted/i);
+});
+
 
 test("incomplete programme timetable request asks for year and semester deterministically", async () => {
   const { answerQuestion } = require("../services/chatService");

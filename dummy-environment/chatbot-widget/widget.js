@@ -1,3 +1,8 @@
+/*
+Changes: Coordinates widget state, chat requests, settings, and view rendering.
+Affects: The embedded chatbot UI and its calls to backend chat and campus endpoints.
+Purpose: Keeps user interaction orchestration in the widget controller while feature modules handle focused behavior.
+*/
 window.UnilusWidget = (function () {
 
   const OUTFIT_OPTIONS = [
@@ -8,7 +13,16 @@ window.UnilusWidget = (function () {
     { key: "tech-hoodie",   label: "Tech hoodie",  icon: "chatbot-widget/outfits/tech-hoodie.png" },
     { key: "tech-circuit",  label: "Tech circuit", icon: "chatbot-widget/outfits/tech-circuit-hoodie.png" },
     { key: "law-wig",       label: "Law",          icon: "chatbot-widget/outfits/law-wig.png" },
-    { key: "spirit-tee",    label: "Spirit tee",   icon: "chatbot-widget/outfits/spirit-tee.png" }
+    { key: "spirit-tee",    label: "Spirit tee",   icon: "chatbot-widget/outfits/spirit-tee.png" },
+    { key: "spirit-hoodie", label: "Green Spirit Hoodie", icon: "chatbot-widget/outfits/spirit-hoodie.png" },
+    { key: "green-polo", label: "Green Polo", icon: "chatbot-widget/outfits/green-polo.png" },
+    { key: "navy-varsity-tee", label: "Navy Varsity Tee", icon: "chatbot-widget/outfits/navy-varsity-tee.png" },
+    { key: "white-varsity-tee", label: "White Varsity Tee", icon: "chatbot-widget/outfits/white-varsity-tee.png" },
+    { key: "gray-spirit-hoodie", label: "Gray Spirit Hoodie", icon: "chatbot-widget/outfits/gray-spirit-hoodie.png" },
+    { key: "black-spirit-hoodie", label: "Black Spirit Hoodie", icon: "chatbot-widget/outfits/black-spirit-hoodie.png" },
+    { key: "maroon-spirit-hoodie", label: "Maroon Spirit Hoodie", icon: "chatbot-widget/outfits/maroon-spirit-hoodie.png" },
+    { key: "white-nursing-uniform", label: "White Nursing Uniform", icon: "chatbot-widget/outfits/white-nursing-uniform.png" },
+    { key: "striped-nursing-uniform", label: "Striped Nursing Uniform", icon: "chatbot-widget/outfits/striped-nursing-uniform.png" }
   ];
 
   const GLASSES_OPTIONS = [
@@ -23,6 +37,8 @@ window.UnilusWidget = (function () {
     "settings-menu": { title: "Customise avatar", subtitle: null },
     outfits: { title: "Outfits", subtitle: null },
     glasses: { title: "Glasses", subtitle: null },
+    accessories: { title: "Accessories", subtitle: null },
+    hairstyles: { title: "Hairstyles", subtitle: null },
     map: { title: "Campus map", subtitle: null }
   };
 
@@ -32,6 +48,10 @@ window.UnilusWidget = (function () {
   let expanded = false;
   let hasBotReplied = false;
   let view = "chat"; // chat | settings-menu | outfits | glasses | map
+  let entitlements = UnilusAvatarEntitlements.resolveEntitlements(null);
+  let currentStudent = null;
+  let identityKey = null;
+  let laptopPreference = null;
 
   // The Leaflet instance, campus/building data, and marker + card
   // rendering all live in campus-map.js now (window.CampusMap). This
@@ -65,6 +85,8 @@ window.UnilusWidget = (function () {
       viewMap: document.getElementById("view-map"),
       outfitGrid: document.getElementById("outfit-grid"),
       glassesGrid: document.getElementById("glasses-grid"),
+      outfitRow: document.querySelector('.settings-row[data-nav="outfits"]'),
+      glassesRow: document.querySelector('.settings-row[data-nav="glasses"]'),
       outfitPreviewIcon: document.getElementById("outfit-preview-icon"),
       glassesPreviewIcon: document.getElementById("glasses-preview-icon"),
       themeSwitch: document.getElementById("theme-switch"),
@@ -81,30 +103,19 @@ window.UnilusWidget = (function () {
       buildingDirections: document.getElementById("map-building-directions")
     };
 
+    initAccessoryControls();
+    initHairstyleControls();
+
     // Restore the last-picked outfit/glasses (saved to localStorage, same
     // approach as the theme setting below) so the avatar doesn't reset to
     // default every time the widget re-initializes on a new page.
-    const savedOutfit = localStorage.getItem(OUTFIT_KEY) || "default";
-    const savedGlasses = localStorage.getItem(GLASSES_KEY) || "none";
     avatarEl = UniAvatar.init(els.heroSlot, {
       state: "idle",
-      outfit: savedOutfit,
-      glasses: savedGlasses === "none" ? null : savedGlasses
+      outfit: "default",
+      glasses: null,
+      laptop: false
     });
-
-    buildSwatches(els.outfitGrid, OUTFIT_OPTIONS, UniAvatar.getOutfit(), (key) => {
-      UniAvatar.setOutfit(key === "default" ? null : key);
-      localStorage.setItem(OUTFIT_KEY, key);
-      highlightActive(els.outfitGrid, key);
-      updateMenuPreviews();
-    });
-    buildSwatches(els.glassesGrid, GLASSES_OPTIONS, UniAvatar.getGlasses() || "none", (key) => {
-      UniAvatar.setGlasses(key === "none" ? null : key);
-      localStorage.setItem(GLASSES_KEY, key);
-      highlightActive(els.glassesGrid, key);
-      updateMenuPreviews();
-    });
-    updateMenuPreviews();
+    refreshIdentity();
 
     els.launcher.addEventListener("click", openChat);
     els.closeBtn.addEventListener("click", closeChat);
@@ -116,6 +127,17 @@ window.UnilusWidget = (function () {
     document.querySelectorAll(".settings-row[data-nav]").forEach((row) => {
       row.addEventListener("click", () => goToView(row.dataset.nav));
     });
+    els.laptopSwitch.addEventListener("click", () => {
+      if (!entitlements.accessories.includes("laptop")) return;
+      laptopPreference = !UniAvatar.getLaptop();
+      UniAvatar.setLaptop(laptopPreference);
+      localStorage.setItem(preferenceKey(LAPTOP_KEY), String(laptopPreference));
+      updateLaptopSwitch();
+    });
+    window.addEventListener("unilus-student-context-changed", refreshIdentity);
+    window.addEventListener("pageshow", refreshIdentity);
+    window.addEventListener("focus", refreshIdentity);
+    window.addEventListener("storage", refreshIdentity);
 
     // CampusMap owns the toolbar/toggle/card DOM from here on - it wires
     // its own click listeners for campus switching and card close.
@@ -141,6 +163,141 @@ window.UnilusWidget = (function () {
   // ----- persisted avatar customization (outfit/glasses) -----
   const OUTFIT_KEY = "unilus-widget-outfit";
   const GLASSES_KEY = "unilus-widget-glasses";
+  const LAPTOP_KEY = "unilus-widget-laptop";
+  const HAIRSTYLE_KEY = "unilus-widget-hairstyle";
+
+  function preferenceKey(base) {
+    return UnilusAvatarEntitlements.preferenceKey(base, currentStudent);
+  }
+
+  function initAccessoryControls() {
+    const row = document.createElement("button");
+    row.type = "button";
+    row.className = "settings-row";
+    row.dataset.nav = "accessories";
+    row.innerHTML = '<span class="settings-row-icon">▣</span><span class="settings-row-label">Accessories</span><span class="settings-row-chevron">›</span>';
+    els.glassesRow.after(row);
+    const panel = document.createElement("div");
+    panel.id = "view-accessories";
+    panel.className = "panel-view";
+    panel.hidden = true;
+    panel.innerHTML = '<div class="accessory-list"><div class="settings-row settings-row--static"><span class="settings-row-icon">▣</span><span class="settings-row-label">Laptop</span><button type="button" class="theme-switch" id="laptop-switch" role="switch" aria-checked="false" aria-label="Toggle laptop"></button></div></div>';
+    els.viewGlasses.after(panel);
+    els.accessoryRow = row;
+    els.viewAccessories = panel;
+    els.laptopSwitch = panel.querySelector("#laptop-switch");
+  }
+
+  function updateLaptopSwitch() {
+    const enabled = UniAvatar.getLaptop();
+    els.laptopSwitch.classList.toggle("is-on", enabled);
+    els.laptopSwitch.setAttribute("aria-checked", String(enabled));
+  }
+
+  function initHairstyleControls() {
+    const row = document.createElement("button");
+    row.type = "button";
+    row.className = "settings-row";
+    row.dataset.nav = "hairstyles";
+    row.hidden = true;
+    row.innerHTML = '<span class="settings-row-icon" id="hair-preview-icon" aria-hidden="true">⌁</span><span class="settings-row-label">Hairstyles</span><span class="settings-row-chevron" aria-hidden="true">›</span>';
+    els.glassesRow.after(row);
+    const panel = document.createElement("div");
+    panel.id = "view-hairstyles";
+    panel.className = "panel-view";
+    panel.hidden = true;
+    panel.innerHTML = '<p class="hair-wig-note" hidden>The Law wig covers your hairstyle. Your selection returns when you choose another outfit.</p><div class="hair-picker"></div>';
+    els.viewGlasses.after(panel);
+    els.hairRow = row;
+    els.viewHairstyles = panel;
+    els.hairList = panel.querySelector(".hair-picker");
+    els.hairWigNote = panel.querySelector(".hair-wig-note");
+    els.hairPreviewIcon = row.querySelector("#hair-preview-icon");
+  }
+
+  function buildHairstylePicker() {
+    els.hairList.innerHTML = "";
+    if (!currentStudent) return;
+    const choose = (key) => {
+      if (!currentStudent || (key !== "none" && !UnilusHairstyles.get(key))) return;
+      UniAvatar.setHairstyle(key === "none" ? null : key);
+      localStorage.setItem(preferenceKey(HAIRSTYLE_KEY), key);
+      highlightActive(els.hairList, key);
+      els.hairList.querySelectorAll(".swatch").forEach((button) => {
+        button.setAttribute("aria-pressed", String(button.dataset.key === key));
+      });
+      updateMenuPreviews();
+    };
+    const active = UniAvatar.getHairstyle() || "none";
+    const addGrid = (parent, options) => {
+      const grid = document.createElement("div");
+      grid.className = "swatch-grid";
+      parent.appendChild(grid);
+      buildSwatches(grid, options, active, choose);
+      grid.querySelectorAll(".swatch").forEach((button) => {
+        button.setAttribute("aria-pressed", String(button.dataset.key === active));
+      });
+    };
+    addGrid(els.hairList, [{ key: "none", label: "None" }]);
+    UnilusHairstyles.CATEGORIES.forEach((category) => {
+      const section = document.createElement("section");
+      section.dataset.category = category.id;
+      section.className = "hair-category";
+      els.hairList.appendChild(section);
+      addGrid(section, UnilusHairstyles.HAIRSTYLES.filter((style) => style.category === category.id)
+        .map((style) => ({ key: style.id, label: style.label, icon: style.src })));
+    });
+  }
+
+  function refreshIdentity() {
+    const student = UnilusAvatarEntitlements.getCurrentStudent();
+    const nextKey = student ? `${student.id}:${student.programmeCode || ""}:${student.programmeName || ""}:${student.programme || ""}` : "guest";
+    if (nextKey === identityKey && avatarEl) return;
+    identityKey = nextKey;
+    currentStudent = student;
+    entitlements = UnilusAvatarEntitlements.resolveEntitlements(student);
+    const allowedOutfits = new Set(entitlements.outfits);
+    const savedOutfit = student ? localStorage.getItem(preferenceKey(OUTFIT_KEY)) : null;
+    const savedGlasses = student ? localStorage.getItem(preferenceKey(GLASSES_KEY)) : null;
+    const savedLaptop = student && entitlements.accessories.includes("laptop")
+      ? localStorage.getItem(preferenceKey(LAPTOP_KEY)) : null;
+    const appearance = UnilusAvatarEntitlements.resolveAppearance(entitlements,
+      { outfit: savedOutfit, glasses: savedGlasses, laptop: savedLaptop });
+    laptopPreference = appearance.laptopPreference;
+    const outfit = appearance.outfit;
+    UniAvatar.setOutfit(outfit);
+    UniAvatar.setGlasses(appearance.glasses);
+    UniAvatar.setLaptop(appearance.laptop);
+    UniAvatar.setHairstyle(UnilusHairstyles.restore(student,
+      student ? localStorage.getItem(preferenceKey(HAIRSTYLE_KEY)) : null));
+    els.outfitRow.hidden = !student;
+    els.glassesRow.hidden = !student;
+    els.hairRow.hidden = !student;
+    els.accessoryRow.hidden = !entitlements.accessories.includes("laptop");
+    els.settingsBtn.setAttribute("aria-label", student ? "Customise avatar" : "Settings");
+    if (view === "settings-menu") els.titleText.textContent = student ? "Customise avatar" : "Settings";
+    if (!student && ["outfits", "glasses", "accessories", "hairstyles"].includes(view)) goToView("settings-menu");
+    if (student && view === "accessories" && els.accessoryRow.hidden) goToView("settings-menu");
+    buildSwatches(els.outfitGrid, OUTFIT_OPTIONS.filter((o) => allowedOutfits.has(o.key)), outfit, (key) => {
+      if (!entitlements.outfits.includes(key)) return;
+      UniAvatar.setOutfit(key);
+      localStorage.setItem(preferenceKey(OUTFIT_KEY), key);
+      if (laptopPreference === null && ["tech-hoodie", "tech-circuit"].includes(key)) UniAvatar.setLaptop(true);
+      highlightActive(els.outfitGrid, key);
+      updateLaptopSwitch();
+      updateMenuPreviews();
+    });
+    buildSwatches(els.glassesGrid, student ? GLASSES_OPTIONS : [], UniAvatar.getGlasses() || "none", (key) => {
+      if (!currentStudent || !GLASSES_OPTIONS.some((g) => g.key === key)) return;
+      UniAvatar.setGlasses(key === "none" ? null : key);
+      localStorage.setItem(preferenceKey(GLASSES_KEY), key);
+      highlightActive(els.glassesGrid, key);
+      updateMenuPreviews();
+    });
+    updateLaptopSwitch();
+    buildHairstylePicker();
+    updateMenuPreviews();
+  }
 
   // ----- theme (light/dark) -----
   const THEME_KEY = "unilus-widget-theme";
@@ -189,6 +346,9 @@ window.UnilusWidget = (function () {
     const glasses = GLASSES_OPTIONS.find((g) => g.key === glassesKey);
     els.outfitPreviewIcon.innerHTML = outfit && outfit.icon ? `<img src="${outfit.icon}" alt="">` : "";
     els.glassesPreviewIcon.innerHTML = glasses && glasses.icon ? `<img src="${glasses.icon}" alt="">` : "";
+    const hairstyle = UnilusHairstyles.get(UniAvatar.getHairstyle());
+    els.hairPreviewIcon.innerHTML = hairstyle ? `<img src="${hairstyle.src}" alt="">` : "⌁";
+    els.hairWigNote.hidden = outfitKey !== "law-wig";
   }
 
   // The single avatar DOM node (with all its live tracking/animation state)
@@ -196,13 +356,21 @@ window.UnilusWidget = (function () {
   function mount(targetEl) {
     if (avatarEl && targetEl && avatarEl.parentElement !== targetEl) {
       targetEl.appendChild(avatarEl);
+      UniAvatar.resetTracking();
+    }
+    if (avatarEl && targetEl) {
+      // Inline replies always sit to the avatar's right. Elsewhere choose
+      // the side with room after the persistent node has been mounted.
+      const inline = targetEl.classList.contains("avatar-slot--inline");
+      const rect = targetEl.getBoundingClientRect();
+      avatarEl.classList.toggle("bubble-left", inline || rect.right > window.innerWidth - rect.left);
     }
   }
 
   function placeAvatar() {
     if (!chatOpen) {
       mount(els.launcherSlot);
-    } else if (view === "settings-menu" || view === "outfits" || view === "glasses") {
+    } else if (view === "settings-menu" || view === "outfits" || view === "glasses" || view === "accessories" || view === "hairstyles") {
       mount(els.settingsSlot);
     } else if (view === "map") {
       // No avatar slot on the map view - leave the avatar parked wherever
@@ -215,23 +383,27 @@ window.UnilusWidget = (function () {
   }
 
   function goToView(name) {
+    if (["outfits", "glasses", "accessories", "hairstyles"].includes(name) && !currentStudent) name = "settings-menu";
+    if (name === "accessories" && !entitlements.accessories.includes("laptop")) name = "settings-menu";
     view = name;
     els.viewChat.hidden = name !== "chat";
     els.viewSettingsMenu.hidden = name !== "settings-menu";
     els.viewOutfits.hidden = name !== "outfits";
     els.viewGlasses.hidden = name !== "glasses";
+    els.viewAccessories.hidden = name !== "accessories";
+    els.viewHairstyles.hidden = name !== "hairstyles";
     els.viewMap.hidden = name !== "map";
 
     // The floating avatar preview strip only belongs to the settings flow -
     // showing it above the map would visually clip the toolbar.
-    els.settingsPreview.hidden = !(name === "settings-menu" || name === "outfits" || name === "glasses");
+    els.settingsPreview.hidden = !(name === "settings-menu" || name === "outfits" || name === "glasses" || name === "accessories" || name === "hairstyles");
     els.backBtn.hidden = name === "chat";
     els.settingsBtn.hidden = name !== "chat";
     els.mapBtn.hidden = name !== "chat";
     if (els.mapBtn) els.mapBtn.classList.toggle("is-active", name === "map");
 
     const copy = VIEW_TITLES[name];
-    els.titleText.textContent = copy.title;
+    els.titleText.textContent = name === "settings-menu" && !currentStudent ? "Settings" : copy.title;
     els.statusLine.textContent = copy.subtitle || "";
     els.statusLine.style.visibility = copy.subtitle ? "visible" : "hidden";
 
@@ -247,7 +419,7 @@ window.UnilusWidget = (function () {
   }
 
   function goBack() {
-    if (view === "outfits" || view === "glasses") {
+    if (view === "outfits" || view === "glasses" || view === "accessories" || view === "hairstyles") {
       goToView("settings-menu");
     } else {
       goToView("chat");
@@ -266,7 +438,7 @@ window.UnilusWidget = (function () {
   // clicking "View on Map" after the chatbot named a location). This
   // function does not do any deciding of its own - campus/buildingId
   // arrive already resolved.
-  function showBuildingOnMap({ campus, buildingId, route, routeFromGps }) {
+  function showBuildingOnMap({ campus, buildingId, route, routeFromGps, mapsTab }) {
     goToView("map");
     requestAnimationFrame(() => {
       CampusMap.show();
@@ -274,7 +446,7 @@ window.UnilusWidget = (function () {
         CampusMap.flyToBuilding(buildingId, campus);
         CampusMap.openBuildingCard(buildingId, campus);
         if (route?.status === "ok") CampusMap.showRoute(route);
-        if (routeFromGps) CampusMap.routeFromCurrentLocation(buildingId);
+        if (routeFromGps) CampusMap.routeFromCurrentLocation(buildingId, mapsTab);
       });
     });
   }
@@ -375,6 +547,7 @@ window.UnilusWidget = (function () {
     if (isMobile()) return;
     expanded = !expanded;
     els.panel.classList.toggle("expanded", expanded);
+    placeAvatar();
     if (view === "map") {
       requestAnimationFrame(CampusMap.show);
     }
@@ -391,7 +564,7 @@ window.UnilusWidget = (function () {
     placeAvatar();
   }
 
-  return { 
+  return {
   init,
   onBotMessage,
   openMap,

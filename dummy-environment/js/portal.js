@@ -6,6 +6,19 @@
     return;
   }
 
+  const student = window.UnilusDemoSession.currentStudent();
+  if (!student) {
+    window.UnilusDemoSession.logout();
+    window.location.replace("portal-login.html");
+    return;
+  }
+  document.querySelectorAll("[data-demo-identity]").forEach((element) => {
+    element.textContent = student.username;
+  });
+  document.querySelectorAll("[data-demo-programme]").forEach((element) => {
+    element.textContent = student.programmeName;
+  });
+
   const sidebar = document.querySelector(".portal-sidebar");
   const menuButton = document.querySelector(".portal-menu-toggle");
   menuButton?.addEventListener("click", () => {
@@ -16,7 +29,8 @@
     .querySelector("[data-logout]")
     ?.addEventListener("click", (event) => {
       event.preventDefault();
-      sessionStorage.removeItem(SESSION_KEY);
-      window.location.replace("portal-login.html");
+      window.UnilusDemoSession.logout();
+      window.dispatchEvent(new Event("unilus-student-context-changed"));
+      window.location.replace("portal-login.html?v=programme-session-2");
     });
 })();

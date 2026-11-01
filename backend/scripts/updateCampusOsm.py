@@ -9,12 +9,17 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+import shutil
 import sys
 import xml.etree.ElementTree as ET
 
 DATA = Path(__file__).resolve().parents[1] / "data" / "campus"
 BOUNDARY_ID = "1558103619"
 PHYSICAL_TAGS = {"building", "amenity", "leisure", "sport", "office", "shop", "tourism", "healthcare"}
+PEDESTRIAN_HIGHWAYS = {"footway", "path", "pedestrian", "steps", "crossing"}
+PEDESTRIAN_TAGS = ("highway", "footway", "surface", "access", "foot", "wheelchair", "lit",
+                   "covered", "bridge", "tunnel", "layer", "incline", "step_count")
+ACCESS_TAGS = ("entrance", "barrier", "access", "foot", "wheelchair")
 
 
 def tags(element):
@@ -154,6 +159,104 @@ def write(path, data):
     path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
+def point_on_geometry(point, geometry):
+    if geometry["type"] == "Point":
+        return point == geometry["coordinates"]
+    for ring in outer_rings(geometry):
+        if any(on_segment(point, a, b, 1e-9) for a, b in zip(ring, ring[1:])):
+            return True
+    return False
+
+
+def import_pedestrian_and_access(root, nodes, ways, boundary_ring, places, provenance):
+    """Keep OSM topology and only associate access nodes with their parent feature."""
+    warnings = []
+    features = []
+    seen_geometry = set()
+    for way_id, way in ways.items():
+        t = tags(way)
+        if t.get("highway") not in PEDESTRIAN_HIGHWAYS:
+            continue
+        if t.get("area") == "yes":
+            warnings.append(f"Pedestrian area needs reviewed routable lines: way/{way_id}")
+            continue
+        ids = [n.attrib["ref"] for n in way.findall("nd")]
+        if len(ids) < 2 or any(node_id not in nodes for node_id in ids):
+            warnings.append(f"Incomplete pedestrian way: way/{way_id}")
+            continue
+        coordinates = [nodes[node_id] for node_id in ids]
+        if len(set(map(tuple, coordinates))) < 2:
+            warnings.append(f"Zero-length pedestrian way: way/{way_id}")
+            continue
+        if not all(contains(point, boundary_ring) for point in coordinates):
+            warnings.append(f"Pedestrian way outside campus: way/{way_id}")
+            continue
+        signature = (tuple(map(tuple, coordinates)), t.get("highway"), t.get("footway"))
+        if signature in seen_geometry:
+            warnings.append(f"Duplicate pedestrian geometry: way/{way_id}")
+            continue
+        seen_geometry.add(signature)
+        foot = t.get("foot")
+        access = t.get("access")
+        allowed = foot not in {"no", "private"} and not (
+            access in {"no", "private"} and foot not in {"yes", "designated", "permissive"})
+        properties = {"id": f"osm_way_{way_id}", "source": f"way/{way_id}",
+                      "node_ids": ids, "osm_tags": {key: t[key] for key in PEDESTRIAN_TAGS if key in t},
+                      "pedestrian_allowed": allowed,
+                      "kind": "crossing" if t.get("footway") == "crossing" or t.get("highway") == "crossing" else t["highway"]}
+        features.append({"type": "Feature", "properties": properties,
+                         "geometry": {"type": "LineString", "coordinates": coordinates}})
+
+    access = []
+    for node in root.findall("node"):
+        node_id = node.attrib["id"]
+        t = tags(node)
+        if not t.get("entrance") and t.get("barrier") != "gate":
+            continue
+        point = nodes[node_id]
+        if not contains(point, boundary_ring):
+            continue
+        matches = [place for place in places if point_on_geometry(point, place["geometry"])]
+        if len(matches) != 1:
+            warnings.append(f"Unassociated or ambiguous entrance/gate: node/{node_id} ({len(matches)} matching places)")
+            continue
+        place = matches[0]
+        access.append({"id": f"osm_node_{node_id}", "osm_node_id": node_id,
+                       "source": f"node/{node_id}", "place_id": place["id"],
+                       "parent_osm_ref": place["osm_ref"],
+                       "entrance": t.get("entrance"), "barrier": t.get("barrier"),
+                       "osm_tags": {key: t[key] for key in ACCESS_TAGS if key in t},
+                       "lat": point[1], "lng": point[0], "primary": False})
+    for place in places:
+        choices = [item for item in access if item["place_id"] == place["id"] and
+                   item["entrance"] != "service" and item["osm_tags"].get("access") not in {"private", "no"} and
+                   item["osm_tags"].get("foot") != "no"]
+        for kind in ("main", "yes"):
+            preferred = [item for item in choices if item["entrance"] == kind]
+            if preferred:
+                preferred[0]["primary"] = True
+                break
+    return ({"type": "FeatureCollection", "source": provenance, "features": features},
+            {"source": provenance, "access_points": access}, warnings)
+
+
+def import_service_roads(ways, nodes, provenance):
+    roads = []
+    for way_id, way in ways.items():
+        t = tags(way)
+        if t.get("highway") != "service":
+            continue
+        ids = [n.attrib["ref"] for n in way.findall("nd")]
+        if len(ids) < 2 or any(node_id not in nodes for node_id in ids):
+            continue
+        coordinates = [nodes[node_id] for node_id in ids]
+        roads.append({"id": f"osm_way_{way_id}", "kind": "shared_road", "source": f"way/{way_id}",
+                      "provenance": "osm:shared_road", "node_ids": ids, "coordinates": coordinates,
+                      "osm_tags": {key: t[key] for key in PEDESTRIAN_TAGS if key in t},
+                      "accessible": None})
+    return {"source": provenance, "roads": roads}
+
+
 def import_osm(source, output_dir=DATA, dry_run=False):
     root = ET.parse(source).getroot()
     nodes = {n.attrib["id"]: [float(n.attrib["lon"]), float(n.attrib["lat"])] for n in root.findall("node")}
@@ -254,12 +357,26 @@ def import_osm(source, output_dir=DATA, dry_run=False):
                "removedGeometryRefs": sorted(old_building_refs - new_building_refs),
                "missingOldPlaceRefs": sorted(old_place_refs - set(objects)),
                "newNames": {p["id"]: p["name"] for p in places}}
+    pedestrian, osm_access, pedestrian_warnings = import_pedestrian_and_access(
+        root, nodes, ways, boundary_ring, places, provenance)
+    osm_roads = import_service_roads(ways, nodes, provenance)
+    summary["pedestrianWayCount"] = len(pedestrian["features"])
+    summary["osmAccessPointCount"] = len(osm_access["access_points"])
+    summary["serviceRoadCount"] = len(osm_roads["roads"])
+    summary["warnings"] = pedestrian_warnings
     if not dry_run:
         write(output_dir / "campus_boundary.json", boundary)
         write(output_dir / "campus_places.json", {"source": provenance, "places": places})
         write(output_dir / "campus_buildings.json", {"source": provenance, "buildings": buildings})
         write(output_dir / "campus_search_index.json", {"search_index": search_index, "aliases": aliases,
                                                          "place_id_lookup": lookup})
+        write(output_dir / "campus_osm_pedestrian.geojson", pedestrian)
+        write(output_dir / "campus_osm_access_points.json", osm_access)
+        write(output_dir / "campus_osm_service_roads.json", osm_roads)
+        source_target = output_dir / "source" / "silverest_latest.osm"
+        source_target.parent.mkdir(parents=True, exist_ok=True)
+        if source.resolve() != source_target.resolve():
+            shutil.copyfile(source, source_target)
     return summary
 
 

@@ -1,0 +1,87 @@
+{
+  "release": "2026-09-23.1",
+  "bbox": [
+    28.466848,
+    -15.357015,
+    28.471409,
+    -15.352995
+  ],
+  "total": 32,
+  "positions": {
+    "outside": 10,
+    "crossing": 3,
+    "inside": 19
+  },
+  "class_counts_bbox": {
+    "residential": 3,
+    "unclassified": 3,
+    "service": 23,
+    "track": 1,
+    "trunk": 1,
+    "standard_gauge": 1
+  },
+  "class_counts_campus_intersecting": {
+    "service": 22
+  },
+  "pedestrian_length_m_inside_boundary": 0,
+  "pedestrian_count_campus_intersecting": 0,
+  "additional_pedestrian_count": 0,
+  "service_count_campus_intersecting": 22,
+  "service_segments_geometrically_matched_within_2m_at_90_percent": 22,
+  "service_overlap_fractions": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "canonical_destination_count": 23,
+  "canonical_coverage": {
+    "5": 0,
+    "10": 0,
+    "25": 0,
+    "50": 0
+  },
+  "canonical_distances_m": {
+    "knowledge_field_1": null,
+    "knowledge_field_2": null,
+    "p_c_school_of_business": null,
+    "unilus_library": null,
+    "cafeteria_school_of_medicine": null,
+    "the_growcery": null,
+    "unilus_hospital": null,
+    "hostel_school_of_medicine_side": null,
+    "unilus_hostel_school_of_medicine_side": null,
+    "running_track_athletics": null,
+    "sports_pitch_soccer": null,
+    "unilus_gym": null,
+    "unilus_swimming_pool": null,
+    "biochemistry_lab": null,
+    "foundation_labs": null,
+    "life_science_labs": null,
+    "basic_science_labs": null,
+    "school_of_business_hostels": null,
+    "unilus_basketball_court": null,
+    "unilus_volleyball_court": null,
+    "unilus_tennis_court": null,
+    "unilus_auditorium": null,
+    "unilus_chapel": null
+  }
+}

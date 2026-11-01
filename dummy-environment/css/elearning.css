@@ -26,10 +26,14 @@
   box-shadow: 0 3px 9px #0004;
 }
 .lms-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   font-size: 21px;
   white-space: nowrap;
   margin-right: 40px;
 }
+.lms-name img { width: 30px; height: 44px; object-fit: contain; }
 .lms-header nav {
   display: flex;
   height: 100%;

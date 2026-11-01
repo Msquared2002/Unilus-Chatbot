@@ -1,4 +1,8 @@
-// GPS is requested only from an explicit map control interaction.
+/*
+Changes: Requests and displays current location after an explicit map action.
+Affects: Campus map location marker and route-origin selection.
+Purpose: Keeps GPS permission and boundary validation tied to clear user interaction.
+*/
 window.CampusLocation = (function () {
   let current = null;
   let marker = null;
@@ -16,7 +20,7 @@ window.CampusLocation = (function () {
     return inside;
   }
 
-  function request(map, boundary, onStatus, onLocated) {
+  function request(map, boundary, onStatus, onLocated, options = {}) {
     if (!navigator.geolocation) {
       onStatus("Location is unavailable in this browser.");
       return;
@@ -43,7 +47,8 @@ window.CampusLocation = (function () {
         onStatus("Location found on Silverest Campus.");
         if (onLocated) onLocated(current);
       } else {
-        onStatus("You appear to be outside Silverest Campus.");
+        onStatus(options.allowOutside ? "Location found. Opening Google Maps directions…" : "You appear to be outside Silverest Campus.");
+        if (options.allowOutside && onLocated) onLocated(current);
       }
     }, (error) => {
       const message = error.code === 1 ? "Location permission was denied." :

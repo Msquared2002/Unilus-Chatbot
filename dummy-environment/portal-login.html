@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>UNILUS Student Portal Login</title>
     <link rel="stylesheet" href="css/shared.css" />
-    <link rel="stylesheet" href="css/portal-login.css" />
+    <script src="js/global-navigation.js" defer></script>
+    <link rel="stylesheet" href="css/portal-login.css?v=programme-session-2" />
   <!-- ================= UNILUS Chatbot Widget: styles ================= -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <link rel="stylesheet" href="chatbot-widget/widget.css">
-<link rel="stylesheet" href="chatbot-widget/avatar.css">
+<link rel="stylesheet" href="chatbot-widget/avatar.css?v=hair-refit-2">
 <link rel="stylesheet" href="chatbot-widget/integration.css">
 </head>
   <body class="portal-auth-page">
@@ -36,13 +37,13 @@
         </p>
         <form class="portal-auth-form" data-portal-login novalidate>
           <label for="portal-username">
-            User Name
+            Username
             <input
               id="portal-username"
               name="username"
               type="text"
               autocomplete="username"
-              placeholder="user name"
+              placeholder="demo"
               required
             />
           </label>
@@ -57,6 +58,12 @@
               required
             />
           </label>
+          <label for="portal-programme">
+            Programme
+            <select id="portal-programme" name="programme" required>
+              <option value="">Select programme</option>
+            </select>
+          </label>
           <button type="submit">Sign In</button>
           <p class="portal-auth-error" data-login-error role="alert"></p>
         </form>
@@ -66,7 +73,9 @@
         </div>
       </section>
     </main>
-    <script src="js/portal-login.js"></script>
+    <script src="js/demo-programmes.js"></script>
+    <script src="js/demo-session.js"></script>
+    <script src="js/portal-login.js?v=programme-session-2"></script>
   
 <!-- ================= UNILUS Chatbot Widget (start) ================= -->
 <!-- ================= floating widget ================= -->
@@ -192,7 +201,6 @@
 <!-- ================= UNILUS Chatbot Widget (end) ================= -->
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="chatbot-widget/avatar.js"></script>
-<script src="chatbot-widget/dist/chatbot-widget.js"></script>
+<script src="chatbot-widget/dist/chatbot-widget.js?v=hair-refit-2"></script>
 </body>
 </html>
