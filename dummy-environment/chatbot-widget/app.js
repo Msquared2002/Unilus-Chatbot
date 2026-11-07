@@ -60,25 +60,28 @@ async function sendMessage() {
 
   try {
 
-    const response = await fetch(
-      "http://localhost:5000/api/chat",
-      {
-        method: "POST",
+    const headers = { "Content-Type": "application/json" };
+    let token = null, chatSession = null;
+    try {
+      token = sessionStorage.getItem("unilusAuthToken");        // set by the portal sign-in
+      chatSession = sessionStorage.getItem("unilusChatSession"); // keeps follow-up questions together
+    } catch { /* storage unavailable: carry on as a visitor */ }
+    if (token) headers.Authorization = `Bearer ${token}`;
 
-        headers: {
-          "Content-Type": "application/json"
-        },
-
-        body: JSON.stringify({
-          question: text
-        })
-      }
-    );
+    const response = await fetch("http://localhost:5000/api/chat", {
+      method: "POST",
+      headers,
+      body: JSON.stringify(chatSession ? { question: text, sessionId: chatSession } : { question: text })
+    });
 
     if (!response.ok) throw new Error(`Chat request failed: ${response.status}`);
 
-
     const data = await response.json();
+
+    try {
+      if (data.sessionId) sessionStorage.setItem("unilusChatSession", data.sessionId);
+      if (data.authProblem) sessionStorage.removeItem("unilusAuthToken"); // expired or refused token
+    } catch { /* ignore */ }
 
 
     removeTypingIndicator(typingRow);

@@ -522,9 +522,19 @@ async function knowledgeBaseSize() {
   return store.count();
 }
 
+/**
+ * The live vector store this service searches. knowledgeUpdater.js adds and
+ * removes documents through this same instance, so changes are visible to the
+ * running server immediately, with no restart.
+ */
+function getStore() {
+  return store;
+}
+
 module.exports = {
   searchKnowledge,
   knowledgeBaseSize,
+  getStore,
   DEFAULT_MIN_SCORE,
   DEFAULT_TOP_K,
   DEFAULT_DENSE_TOP_K,

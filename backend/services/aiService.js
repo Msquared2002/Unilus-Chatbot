@@ -1,8 +1,7 @@
 const Groq = require("groq-sdk");
-
 /*
 Changes: Generates evidence-grounded chatbot answers and sanitizes model output.
-Affects: chatService.js answer responses and supported resource links.
+Affects: chatService.js answer responses and supportable resource links.
 Purpose: Keeps model fallback and grounding safeguards centralized at the generation boundary.
 */
 
@@ -170,6 +169,7 @@ GROUNDING RULES
 8. Copy numeric values exactly from the controlling evidence. Never mentally recalculate, round, "fix", or substitute a different figure.
 9. A source filename/title helps identify evidence, but do not manufacture facts solely from a suggestive filename when the supplied content does not support them.
 10. If the information is genuinely unavailable after using the supplied evidence, respond: "I don't have that information in the UNILUS records."
+11. Earlier turns in this conversation may be supplied as prior messages. Use them only to understand what the student is referring to (e.g. "what about Wednesday?" after a timetable question). Never treat something said earlier in the conversation as UNILUS evidence -- only the UNILUS Information supplied in the current turn is a source of fact.
 
 ========================
 ANSWER DISCIPLINE
@@ -235,7 +235,7 @@ async function createCompletion(model, messages, temperature = 0.1) {
     });
 }
 
-async function askAI(question, context = "", { allowedUrls = [], groundingText = "" } = {}) {
+async function askAI(question, context = "", { allowedUrls = [], groundingText = "", history = [] } = {}) {
     let lastError;
 
     // URLs present in formatted evidence are automatically allowed in addition
@@ -246,11 +246,21 @@ async function askAI(question, context = "", { allowedUrls = [], groundingText =
     ])];
 
     const focusHints = buildQuestionFocusHints(question);
+
+    // Prior turns in this conversation, oldest first, so the model can
+    // resolve follow-ups like "what about Wednesday?" -- see grounding
+    // rule 11: history gives context, never new facts.
+    const historyMessages = history.map((turn) => ({
+        role: turn.role === "assistant" ? "assistant" : "user",
+        content: turn.content,
+    }));
+
     const baseMessages = [
         {
             role: "system",
             content: buildSystemPrompt(),
         },
+        ...historyMessages,
         {
             role: "user",
             content: `

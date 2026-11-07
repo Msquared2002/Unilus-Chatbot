@@ -248,39 +248,47 @@ function classifyQuery(query) {
 }
 
 function searchTimetableByEntities(query, entities) {
+  // Resolve the strongest entity first, then apply every explicit filter.
+  // In particular, day must be applied before the answer formatter can cap
+  // a broad lecturer/course result set.
+  let matches = null;
   if (entities.courseCode) {
     const byCourse = timetableService.getByCourse(entities.courseCode);
-    if (byCourse.length) return byCourse;
+    if (byCourse.length) matches = byCourse;
   }
-  if (entities.venueCode) {
+  if (!matches && entities.venueCode) {
     const byVenue = timetableService.getByVenue(entities.venueCode);
-    if (byVenue.length) return byVenue;
+    if (byVenue.length) matches = byVenue;
   }
-  if (entities.lecturer) {
+  if (!matches && entities.lecturer) {
     const byLecturer = timetableService.getByLecturer(entities.lecturer);
-    if (byLecturer.length) return byLecturer;
+    if (byLecturer.length) matches = byLecturer;
   }
-  if (entities.programmeFamily && entities.year && entities.semester) {
-    let byProgrammeStage = timetableService.getByProgrammeStage({
+  if (!matches && entities.programmeFamily && entities.year && entities.semester) {
+    matches = timetableService.getByProgrammeStage({
       family: entities.programmeFamily,
       year: entities.year,
       semester: entities.semester,
       mode: entities.studyMode,
     });
+  }
+
+  if (matches) {
     if (entities.day) {
-      byProgrammeStage = byProgrammeStage.filter((record) =>
+      matches = matches.filter((record) =>
         String(record.day || "").toLowerCase() === String(entities.day).toLowerCase()
       );
     }
-    if (byProgrammeStage.length) return byProgrammeStage;
-
-    // A fully specified programme/year/semester query is high-confidence.
-    // Do NOT fall through to fuzzy word search, because common words such as
-    // "for" can otherwise return unrelated programmes and create a false
-    // timetable. Empty is safer and lets the answer layer say the cohort was
-    // not found.
-    return [];
+    return matches;
   }
+
+  // A fully specified programme/year/semester query is high-confidence.
+  // Do NOT fall through to fuzzy word search, because common words such as
+  // "for" can otherwise return unrelated programmes and create a false
+  // timetable. Empty is safer and lets the answer layer say the cohort was
+  // not found.
+  if (entities.programmeFamily && entities.year && entities.semester) return [];
+
   if (entities.day) {
     const byDay = timetableService.getByDay(entities.day);
     if (byDay.length) return byDay;
@@ -292,6 +300,35 @@ function searchTimetableByEntities(query, entities) {
 
   // No exact entity matched anything — fall back to fuzzy token search.
   return timetableService.search(query);
+}
+
+// A signed-in student's profile (programme, year, semester) fills in what a
+// class-timetable question leaves out, e.g. "what's my timetable?". It never
+// touches exam, course, venue or lecturer questions.
+function applyProfileDefaults(queryType, query, profile) {
+  if (!profile || !profile.programme) return queryType;
+  const entities = queryType.entities;
+  if (entities.courseCode || entities.venueCode || entities.lecturer) return queryType;
+
+  const text = String(query || "");
+  const asksForClasses = /\b(timetable|time table|classes|class|lectures?|schedule)\b/i.test(text);
+  const asksSomethingElse = /\b(exams?|tests?|assessments?|results?|graduat\w*|fees?)\b/i.test(text);
+  if (!asksForClasses || asksSomethingElse) return queryType;
+
+  const family = String(profile.programme).trim().toUpperCase();
+  if (!timetableService.isKnownProgrammeFamily(family)) return queryType;
+  if (entities.programmeFamily && entities.programmeFamily !== family) return queryType;
+
+  const filled = { ...entities };
+  if (!filled.programmeFamily) filled.programmeFamily = family;
+  const year = Number(profile.year) || null;
+  const semester = Number(profile.semester) || null;
+  if (filled.year == null && filled.semester == null && year && semester) {
+    filled.year = year;
+    filled.semester = semester;
+  }
+  filled.fromProfile = true;
+  return { ...queryType, isTimetable: true, entities: filled };
 }
 
 /**
@@ -307,7 +344,7 @@ function searchTimetableByEntities(query, entities) {
  *   "student" -- fail closed, not open.
  * @returns {Promise<{queryType: object, timetable: Array, knowledge: Array, resources: Array}>}
  */
-async function retrieveAnswer(query, history = [], audience = "public") {
+async function retrieveAnswer(query, history = [], audience = "public", profile = null) {
   const hasHistory = Array.isArray(history) && history.length > 0;
   const isStudent = isStudentAudience(audience);
 
@@ -327,7 +364,7 @@ async function retrieveAnswer(query, history = [], audience = "public") {
     }
   }
 
-  const queryType = classifyQuery(effectiveQuery);
+  const queryType = applyProfileDefaults(classifyQuery(effectiveQuery), effectiveQuery, isStudent ? profile : null);
 
   const result = {
     queryType,

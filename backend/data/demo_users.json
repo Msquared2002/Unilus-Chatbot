@@ -3,17 +3,21 @@
   "users": [
     {
       "username": "demo",
-      "name": "Luka Hamududu",
+      "name": "demo",
       "role": "student",
       "programme": "BIT",
-      "password_hash": "scrypt$f640073dd6b62582066863c866d4e689$8ae9581c121661dbabb8114992b00501c42ed89ce2d53288dcee6270169feb76d5cd7153b53c279a82d0613936b9afdeb81c5dbdebf639bf6879e04a74098458"
+      "password_hash": "scrypt$f640073dd6b62582066863c866d4e689$8ae9581c121661dbabb8114992b00501c42ed89ce2d53288dcee6270169feb76d5cd7153b53c279a82d0613936b9afdeb81c5dbdebf639bf6879e04a74098458",
+      "year": 3,
+      "semester": 2
     },
     {
       "username": "BIT2424001",
       "name": "Luka Hamududu",
       "role": "student",
       "programme": "BIT",
-      "password_hash": "scrypt$e3ab8a8a272cabdaa22d18ea6a3e23aa$29aa5935627455fd681bbd0aa0400fe9739a817bc74d87e792f314b01a14c83092a95a04356b83b1ccaf1255aabf37650e4a2f50855b2b6e14013fdb5c298762"
+      "password_hash": "scrypt$e3ab8a8a272cabdaa22d18ea6a3e23aa$29aa5935627455fd681bbd0aa0400fe9739a817bc74d87e792f314b01a14c83092a95a04356b83b1ccaf1255aabf37650e4a2f50855b2b6e14013fdb5c298762",
+      "year": 3,
+      "semester": 2
     },
     {
       "username": "staff.demo",

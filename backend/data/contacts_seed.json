@@ -1,0 +1,31 @@
+{
+  "contacts": [
+    {
+      "contact_id": "general_enquiries",
+      "topic": "General enquiries",
+      "department": "University of Lusaka",
+      "phone": "0971263550",
+      "email": "info@unilus.ac.zm",
+      "note": "For any question not covered by the chat-bot's data.",
+      "source_url": "https://web.unilus.ac.zm/contact-us/"
+    },
+    {
+      "contact_id": "academic_office_timetables",
+      "topic": "Exam timetables and missing timetable documents",
+      "department": "Academic Office",
+      "phone": "0971263550",
+      "email": "info@unilus.ac.zm",
+      "note": "For timetable questions or missing documents, contact the Academic Office.",
+      "source_url": "https://sms.unilus.ac.zm/timetables"
+    },
+    {
+      "contact_id": "faq_page",
+      "topic": "General frequently asked questions",
+      "department": "University of Lusaka",
+      "phone": null,
+      "email": null,
+      "note": "A searchable FAQ database covering admissions and general student questions.",
+      "source_url": "https://web.unilus.ac.zm/faq/"
+    }
+  ]
+}

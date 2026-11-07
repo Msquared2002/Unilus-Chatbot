@@ -75,6 +75,8 @@ function publicUser(user) {
         name: user.name || user.username,
         role: user.role,
         programme: user.programme || null,
+        year: user.year || null, // profile:public
+        semester: user.semester || null,
     };
 }
 
@@ -137,6 +139,8 @@ function signToken(user) {
         name: user.name,
         role: user.role,
         programme: user.programme || null,
+        year: user.year || null, // profile:token
+        semester: user.semester || null,
         iat: now,
         exp: now + ttlSeconds(),
     };
@@ -195,6 +199,8 @@ function verifyToken(token) {
             name: payload.name || payload.sub,
             role: payload.role,
             programme: payload.programme || null,
+            year: payload.year || null, // profile:verify
+            semester: payload.semester || null,
         },
     };
 }
