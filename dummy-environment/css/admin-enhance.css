@@ -1,0 +1,81 @@
+/* Additions for the interactive Support Centre. Loaded after admin.css; uses its colour tokens. */
+
+/* Clickable dashboard cards */
+.metric-card.is-link { cursor: pointer; transition: transform .12s ease, box-shadow .12s ease; }
+.metric-card.is-link:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(20,49,72,.12); }
+.metric-card.is-link:focus-visible, .ticket-table tbody tr:focus-visible, .chip:focus-visible { outline: 2px solid var(--adm-green); outline-offset: 2px; }
+.ticket-table tbody tr[data-ticket] { cursor: pointer; }
+.ticket-table tbody tr[data-ticket]:hover { background: var(--adm-green-soft); }
+
+/* Status chips above the ticket table */
+.status-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border: 1px solid var(--adm-line); border-radius: 16px; background: #fff; color: var(--adm-ink); font-size: 12px; font-weight: 700; cursor: pointer; }
+.chip b { display: inline-block; min-width: 20px; padding: 1px 6px; border-radius: 10px; background: var(--adm-bg); color: var(--adm-muted); font-size: 11px; text-align: center; }
+.chip:hover { border-color: var(--adm-green); }
+.chip.is-active { background: var(--adm-green); border-color: var(--adm-green); color: #fff; }
+.chip.is-active b { background: rgba(255,255,255,.22); color: #fff; }
+
+/* Quick actions on a ticket */
+.quick-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 0 0 18px; padding: 12px 14px; background: #fff; border: 1px solid var(--adm-line); border-left: 3px solid var(--adm-gold); border-radius: 4px; }
+.quick-actions > span { margin-right: 4px; color: var(--adm-muted); font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.quick-actions button:disabled { opacity: .55; cursor: wait; }
+
+/* New-ticket banner */
+.new-banner { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; padding: 10px 14px; background: #fff4dc; border: 1px solid #ecd48f; border-radius: 4px; color: #6b4f08; font-size: 13px; font-weight: 700; }
+
+/* Toasts */
+.toast-host { position: fixed; right: 20px; bottom: 20px; z-index: 50; display: grid; gap: 10px; max-width: min(380px, calc(100vw - 40px)); }
+.toast { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: var(--adm-ink); color: #fff; border-radius: 4px; box-shadow: 0 8px 24px rgba(0,0,0,.25); font-size: 13px; animation: toast-in .18s ease-out; }
+.toast span { flex: 1; }
+.toast a { color: var(--adm-gold); font-weight: 700; white-space: nowrap; }
+.toast button { background: none; border: 0; color: #fff; font-size: 18px; line-height: 1; cursor: pointer; opacity: .7; }
+.toast button:hover { opacity: 1; }
+@keyframes toast-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* Reports */
+.report-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 18px; }
+.bar-list { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.bar-list li { display: grid; grid-template-columns: minmax(110px, 38%) 1fr 34px; align-items: center; gap: 10px; font-size: 12px; }
+.bar-label { color: var(--adm-ink); font-weight: 600; overflow-wrap: anywhere; }
+.bar-track { height: 10px; background: var(--adm-bg); border-radius: 5px; overflow: hidden; }
+.bar-fill { display: block; height: 100%; background: var(--adm-green); border-radius: 5px; transition: width .4s ease; }
+.bar-list b { text-align: right; color: var(--adm-ink); }
+.report-note { margin: 16px 0 0; color: var(--adm-muted); font-size: 12px; }
+@media (max-width: 900px) { .report-grid { grid-template-columns: 1fr; } }
+
+@media (prefers-reduced-motion: reduce) { .metric-card.is-link, .toast, .bar-fill { transition: none; animation: none; } }
+
+/* Knowledge base page */
+.knowledge-top { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 18px; margin: 18px 0; align-items: start; }
+.drop-zone { display: grid; gap: 4px; justify-items: center; padding: 24px 16px; border: 2px dashed var(--adm-line); border-radius: 6px; background: var(--adm-bg); color: var(--adm-muted); text-align: center; cursor: pointer; transition: border-color .12s ease, background .12s ease; }
+.drop-zone:hover, .drop-zone.is-over { border-color: var(--adm-green); background: var(--adm-green-soft); }
+.drop-zone input { max-width: 100%; }
+.drop-zone span strong { color: var(--adm-green); }
+.drop-zone small { color: var(--adm-muted); }
+.doc-search { width: 100%; margin: 0 0 12px; padding: 10px 12px; border: 1px solid var(--adm-line); border-radius: 3px; font: inherit; }
+.metric-value--small { font-size: 22px; }
+.ticket-table tr[hidden] { display: none; }
+@media (max-width: 900px) { .knowledge-top { grid-template-columns: 1fr; } }
+
+/* Department cards */
+.department-card.is-link { cursor: pointer; transition: transform .12s ease, box-shadow .12s ease; }
+.department-card.is-link:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(20,49,72,.12); }
+.department-card.is-link:focus-visible { outline: 2px solid var(--adm-green); outline-offset: 2px; }
+.department-card__stats.has-docs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.department-card__actions { display: flex; flex-wrap: wrap; gap: 10px; padding-top: 14px; border-top: 1px solid #edf0f1; }
+@media (max-width: 1100px) { .department-directory { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 700px) { .department-directory { grid-template-columns: 1fr; } .department-card__stats.has-docs { grid-template-columns: 1fr 1fr; } }
+
+/* Department banner on the Knowledge base page */
+.dept-banner { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 0 16px; padding: 12px 14px; background: var(--adm-green-soft); border: 1px solid var(--adm-line); border-left: 3px solid var(--adm-green); border-radius: 4px; color: var(--adm-ink); font-size: 13px; }
+
+/* Teach the chatbot: answer / document tabs */
+.teach-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px; }
+.teach-form[hidden] { display: none; }
+
+/* Visibility control and hints */
+.inline-select { display: inline-flex; align-items: center; gap: 8px; margin-right: 6px; color: var(--adm-muted); font-size: 12px; font-weight: 700; }
+.inline-select select { padding: 7px 10px; border: 1px solid var(--adm-line); border-radius: 3px; background: #fff; color: var(--adm-ink); font: inherit; font-weight: 600; }
+.inline-select select:disabled { opacity: .6; cursor: wait; }
+.detail-note[data-vis-note]:empty { display: none; }
+.detail-note.is-warning { color: #8a5a00; }

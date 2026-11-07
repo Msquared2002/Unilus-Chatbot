@@ -2,13 +2,14 @@
  * sessionService.js
  * ==================
  *
- * Persists conversation turns to a real SQLite database (via
- * better-sqlite3 -- an embedded, serverless, file-based DB, no
- * Docker/Postgres setup required) so:
+ * Persists conversation turns so:
  *   1. Follow-up questions in the SAME session can reference what
  *      was just asked (aiService is given the recent history).
  *   2. Conversation history survives a server restart, satisfying
  *      the "Conversations" entity in the Database Layer requirement.
+ *
+ * Runs on PostgreSQL (when DATABASE_URL is set) or the local SQLite file,
+ * through services/db.js. appendMessage and getRecentHistory are async.
  *
  * Deliberately NOT a self-learning mechanism: history changes what
  * the model sees as CONTEXT for follow-ups within a conversation. It
@@ -17,43 +18,44 @@
  * unansweredLogger.js).
  */
 
-const path = require("path");
 const crypto = require("crypto");
-const Database = require("better-sqlite3");
+const db = require("./db");
 
-const db = new Database(path.join(__dirname, "../data/conversations.db"));
-
-db.exec(`
-    CREATE TABLE IF NOT EXISTS conversations (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        session_id TEXT NOT NULL,
-        role TEXT NOT NULL,
-        content TEXT NOT NULL,
-        created_at TEXT NOT NULL DEFAULT (datetime('now'))
-    );
-    CREATE INDEX IF NOT EXISTS idx_conversations_session
-        ON conversations (session_id, id);
-`);
-
-const insertMessage = db.prepare(
-    `INSERT INTO conversations (session_id, role, content) VALUES (?, ?, ?)`
-);
-
-const selectRecentMessages = db.prepare(
-    `SELECT role, content FROM conversations
-     WHERE session_id = ?
-     ORDER BY id DESC
-     LIMIT ?`
-);
+db.schema({
+    sqlite: [
+        `CREATE TABLE IF NOT EXISTS conversations (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            session_id TEXT NOT NULL,
+            role TEXT NOT NULL,
+            content TEXT NOT NULL,
+            created_at TEXT NOT NULL DEFAULT (datetime('now'))
+        )`,
+        `CREATE INDEX IF NOT EXISTS idx_conversations_session ON conversations (session_id, id)`,
+    ],
+    postgres: [
+        `CREATE TABLE IF NOT EXISTS conversations (
+            id SERIAL PRIMARY KEY,
+            session_id TEXT NOT NULL,
+            role TEXT NOT NULL,
+            content TEXT NOT NULL,
+            created_at TEXT NOT NULL DEFAULT (to_char(now() AT TIME ZONE 'utc', 'YYYY-MM-DD HH24:MI:SS'))
+        )`,
+        `CREATE INDEX IF NOT EXISTS idx_conversations_session ON conversations (session_id, id)`,
+    ],
+});
 
 
+// Pure helper: stays synchronous.
 function createSessionId() {
     return crypto.randomUUID();
 }
 
 
-function appendMessage(sessionId, role, content) {
-    insertMessage.run(sessionId, role, content);
+async function appendMessage(sessionId, role, content) {
+    await db.run(
+        `INSERT INTO conversations (session_id, role, content) VALUES (?, ?, ?)`,
+        [sessionId, role, content]
+    );
 }
 
 
@@ -64,8 +66,14 @@ function appendMessage(sessionId, role, content) {
  * more tokens per request and more chances for an old, irrelevant
  * turn to confuse a new question.
  */
-function getRecentHistory(sessionId, limit = 6) {
-    const rows = selectRecentMessages.all(sessionId, limit);
+async function getRecentHistory(sessionId, limit = 6) {
+    const rows = await db.all(
+        `SELECT role, content FROM conversations
+         WHERE session_id = ?
+         ORDER BY id DESC
+         LIMIT ?`,
+        [sessionId, limit]
+    );
     return rows.reverse(); // oldest first, as the LLM expects
 }
 

@@ -8,6 +8,15 @@
  *
  * The service fails open: if the planner model is disabled, unavailable or
  * returns malformed output, retrieval continues with the original query.
+ *
+ * HISTORY SUPPORT: an optional `history` array (recent conversation turns,
+ * oldest first, shape [{role, content}]) can be supplied. When present, the
+ * planner is instructed to use it ONLY to resolve vague references in the
+ * current message ("the exam", "that course", "what about Wednesday") into
+ * whatever was concretely named earlier in the conversation -- e.g. turning
+ * "what about the exam?" into "BIT320 exam" for retrieval purposes. History
+ * is never treated as a source of new facts and never changes the "does not
+ * answer the student" boundary below.
  */
 
 const Groq = require("groq-sdk");
@@ -192,15 +201,56 @@ function parsePlannerResponse(content, originalQuery) {
   }));
 }
 
-async function planQuery(query, { completionFn = null, force = false } = {}) {
+async function planQuery(query, { completionFn = null, force = false, history = [] } = {}) {
   if (!force && !plannerEnabled()) return fallbackPlan(query, "planner disabled or GROQ_API_KEY unavailable");
 
   const currentYear = new Date().getFullYear();
+
+  // Prior turns, oldest first. Used ONLY to resolve vague references in the
+  // current message -- never as a source of new facts, and the planner
+  // still never answers the student (see system prompt below).
+  const historyMessages = (Array.isArray(history) ? history : [])
+    .filter((turn) => turn && typeof turn.content === "string" && turn.content.trim())
+    .map((turn) => ({
+      role: turn.role === "assistant" ? "assistant" : "user",
+      content: turn.content,
+    }));
+
   const messages = [
     {
       role: "system",
-      content: `You are a retrieval query planner for the University of Lusaka (UNILUS) Student Digital Companion.\n\nYou do NOT answer the student's question. You only rewrite it for search.\n\nReturn JSON only with this exact shape:\n{\n  "intent": "short retrieval intent",\n  "normalizedQuery": "clear search query",\n  "searchQueries": ["up to 3 concise alternative searches"],\n  "entities": {\n    "programme": null,\n    "academic_year": null,\n    "audience": null,\n    "currency": null,\n    "topic": null,\n    "document_type": null,\n    "fee_scope": null\n  }\n}\n\nRules:\n- Preserve all concrete facts the student supplied.\n- Do not invent a programme, fee amount, policy, deadline or requirement.\n- Convert natural paraphrases into useful university terminology when safe (for example, taking a break from studies -> deferment; how much I pay -> fees/fee schedule).\n- Expand abbreviations only when the meaning is clear from the question.\n- Resolve 'this year'/'current year' to ${currentYear}; otherwise do not invent a year.\n- Search queries should be short, keyword-rich and meaningfully different, not full answers.\n- fee_scope is only for fee questions. Use one of: programme_tuition, accommodation, application, graduation, examination, registration, or null.\n- If an entity is not present or safely implied by wording, use null.`,
+      content: `You are a retrieval query planner for the University of Lusaka (UNILUS) Student Digital Companion.
+
+You do NOT answer the student's question. You only rewrite it for search.
+
+Return JSON only with this exact shape:
+{
+  "intent": "short retrieval intent",
+  "normalizedQuery": "clear search query",
+  "searchQueries": ["up to 3 concise alternative searches"],
+  "entities": {
+    "programme": null,
+    "academic_year": null,
+    "audience": null,
+    "currency": null,
+    "topic": null,
+    "document_type": null,
+    "fee_scope": null
+  }
+}
+
+Rules:
+- Preserve all concrete facts the student supplied.
+- Do not invent a programme, fee amount, policy, deadline or requirement.
+- Convert natural paraphrases into useful university terminology when safe (for example, taking a break from studies -> deferment; how much I pay -> fees/fee schedule).
+- Expand abbreviations only when the meaning is clear from the question.
+- Resolve 'this year'/'current year' to ${currentYear}; otherwise do not invent a year.
+- Search queries should be short, keyword-rich and meaningfully different, not full answers.
+- fee_scope is only for fee questions. Use one of: programme_tuition, accommodation, application, graduation, examination, registration, or null.
+- If an entity is not present or safely implied by wording, use null.
+- If prior conversation turns are supplied before the student's current message, use them ONLY to resolve vague references in the current message (pronouns like "it", or phrases like "the exam", "that course", "what about Wednesday") into whatever was concretely named earlier (a course code, programme, topic, etc.). Write the resolved concrete reference directly into normalizedQuery and searchQueries. Do not treat anything said in prior turns as a new fact to report, and do not answer the student's question using prior turns.`,
     },
+    ...historyMessages,
     { role: "user", content: query },
   ];
 

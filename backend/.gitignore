@@ -4,3 +4,4 @@ data/documents/chunks.json
 data/website/chunks.json
 data/vectors/knowledge_vectors.json
 *.log
+*.bak-*

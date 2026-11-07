@@ -4,9 +4,9 @@
  *
  * Escalation tickets, user feedback and analytics for the UNILUS chatbot.
  *
- * Uses the SAME SQLite file as sessionService (data/conversations.db),
- * so there is nothing new to install or configure: better-sqlite3 is
- * already a dependency. Tables are created automatically on first load.
+ * Runs on PostgreSQL (when DATABASE_URL is set) or the local SQLite file,
+ * through services/db.js. Tables are created automatically on startup.
+ * Every function that touches the database is async.
  *
  * What this covers from the requirements document:
  *   - Automatic ticket creation with a unique reference number
@@ -21,42 +21,66 @@
  * creation still works when the AI service is unreachable.
  */
 
-const path = require("path");
 const crypto = require("crypto");
-const Database = require("better-sqlite3");
-
-const db = new Database(path.join(__dirname, "../data/conversations.db"));
+const db = require("./db");
 
 const STATUSES = ["Open", "In Progress", "Resolved", "Closed"];
 const DEFAULT_DEPARTMENT = "Registry";
 
-db.exec(`
-    CREATE TABLE IF NOT EXISTS tickets (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        ticket_ref TEXT UNIQUE,
-        session_id TEXT NOT NULL,
-        question TEXT NOT NULL,
-        summary TEXT NOT NULL,
-        history_json TEXT NOT NULL,
-        category TEXT NOT NULL,
-        priority TEXT NOT NULL,
-        department TEXT NOT NULL,
-        contact_id TEXT,
-        status TEXT NOT NULL DEFAULT 'Open',
-        created_at TEXT NOT NULL DEFAULT (datetime('now')),
-        updated_at TEXT NOT NULL DEFAULT (datetime('now'))
-    );
-    CREATE INDEX IF NOT EXISTS idx_tickets_session ON tickets (session_id, id);
-    CREATE INDEX IF NOT EXISTS idx_tickets_status ON tickets (status);
-
-    CREATE TABLE IF NOT EXISTS feedback (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        session_id TEXT,
-        rating TEXT NOT NULL,
-        comment TEXT,
-        created_at TEXT NOT NULL DEFAULT (datetime('now'))
-    );
-`);
+db.schema({
+    sqlite: [
+        `CREATE TABLE IF NOT EXISTS tickets (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            ticket_ref TEXT UNIQUE,
+            session_id TEXT NOT NULL,
+            question TEXT NOT NULL,
+            summary TEXT NOT NULL,
+            history_json TEXT NOT NULL,
+            category TEXT NOT NULL,
+            priority TEXT NOT NULL,
+            department TEXT NOT NULL,
+            contact_id TEXT,
+            status TEXT NOT NULL DEFAULT 'Open',
+            created_at TEXT NOT NULL DEFAULT (datetime('now')),
+            updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+        )`,
+        `CREATE INDEX IF NOT EXISTS idx_tickets_session ON tickets (session_id, id)`,
+        `CREATE INDEX IF NOT EXISTS idx_tickets_status ON tickets (status)`,
+        `CREATE TABLE IF NOT EXISTS feedback (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            session_id TEXT,
+            rating TEXT NOT NULL,
+            comment TEXT,
+            created_at TEXT NOT NULL DEFAULT (datetime('now'))
+        )`,
+    ],
+    postgres: [
+        `CREATE TABLE IF NOT EXISTS tickets (
+            id SERIAL PRIMARY KEY,
+            ticket_ref TEXT UNIQUE,
+            session_id TEXT NOT NULL,
+            question TEXT NOT NULL,
+            summary TEXT NOT NULL,
+            history_json TEXT NOT NULL,
+            category TEXT NOT NULL,
+            priority TEXT NOT NULL,
+            department TEXT NOT NULL,
+            contact_id TEXT,
+            status TEXT NOT NULL DEFAULT 'Open',
+            created_at TEXT NOT NULL DEFAULT (to_char(now() AT TIME ZONE 'utc', 'YYYY-MM-DD HH24:MI:SS')),
+            updated_at TEXT NOT NULL DEFAULT (to_char(now() AT TIME ZONE 'utc', 'YYYY-MM-DD HH24:MI:SS'))
+        )`,
+        `CREATE INDEX IF NOT EXISTS idx_tickets_session ON tickets (session_id, id)`,
+        `CREATE INDEX IF NOT EXISTS idx_tickets_status ON tickets (status)`,
+        `CREATE TABLE IF NOT EXISTS feedback (
+            id SERIAL PRIMARY KEY,
+            session_id TEXT,
+            rating TEXT NOT NULL,
+            comment TEXT,
+            created_at TEXT NOT NULL DEFAULT (to_char(now() AT TIME ZONE 'utc', 'YYYY-MM-DD HH24:MI:SS'))
+        )`,
+    ],
+});
 
 
 /* ------------------------------------------------------------------ */
@@ -99,9 +123,9 @@ function truncate(text, max) {
     return s.length > max ? `${s.slice(0, max - 1)}…` : s;
 }
 
-// SQLite stores "YYYY-MM-DD HH:MM:SS" in UTC; return proper ISO strings.
-function toIso(sqliteTime) {
-    return sqliteTime ? `${String(sqliteTime).replace(" ", "T")}Z` : null;
+// Times are stored as "YYYY-MM-DD HH:MM:SS" in UTC; return proper ISO strings.
+function toIso(stored) {
+    return stored ? `${String(stored).replace(" ", "T")}Z` : null;
 }
 
 // What the person who opened the ticket may see: status only, never the
@@ -157,56 +181,28 @@ function buildSummary(question, history, category, priority) {
     return parts.join(" ");
 }
 
+const cleanRef = (ref) => String(ref || "").trim().toUpperCase();
+
 
 /* ------------------------------------------------------------------ */
 /* Tickets                                                             */
 /* ------------------------------------------------------------------ */
-
-const insertTicket = db.prepare(`
-    INSERT INTO tickets
-        (ticket_ref, session_id, question, summary, history_json,
-         category, priority, department, contact_id)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-`);
-const setTicketRef = db.prepare(`UPDATE tickets SET ticket_ref = ? WHERE id = ?`);
-const selectByRef = db.prepare(`SELECT * FROM tickets WHERE ticket_ref = ?`);
-const selectOpenDuplicate = db.prepare(`
-    SELECT * FROM tickets
-    WHERE session_id = ? AND lower(question) = lower(?)
-      AND status IN ('Open', 'In Progress')
-    ORDER BY id DESC LIMIT 1
-`);
-const selectLatestForSession = db.prepare(`
-    SELECT * FROM tickets WHERE session_id = ? ORDER BY id DESC LIMIT 1
-`);
-
-const createTicketTx = db.transaction((fields) => {
-    const info = insertTicket.run(
-        `TMP-${crypto.randomUUID()}`,
-        fields.sessionId,
-        fields.question,
-        fields.summary,
-        fields.historyJson,
-        fields.category,
-        fields.priority,
-        fields.department,
-        fields.contactId
-    );
-    const id = Number(info.lastInsertRowid);
-    const ref = `UNI-${new Date().getFullYear()}-${String(id).padStart(4, "0")}`;
-    setTicketRef.run(ref, id);
-    return ref;
-});
 
 /**
  * Opens an escalation ticket. If the same session already has an open
  * ticket for the same question, that ticket is returned instead of
  * creating a duplicate (students retry and rephrase a lot).
  *
- * @returns {{ ticket: object, created: boolean }}
+ * @returns {Promise<{ ticket: object, created: boolean }>}
  */
-function createTicket({ sessionId, question, history = [], contact = null }) {
-    const duplicate = selectOpenDuplicate.get(sessionId, question);
+async function createTicket({ sessionId, question, history = [], contact = null }) {
+    const duplicate = await db.get(
+        `SELECT * FROM tickets
+         WHERE session_id = ? AND lower(question) = lower(?)
+           AND status IN ('Open', 'In Progress')
+         ORDER BY id DESC LIMIT 1`,
+        [sessionId, question]
+    );
     if (duplicate) {
         return { ticket: publicView(duplicate), created: false };
     }
@@ -219,44 +215,55 @@ function createTicket({ sessionId, question, history = [], contact = null }) {
     const category = classifyCategory(question, contact);
     const priority = classifyPriority(question, category);
 
-    const ref = createTicketTx({
-        sessionId,
-        question: truncate(question, 2000),
-        summary: buildSummary(question, cleanHistory, category, priority),
-        historyJson: JSON.stringify(cleanHistory),
-        category,
-        priority,
-        department: (contact && contact.department) || DEFAULT_DEPARTMENT,
-        contactId: contact ? contact.contact_id || null : null,
-    });
+    // The reference is built from the row id, so it is unique and sequential.
+    const id = await db.insert(
+        `INSERT INTO tickets
+            (ticket_ref, session_id, question, summary, history_json,
+             category, priority, department, contact_id)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+            `TMP-${crypto.randomUUID()}`,
+            sessionId,
+            truncate(question, 2000),
+            buildSummary(question, cleanHistory, category, priority),
+            JSON.stringify(cleanHistory),
+            category,
+            priority,
+            (contact && contact.department) || DEFAULT_DEPARTMENT,
+            contact ? contact.contact_id || null : null,
+        ]
+    );
+    const ref = `UNI-${new Date().getFullYear()}-${String(id).padStart(4, "0")}`;
+    await db.run(`UPDATE tickets SET ticket_ref = ? WHERE id = ?`, [ref, id]);
 
-    return { ticket: publicView(selectByRef.get(ref)), created: true };
+    return { ticket: publicView(await db.get(`SELECT * FROM tickets WHERE ticket_ref = ?`, [ref])), created: true };
 }
 
-function getTicketByRef(ref) {
-    return publicView(selectByRef.get(String(ref || "").trim().toUpperCase()));
+async function getTicketByRef(ref) {
+    return publicView(await db.get(`SELECT * FROM tickets WHERE ticket_ref = ?`, [cleanRef(ref)]));
 }
 
-function getTicketForAdmin(ref) {
-    return adminView(selectByRef.get(String(ref || "").trim().toUpperCase()));
+async function getTicketForAdmin(ref) {
+    return adminView(await db.get(`SELECT * FROM tickets WHERE ticket_ref = ?`, [cleanRef(ref)]));
 }
 
-function getLatestTicketForSession(sessionId) {
-    return publicView(selectLatestForSession.get(sessionId));
+async function getLatestTicketForSession(sessionId) {
+    return publicView(await db.get(`SELECT * FROM tickets WHERE session_id = ? ORDER BY id DESC LIMIT 1`, [sessionId]));
 }
 
+// Pure helper: stays synchronous.
 function normalizeStatus(value) {
     const wanted = String(value || "").trim().toLowerCase();
     return STATUSES.find((s) => s.toLowerCase() === wanted) || null;
 }
 
-function listTickets({ status = null, limit = 50 } = {}) {
+async function listTickets({ status = null, limit = 50 } = {}) {
     const cappedLimit = Math.min(Math.max(parseInt(limit, 10) || 50, 1), 200);
     const normalized = status ? normalizeStatus(status) : null;
 
     const rows = normalized
-        ? db.prepare(`SELECT * FROM tickets WHERE status = ? ORDER BY id DESC LIMIT ?`).all(normalized, cappedLimit)
-        : db.prepare(`SELECT * FROM tickets ORDER BY id DESC LIMIT ?`).all(cappedLimit);
+        ? await db.all(`SELECT * FROM tickets WHERE status = ? ORDER BY id DESC LIMIT ?`, [normalized, cappedLimit])
+        : await db.all(`SELECT * FROM tickets ORDER BY id DESC LIMIT ?`, [cappedLimit]);
 
     return rows.map(adminView);
 }
@@ -265,19 +272,20 @@ function listTickets({ status = null, limit = 50 } = {}) {
  * @returns the updated ticket (admin view), or null if the ref doesn't exist.
  * Throws if the status isn't one of STATUSES (routes validate first).
  */
-function updateTicketStatus(ref, status) {
+async function updateTicketStatus(ref, status) {
     const normalized = normalizeStatus(status);
     if (!normalized) {
         throw new Error(`Invalid status. Use one of: ${STATUSES.join(", ")}`);
     }
 
-    const cleanRef = String(ref || "").trim().toUpperCase();
-    const info = db
-        .prepare(`UPDATE tickets SET status = ?, updated_at = datetime('now') WHERE ticket_ref = ?`)
-        .run(normalized, cleanRef);
+    const wanted = cleanRef(ref);
+    const info = await db.run(
+        `UPDATE tickets SET status = ?, updated_at = ${db.now} WHERE ticket_ref = ?`,
+        [normalized, wanted]
+    );
 
     if (info.changes === 0) return null;
-    return adminView(selectByRef.get(cleanRef));
+    return adminView(await db.get(`SELECT * FROM tickets WHERE ticket_ref = ?`, [wanted]));
 }
 
 
@@ -285,19 +293,14 @@ function updateTicketStatus(ref, status) {
 /* Feedback                                                            */
 /* ------------------------------------------------------------------ */
 
-const insertFeedback = db.prepare(
-    `INSERT INTO feedback (session_id, rating, comment) VALUES (?, ?, ?)`
-);
-
-function recordFeedback({ sessionId = null, rating, comment = null }) {
+async function recordFeedback({ sessionId = null, rating, comment = null }) {
     const normalized = String(rating || "").trim().toLowerCase();
     if (normalized !== "up" && normalized !== "down") {
         throw new Error('rating must be "up" or "down"');
     }
-    insertFeedback.run(
-        sessionId,
-        normalized,
-        comment ? truncate(comment, 1000) : null
+    await db.run(
+        `INSERT INTO feedback (session_id, rating, comment) VALUES (?, ?, ?)`,
+        [sessionId, normalized, comment ? truncate(comment, 1000) : null]
     );
 }
 
@@ -306,26 +309,24 @@ function recordFeedback({ sessionId = null, rating, comment = null }) {
 /* Analytics                                                           */
 /* ------------------------------------------------------------------ */
 
-function groupCounts(sql) {
+async function groupCounts(sql) {
     const out = {};
-    for (const row of db.prepare(sql).all()) {
-        out[row.key] = row.count;
+    for (const row of await db.all(sql)) {
+        out[row.k] = Number(row.n);
     }
     return out;
 }
 
-function getStats() {
+async function getStats() {
     let totalQuestions = 0;
     try {
-        totalQuestions = db
-            .prepare(`SELECT COUNT(*) AS c FROM conversations WHERE role = 'user'`)
-            .get().c;
+        totalQuestions = Number((await db.get(`SELECT COUNT(*) AS c FROM conversations WHERE role = 'user'`)).c);
     } catch (err) {
         totalQuestions = 0; // conversations table not created yet
     }
 
-    const totalTickets = db.prepare(`SELECT COUNT(*) AS c FROM tickets`).get().c;
-    const feedback = groupCounts(`SELECT rating AS key, COUNT(*) AS count FROM feedback GROUP BY rating`);
+    const totalTickets = Number((await db.get(`SELECT COUNT(*) AS c FROM tickets`)).c);
+    const feedback = await groupCounts(`SELECT rating AS k, COUNT(*) AS n FROM feedback GROUP BY rating`);
 
     return {
         // Includes greetings and every other user message, so treat the
@@ -336,10 +337,10 @@ function getStats() {
         escalationRate: totalQuestions > 0
             ? Math.round((totalTickets / totalQuestions) * 1000) / 1000
             : 0,
-        ticketsByStatus: groupCounts(`SELECT status AS key, COUNT(*) AS count FROM tickets GROUP BY status`),
-        ticketsByDepartment: groupCounts(`SELECT department AS key, COUNT(*) AS count FROM tickets GROUP BY department`),
-        ticketsByPriority: groupCounts(`SELECT priority AS key, COUNT(*) AS count FROM tickets GROUP BY priority`),
-        ticketsByCategory: groupCounts(`SELECT category AS key, COUNT(*) AS count FROM tickets GROUP BY category`),
+        ticketsByStatus: await groupCounts(`SELECT status AS k, COUNT(*) AS n FROM tickets GROUP BY status`),
+        ticketsByDepartment: await groupCounts(`SELECT department AS k, COUNT(*) AS n FROM tickets GROUP BY department`),
+        ticketsByPriority: await groupCounts(`SELECT priority AS k, COUNT(*) AS n FROM tickets GROUP BY priority`),
+        ticketsByCategory: await groupCounts(`SELECT category AS k, COUNT(*) AS n FROM tickets GROUP BY category`),
         feedback: {
             up: feedback.up || 0,
             down: feedback.down || 0,

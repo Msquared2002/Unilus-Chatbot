@@ -4,22 +4,59 @@ const crypto = require("crypto");
 const router = express.Router();
 const chatService = require("../services/chatService");
 
+const FRIENDLY_ERROR_ANSWER =
+    "I'm having trouble reaching my AI service right now. Please try again in a minute, or contact the Academic Office on 0971263550 / info@unilus.ac.zm.";
 
 router.post("/", async (req, res) => {
 
+    const question =
+        typeof req.body.question === "string"
+            ? req.body.question.trim()
+            : "";
+
+    const sessionId =
+        req.body.sessionId ||
+        crypto.randomUUID();
+
+    // The access level comes from the signed token (see attachUser), never
+    // from the request body. A "student" value sent in the body is ignored,
+    // so it can't be used to claim access. Anyone without a valid token,
+    // including expired or tampered tokens, is treated as public.
+    const audience = req.user ? "student" : "public";
+
+    // Who is asking, taken from the signed token: used to personalise
+    // ("my timetable") and to greet them by name.
+    const profile = req.user
+        ? { name: req.user.name, programme: req.user.programme, year: req.user.year, semester: req.user.semester }
+        : null;
+
+    // Tells the frontend whether the user is signed in, and whether a token
+    // it sent was refused ("expired" | "invalid" | "disabled") so it can
+    // ask the user to sign in again.
+    const authInfo = {
+        authenticated: Boolean(req.user),
+        authProblem: req.authProblem || null
+    };
+
+    // Empty or missing question: answer politely instead of crashing
+    // somewhere deeper in the pipeline.
+    if (!question) {
+        return res.status(400).json({
+            question,
+            answer: "Please type a question and I'll do my best to help.",
+            ...authInfo,
+            sessionId
+        });
+    }
+
     try {
-
-        const question = req.body.question;
-
-        const sessionId =
-            req.body.sessionId ||
-            crypto.randomUUID();
-
 
         const result =
             await chatService.answerQuestion(
                 question,
-                sessionId
+                sessionId,
+                audience,
+                profile
             );
 
 
@@ -42,6 +79,14 @@ router.post("/", async (req, res) => {
             navigation: result.navigation,
             routeIntent: result.routeIntent,
 
+            // Present only when the question was escalated:
+            // { ref, status, department, category, priority, ... }
+            ticket: result.ticket || null,
+            usedFallback: Boolean(result.usedFallback),
+            signInRequired: Boolean(result.signInRequired),
+
+            ...authInfo,
+
             sessionId
 
         });
@@ -50,8 +95,23 @@ router.post("/", async (req, res) => {
 
         console.error("Chat route error:", error);
 
-        res.status(500).json({
-            error: "Failed to process question"
+        // Return a normal-looking reply (HTTP 200) with a friendly
+        // message so the widget displays it instead of falling back to
+        // its own canned error text. `error: true` lets the frontend
+        // style it differently if it ever wants to.
+        res.json({
+            question,
+            answer: FRIENDLY_ERROR_ANSWER,
+            error: true,
+            queryType: null,
+            sources: [],
+            resources: [],
+            recommendedResources: [],
+            timetableMatches: 0,
+            ticket: null,
+            usedFallback: false,
+            ...authInfo,
+            sessionId
         });
 
     }

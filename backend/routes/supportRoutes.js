@@ -29,9 +29,9 @@ const { requireStaff } = require("../middleware/requireStaff");
 
 /* ----------------------------- Public ----------------------------- */
 
-router.get("/tickets/:ref", (req, res) => {
+router.get("/tickets/:ref", async (req, res) => {
     try {
-        const ticket = support.getTicketByRef(req.params.ref);
+        const ticket = await support.getTicketByRef(req.params.ref);
 
         if (!ticket) {
             return res.status(404).json({ error: "Ticket not found" });
@@ -45,9 +45,9 @@ router.get("/tickets/:ref", (req, res) => {
 });
 
 
-router.post("/feedback", (req, res) => {
+router.post("/feedback", async (req, res) => {
     try {
-        support.recordFeedback({
+        await support.recordFeedback({
             sessionId: req.body.sessionId || null,
             rating: req.body.rating,
             comment: typeof req.body.comment === "string" ? req.body.comment : null
@@ -66,10 +66,10 @@ router.post("/feedback", (req, res) => {
 
 /* ------------------------------ Staff ----------------------------- */
 
-router.get("/admin/tickets", requireStaff, (req, res) => {
+router.get("/admin/tickets", requireStaff, async (req, res) => {
     try {
         res.json(
-            support.listTickets({
+            await support.listTickets({
                 status: req.query.status || null,
                 limit: req.query.limit
             })
@@ -81,9 +81,9 @@ router.get("/admin/tickets", requireStaff, (req, res) => {
 });
 
 
-router.get("/admin/tickets/:ref", requireStaff, (req, res) => {
+router.get("/admin/tickets/:ref", requireStaff, async (req, res) => {
     try {
-        const ticket = support.getTicketForAdmin(req.params.ref);
+        const ticket = await support.getTicketForAdmin(req.params.ref);
 
         if (!ticket) {
             return res.status(404).json({ error: "Ticket not found" });
@@ -97,7 +97,7 @@ router.get("/admin/tickets/:ref", requireStaff, (req, res) => {
 });
 
 
-router.patch("/admin/tickets/:ref", requireStaff, (req, res) => {
+router.patch("/admin/tickets/:ref", requireStaff, async (req, res) => {
     try {
         if (!support.normalizeStatus(req.body.status)) {
             return res.status(400).json({
@@ -105,7 +105,7 @@ router.patch("/admin/tickets/:ref", requireStaff, (req, res) => {
             });
         }
 
-        const updated = support.updateTicketStatus(req.params.ref, req.body.status);
+        const updated = await support.updateTicketStatus(req.params.ref, req.body.status);
 
         if (!updated) {
             return res.status(404).json({ error: "Ticket not found" });
@@ -119,9 +119,9 @@ router.patch("/admin/tickets/:ref", requireStaff, (req, res) => {
 });
 
 
-router.get("/admin/stats", requireStaff, (req, res) => {
+router.get("/admin/stats", requireStaff, async (req, res) => {
     try {
-        res.json(support.getStats());
+        res.json(await support.getStats());
     } catch (error) {
         console.error("Admin stats error:", error);
         res.status(500).json({ error: "Failed to compute stats" });

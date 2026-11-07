@@ -7,6 +7,10 @@
  *   - data/search_index.json  (exact-match maps + token inverted index,
  *                               built by unilus_timetable/index.py)
  *
+ * RELOADABLE: reload() re-reads both files and rebuilds the derived lookups
+ * (programme stages, known lecturer names) without restarting the server.
+ * timetableUpdater.js calls it after a staff import.
+ *
  * WHY THIS CHANGED FROM THE OLD VERSION
  * --------------------------------------
  * 1. The old file loaded ONLY chatbot_timetable.json, which the old
@@ -31,24 +35,36 @@
 const fs = require("fs");
 const path = require("path");
 
-function loadJsonOrEmpty(filePath, fallback) {
-    if (!fs.existsSync(filePath)) {
-        console.warn(`timetableService: ${filePath} not found — run the timetable pipeline first. Using empty data.`);
-        return fallback;
-    }
-    return JSON.parse(fs.readFileSync(filePath, "utf8"));
-}
+const TIMETABLE_PATH = path.join(__dirname, "../data/timetable/timetable.json");
+const SEARCH_INDEX_PATH = path.join(__dirname, "../data/timetable/search_index.json");
 
-const timetable = loadJsonOrEmpty(path.join(__dirname, "../data/timetable/timetable.json"), []);
-
-const searchIndex = loadJsonOrEmpty(path.join(__dirname, "../data/timetable/search_index.json"), {
+const EMPTY_INDEX = {
     by_course_code: {},
     by_lecturer_code: {},
     by_venue_code: {},
     by_programme_code: {},
     by_day: {},
     tokens: {},
-});
+};
+
+// strict = true (used by reload()): a missing or unreadable file is an error,
+// never silently replaced with empty data.
+function loadJsonOrEmpty(filePath, fallback, { strict = false } = {}) {
+    if (!fs.existsSync(filePath)) {
+        if (strict) throw new Error(`${filePath} not found`);
+        console.warn(`timetableService: ${filePath} not found — run the timetable pipeline first. Using empty data.`);
+        return fallback;
+    }
+    return JSON.parse(fs.readFileSync(filePath, "utf8"));
+}
+
+// The loaded data. reload() replaces all of these together, so the running
+// server can pick up a new timetable without a restart (see timetableUpdater.js).
+let timetable = [];
+let searchIndex = EMPTY_INDEX;
+let programmeStageDescriptors = [];
+let knownProgrammeFamilies = new Set();
+let knownLecturerNameTokens = new Set();
 
 // Programme codes such as BIT32 encode programme family + year + semester.
 // Build this dynamically from the generated index so routing never depends on
@@ -60,7 +76,8 @@ function compactProgrammeCode(code) {
     return String(code || "").toUpperCase().replace(/\s+/g, "");
 }
 
-const programmeStageDescriptors = Object.keys(searchIndex.by_programme_code || {})
+function buildProgrammeStageDescriptors(index) {
+    return Object.keys(index.by_programme_code || {})
     .map((code) => {
         const compact = compactProgrammeCode(code);
         const match = compact.match(/^([A-Z][A-Z0-9_]*?)([1-9])([1-9])(?:[-_].*)?$/);
@@ -78,8 +95,7 @@ const programmeStageDescriptors = Object.keys(searchIndex.by_programme_code || {
         };
     })
     .filter(Boolean);
-
-const knownProgrammeFamilies = new Set(programmeStageDescriptors.map((d) => d.family));
+}
 
 function normalize(text) {
     if (!text) return "";
@@ -107,14 +123,46 @@ function tokenize(text) {
 // five-name whitelist in retrievalService.js — any lecturer who is
 // actually in the timetable can now be recognized, not just five.
 // ------------------------------------------------------------------
-const knownLecturerNameTokens = new Set();
-for (const entry of timetable) {
-    if (entry.lecturer_name) {
-        for (const token of tokenize(stripTitle(entry.lecturer_name))) {
-            if (token.length > 2) knownLecturerNameTokens.add(token);
+function buildLecturerNameTokens(records) {
+    const tokens = new Set();
+    for (const entry of records) {
+        if (entry.lecturer_name) {
+            for (const token of tokenize(stripTitle(entry.lecturer_name))) {
+                if (token.length > 2) tokens.add(token);
+            }
         }
     }
+    return tokens;
 }
+
+/**
+ * (Re)loads timetable.json and search_index.json from disk and rebuilds
+ * everything derived from them. Nothing is replaced until ALL of it has been
+ * read and built successfully, so a bad file leaves the old data in place.
+ */
+function loadData({ strict = false } = {}) {
+    const nextTimetable = loadJsonOrEmpty(TIMETABLE_PATH, [], { strict });
+    const nextIndex = loadJsonOrEmpty(SEARCH_INDEX_PATH, EMPTY_INDEX, { strict });
+
+    if (!Array.isArray(nextTimetable)) throw new Error("timetable.json must contain a list of sessions");
+
+    const nextDescriptors = buildProgrammeStageDescriptors(nextIndex);
+    const nextFamilies = new Set(nextDescriptors.map((d) => d.family));
+    const nextLecturerTokens = buildLecturerNameTokens(nextTimetable);
+
+    timetable = nextTimetable;
+    searchIndex = nextIndex;
+    programmeStageDescriptors = nextDescriptors;
+    knownProgrammeFamilies = nextFamilies;
+    knownLecturerNameTokens = nextLecturerTokens;
+}
+
+function reload() {
+    loadData({ strict: true });
+    return timetable.length;
+}
+
+loadData();
 
 function isKnownLecturerNameToken(token) {
     const normalized = normalize(token);
@@ -313,6 +361,9 @@ function search(query) {
 }
 
 module.exports = {
+    reload,
+    TIMETABLE_PATH,
+    SEARCH_INDEX_PATH,
     getAll,
     getByCourse,
     getByProgramme,
