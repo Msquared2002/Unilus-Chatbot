@@ -11,3 +11,5 @@ test('production frontend requires an explicit credential-free HTTPS endpoint an
   assert.ok(output.includes('https://synthetic.invalid/api'));assert.ok(!output.includes('synthetic-server-secret'));
  }finally{if(!path.resolve(dir).startsWith(path.resolve(os.tmpdir())+path.sep))throw Error('Unexpected cleanup path');fs.rmSync(dir,{recursive:true,force:true});}
 });
+
+test("public demonstration pages warn against real university credentials",()=>{const login=fs.readFileSync(path.join(__dirname,"../../dummy-environment/portal-login.html"),"utf8");assert.match(login,/Never enter a real UNILUS portal password/);assert.ok(!login.includes("No credentials are stored or sent"));const home=fs.readFileSync(path.join(__dirname,"../../dummy-environment/website.html"),"utf8");assert.match(home,/Demonstration notice/);assert.match(home,/never enter real university passwords/);});
