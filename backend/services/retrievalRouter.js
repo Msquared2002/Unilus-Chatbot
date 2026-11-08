@@ -346,6 +346,37 @@ function applyProfileDefaults(queryType, query, profile) {
  *   "student" -- fail closed, not open.
  * @returns {Promise<{queryType: object, timetable: Array, knowledge: Array, resources: Array}>}
  */
+function isContextualFollowup(query) {
+  const text = String(query || '').trim();
+  if (text.length > 220) return false;
+  const explicit = classifyQuery(text).entities;
+  if (explicit.courseCode || explicit.venueCode || explicit.programmeFamily) return false;
+  if (/\b(?:its|their|those|the exam|another day)\b/i.test(text)) return true;
+  if (/\b(?:about|for|of|with|on|is|does|can|are)\s+(?:that|this|it)\b/i.test(text)) return true;
+  return /^(?:and|also|what about|how about|on|for)\b/i.test(text) &&
+    !/\b(?:hostel|tuition|library|campus|ticket|programme|timetable|fees)\b/i.test(text);
+}
+function resolveTimetableFollowup(query, history = []) {
+  const day = extractDay(query);
+  if (!day || !/^(?:(?:and|also|what about|how about|on|for)\s+)?(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)(?:\s+please)?[?!.\s]*$/i.test(query.trim())) return null;
+  for (const turn of history.slice(-6).reverse()) {
+    if (turn.role !== 'user') continue;
+    if (extractDay(turn.content) && isContextualFollowup(turn.content)) continue;
+    const type = classifyQuery(turn.content);
+    if (!type.isTimetable) return null; // A substantive topic change ends timetable context.
+    const e = type.entities;
+    const scope = e.courseCode || e.venueCode || (e.lecturer ? `lecturer ${e.lecturer}` :
+      e.programmeFamily ? `${e.programmeFamily}${e.year ? ` year ${e.year}` : ''}${e.semester ? ` semester ${e.semester}` : ''}${e.studyMode ? ` ${e.studyMode.replace('_', ' ')}` : ''}` : null);
+    return scope ? `Show the ${scope} timetable for ${day}` : null;
+  }
+  return null;
+}
+function isSpecialistRequest(query, history = []) {
+  const type = classifyQuery(resolveTimetableFollowup(query, history) || query);
+  const e = type.entities;
+  const explicitLecturer = e.lecturer && (/\b(?:lecturer|timetable|teach(?:es)?|schedule|Mr|Mrs|Ms|Dr|Prof)\b/i.test(query) || e.lecturer.split(/\s+/).length > 1);
+  return type.isTimetable && Boolean(e.courseCode || e.venueCode || explicitLecturer || e.programmeFamily);
+}
 async function retrieveAnswer(query, history = [], audience = "public", profile = null) {
   const hasHistory = Array.isArray(history) && history.length > 0;
   const isStudent = isStudentAudience(audience);
@@ -357,9 +388,11 @@ async function retrieveAnswer(query, history = [], audience = "public", profile 
   // means "BIT320's exam" unless the text itself says so. Only runs
   // when there is history to resolve against, so a first message in a
   // session costs no extra planner call.
-  let effectiveQuery = query;
+  const structuredFollowup = resolveTimetableFollowup(query, history);
+  const contextual = isContextualFollowup(query);
+  let effectiveQuery = structuredFollowup || query;
   let historyPlan = null;
-  if (hasHistory && /\b(that|those|it|what about|the exam|another day)\b/i.test(query) && queryUnderstandingService.plannerEnabled()) {
+  if (!structuredFollowup && hasHistory && contextual && queryUnderstandingService.plannerEnabled()) {
     historyPlan = await queryUnderstandingService.planQuery(query, { history });
     if (historyPlan.usedPlanner && historyPlan.normalizedQuery) {
       effectiveQuery = historyPlan.normalizedQuery;
@@ -375,6 +408,10 @@ async function retrieveAnswer(query, history = [], audience = "public", profile 
     resources: [],
     queryPlan: historyPlan || queryUnderstandingService.fallbackPlan(query, "not needed"),
   };
+  if (contextual && !structuredFollowup && (!historyPlan?.usedPlanner || !historyPlan.normalizedQuery || historyPlan.normalizedQuery.toLowerCase() === query.toLowerCase())) {
+    result.needsContextClarification = true;
+    return result;
+  }
 
   // AUDIENCE GATE: timetable/exam lookups are student-only. A public
   // (not logged in) visitor never triggers a timetable search at all,
@@ -392,7 +429,7 @@ async function retrieveAnswer(query, history = [], audience = "public", profile 
     // It fails open to the original query if disabled/unavailable.
     // Reuse the history-resolved plan if we already produced one above --
     // avoids a second planner call for the same question.
-    result.queryPlan = (historyPlan && historyPlan.usedPlanner)
+    result.queryPlan = historyPlan
       ? historyPlan
       : await queryUnderstandingService.planQuery(effectiveQuery);
     result.knowledge = await knowledgeService.searchKnowledge(effectiveQuery, {
@@ -418,7 +455,7 @@ async function retrieveAnswer(query, history = [], audience = "public", profile 
     queryType.isTimetable && result.timetable.length === 0 && !queryType.isKnowledge &&
     !hasStructuredTimetableEntity
   ) {
-    result.queryPlan = (historyPlan && historyPlan.usedPlanner)
+    result.queryPlan = historyPlan
       ? historyPlan
       : await queryUnderstandingService.planQuery(effectiveQuery);
     result.knowledge = await knowledgeService.searchKnowledge(effectiveQuery, {
@@ -455,6 +492,9 @@ async function retrieveAnswer(query, history = [], audience = "public", profile 
 }
 
 module.exports = {
+  isContextualFollowup,
+  resolveTimetableFollowup,
+  isSpecialistRequest,
   retrieveAnswer,
   classifyQuery,
   extractCourseCode,

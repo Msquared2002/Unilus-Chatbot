@@ -23,6 +23,7 @@ function recommend(input) {
 const {store}=require('./programmeAdvisorState');
 function tryAnswer(question, sessionId) {
  const previous=store.get(sessionId);
+ const contextActive=previous && previous.topicActive!==false;
  const resolved=preference.resolve(question);
  const requestedAction=/^Advisor:/i.test(question);
  if(requestedAction&&!previous)return {answer:'Your temporary assessment has expired or was reset. Please share your interests or results to begin again.',queryType:{isProgrammeAdvisor:true},sources:[],resources:[],recommendedResources:[],timetableMatches:0,suggestedActions:[]};
@@ -30,9 +31,9 @@ function tryAnswer(question, sessionId) {
  const reset=/forget my previous results|start again|new assessment/i.test(question);
  const extracted=parseInput(/more interested/i.test(question) ? question.split(/\bthan\b/i)[0] : question);
  const personal=/\b(i enjoy|i love|interested in|career|my interests|more interested|want to become|want to be|good at|strong in)\b/i.test(question);
- const comparison=/\bcompare\b|which one|their entry requirements|matches my interests better|more business.oriented|more programming/i.test(question);
+ const comparison=/\bcompare\b/i.test(question) || contextActive && /which one|their entry requirements|matches my interests better|more business.oriented|more programming/i.test(question);
  const followup=/recommend|why.*suggest|entry requirements|published academic|what about|recorded results|add another subject|correct a grade|correct my results|finished|all my results/i.test(question);
- if (!requestedAction && !resolved.length && !reset && !personal && !comparison && !extracted.results.length && !require("./applicantResultParser").qualification(question) && !/five credits/i.test(question) && !(previous && followup) && !/what should i study|programme advisor|can i qualify|which.*programme.*suit|help me choose (?:a |an |my )?(?:university )?programmes?/i.test(question)) return null;
+ if (!requestedAction && !resolved.length && !reset && !personal && !comparison && !extracted.results.length && !require("./applicantResultParser").qualification(question) && !/five credits/i.test(question) && !(contextActive && followup) && !/what should i study|programme advisor|can i qualify|which.*programme.*suit|help me choose (?:a |an |my )?(?:university )?programmes?/i.test(question)) return null;
  if(reset){store.clear(sessionId);return {answer:'Your temporary applicant profile has been cleared. Which subjects or fields interest you?',queryType:{isProgrammeAdvisor:true},sources:[],resources:[],recommendedResources:[],timetableMatches:0,suggestedActions:[]};}
  const profile=previous || {interests:[],results:[],considering:[],qualification:'unknown'};
  const qualification=require('./applicantResultParser').qualification(question);
@@ -62,9 +63,9 @@ function tryAnswer(question, sessionId) {
 
  const input=profile;
  let recommendations=recommend(input);
- const target=resolved.length===1?resolved[0]:null;
+ const target=resolved.length===1?resolved[0]:contextActive && /\b(?:its|entry requirements|details|overview)\b/i.test(question) && profile.lastProgramme ? catalogue.find(p=>p.id===profile.lastProgramme) : null;
  if(!target && extracted.results.length && profile.lastProgramme){const p=catalogue.find(p=>p.id===profile.lastProgramme);if(p)recommendations=[{programme:p,reasons:["Reassessed using your updated results."],eligibility:evaluateEligibility(p,input.results,input)}];}
- const priorProgramme=profile.lastProgramme;
+ const priorProgramme=contextActive ? profile.lastProgramme : null;
  if(target){profile.lastProgramme=target.id;store.set(sessionId,profile);}
  if(target)recommendations=[{programme:target,reasons:['You asked about this programme.'],eligibility:evaluateEligibility(target,input.results,input)}];
  let named=[...resolved];

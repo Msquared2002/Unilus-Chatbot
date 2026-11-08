@@ -57,7 +57,8 @@ router.post("/", async (req, res) => {
                 question,
                 sessionId,
                 audience,
-                profile
+                profile,
+                { user: req.user }
             );
 
 
@@ -78,6 +79,7 @@ router.post("/", async (req, res) => {
             timetableMatches: result.timetableMatches,
 
             advisor: result.advisor,
+            support: result.support,
             suggestedActions: result.suggestedActions,
             route: result.route,
             routeStatus: result.routeStatus,

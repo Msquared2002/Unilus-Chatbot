@@ -47,7 +47,8 @@ Purpose: Preserves one place for combining structured results before answer gene
 
 // Matches a message that is ONLY a greeting (e.g. "hi", "Hey!", "good morning").
 // "hello there, when is my exam" will NOT match and goes through the normal pipeline.
-const GREETING = /^\s*(hi|hey|hello|yo|good (morning|afternoon|evening))\W*$/i;
+const conversation = require('./conversationService');
+const supportConversation = require('./supportConversationService');
 
 // Ticket references look like UNI-2026-0042.
 const TICKET_REF = /\bUNI-\d{4}-\d{4}\b/i;
@@ -338,10 +339,8 @@ function collectAllowedUrls({ knowledge = [], resources = [] }) {
  * the closest matching UNILUS contact when one is found (a loose
  * topic match is enough — see contactService's threshold), or a
  * generic message otherwise. Shape matches answerQuestion's normal
- * return object so callers don't need to special-case it. Also logs
- * the question to unanswered-questions-log.jsonl for later human
- * review -- see unansweredLogger.js for why this is a review queue,
- * not a self-learning mechanism.
+ * return object so callers don't need to special-case it. Logging remains
+ * hash-only. Missing evidence is never authorization to create a ticket.
  */
 async function buildFallback(question, queryType, timetableMatches = 0, sessionId = null) {
     const fallback = await contactService.findFallbackContact(question);
@@ -360,27 +359,7 @@ async function buildFallback(question, queryType, timetableMatches = 0, sessionI
         matchedContact: contact ? contact.contact_id : null,
     });
 
-    // Escalate: open a ticket carrying the question, a summary and the
-    // recent conversation, so the student never has to repeat themselves.
-    // If ticketing fails for any reason, the plain contact answer above
-    // is still returned.
-    let ticket = null;
-    if (sessionId) {
-        try {
-            const result = await supportService.createTicket({
-                sessionId,
-                question,
-                history: await sessionService.getRecentHistory(sessionId, 12),
-                contact,
-            });
-            ticket = result.ticket;
-            answer += result.created
-                ? ` I've logged this as ticket ${ticket.ref} and passed it to the ${ticket.department}. Ask me for the "status of ${ticket.ref}" any time to check progress.`
-                : ` You already have an open ticket for this (${ticket.ref}), currently ${ticket.status}.`;
-        } catch (err) {
-            console.log("Failed to create ticket:", err.message);
-        }
-    }
+    answer += ' If you would like human assistance, ask me to create a support ticket. I will ask you to confirm the issue before submitting it.';
 
     answer = await toneService.rephrase(question, answer, { kind: "fallback" });
 
@@ -392,7 +371,7 @@ async function buildFallback(question, queryType, timetableMatches = 0, sessionI
         recommendedResources: [],
         timetableMatches,
         usedFallback: true,
-        ticket,
+        ticket: null,
     };
 }
 
@@ -403,14 +382,13 @@ async function answerQuestionCore(question, sessionId, audience = "public", prof
 
     await sessionService.appendMessage(sessionId, "user", question);
 
-    // Bare greetings get a friendly canned intro. No retrieval, no LLM call,
-    // so it works even if the AI service is unreachable.
-    if (GREETING.test(question)) {
-        const greeting = toneService.greetingFor(question, profile);
+    const social = conversation.reply(question, profile);
+    if (social) {
+        const greeting = social;
         await sessionService.appendMessage(sessionId, "assistant", greeting);
         return {
             answer: greeting,
-            queryType: { isTimetable: false, isKnowledge: false, isMixed: false, entities: {} },
+            queryType: { isTimetable: false, isKnowledge: false, isMixed: false, isConversation: true, entities: {} },
             sources: [],
             resources: [],
             recommendedResources: [],
@@ -418,6 +396,12 @@ async function answerQuestionCore(question, sessionId, audience = "public", prof
             usedFallback: false,
             sessionId,
         };
+    }
+
+    if (conversation.personalResults(question)) {
+        const answer = 'I cannot access your real UNILUS CA marks, final results or previous-semester performance. The demonstration is not connected to university academic records. Please check the official student portal. If you cannot access it or need help with missing results, ask me to create a support ticket; I will show the issue for your confirmation first.';
+        await sessionService.appendMessage(sessionId, 'assistant', answer);
+        return { ...supportConversation.response(answer, 'offered'), queryType: { isAcademicResultsUnavailable: true }, sessionId };
     }
 
     // Ticket status ("status of UNI-2026-0042", "any update on my ticket").
@@ -450,7 +434,9 @@ async function answerQuestionCore(question, sessionId, audience = "public", prof
 
     // Answers staff saved from the admin panel for questions the bot used to
     // escalate. "student" answers are only returned to signed-in students.
-    const staffAnswer = await faqService.findStaffAnswer(question, audience);
+    const priorHistory = (await sessionService.getRecentHistory(sessionId)).slice(0, -1);
+    const specialist = retrievalService.isSpecialistRequest(question, priorHistory);
+    const staffAnswer = specialist ? null : await faqService.findStaffAnswer(question, audience);
     if (staffAnswer) {
         await faqService.recordUse(staffAnswer.id);
         const staffReply = await toneService.rephrase(question, staffAnswer.answer, { kind: "staff" });
@@ -467,8 +453,12 @@ async function answerQuestionCore(question, sessionId, audience = "public", prof
         };
     }
 
-    const priorHistory = (await sessionService.getRecentHistory(sessionId)).slice(0, -1);
-    const { timetable, knowledge, resources, queryType } = await retrievalService.retrieveAnswer(question, priorHistory, audience, profile);
+    const { timetable, knowledge, resources, queryType, needsContextClarification } = await retrievalService.retrieveAnswer(question, priorHistory, audience, profile);
+    if (needsContextClarification) {
+        const answer = 'Which programme, timetable or university topic are you referring to? Please include the subject so I can look up the right information.';
+        await sessionService.appendMessage(sessionId, 'assistant', answer);
+        return { ...supportConversation.response(answer, 'none'), queryType, sessionId };
+    }
 
     // Someone who is not signed in asking for something only signed-in students can
     // see (such as "my class timetable") gets a sign-in prompt, not a support ticket.
@@ -608,15 +598,31 @@ async function answerQuestionCore(question, sessionId, audience = "public", prof
     };
 }
 
-async function answerQuestion(question, sessionId, audience='public', profile=null) {
+function markAdvisorTopic(sessionId, active) {
+    const store = require('./programmeAdvisorState').store;
+    const profile = store.get(sessionId);
+    if (profile) { profile.topicActive = active; store.set(sessionId, profile); }
+}
+async function answerQuestion(question, sessionId, audience='public', profile=null, { user = null } = {}) {
     // Applicant grades remain in the bounded advisor store, never in persistent chat history or tone rewriting.
-    const advisor=require('./programmeAdvisorService').tryAnswer(question,sessionId);
-    if(advisor)return advisor;
+    question = conversation.stripGreeting(question);
+    const supportReply = await supportConversation.tryHandle(question, sessionId, user);
+    if (supportReply) {
+        markAdvisorTopic(sessionId, false);
+        await sessionService.appendMessage(sessionId, 'user', question);
+        await sessionService.appendMessage(sessionId, 'assistant', supportReply.answer);
+        return { ...supportReply, sessionId };
+    }
+    const advisor = !conversation.reply(question, profile) && !conversation.personalResults(question)
+        ? require('./programmeAdvisorService').tryAnswer(question,sessionId) : null;
+    if (advisor) { markAdvisorTopic(sessionId, true); return advisor; }
+    if (!conversation.reply(question, profile)) markAdvisorTopic(sessionId, false);
     const parser=require('./applicantResultParser');
     const safeQuestion=parser.extract(question).length?parser.withoutResults(question).trim():question;
     const result=await answerQuestionCore(safeQuestion,sessionId,audience,profile);
     const records=result._actionRecords || [];delete result._actionRecords;
     try{result.suggestedActions=require('./suggestedActionService').selectActions(question,result,records);}catch{result.suggestedActions=[];}
+    if (result.support || result.queryType?.isConversation) result.suggestedActions = [];
     return result;
 }
 module.exports = {
