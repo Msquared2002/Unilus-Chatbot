@@ -61,9 +61,17 @@ function buildProximityAnswer(place, nearby) {
  *                   recommendedResources: Array, timetableMatches: number}}
  */
 function tryHandleNavigation(question) {
+  const intent = navigationIntentDetector.classify(question);
+  const fromTo = (question || "").match(/\bfrom\s+(.+?)\s+to\s+(.+?)(?:[?.!]|$)/i);
+  const originChoices = fromTo ? locationSearchService.hostelChoices(fromTo[1]) : [];
+  const choices = fromTo ? (originChoices.length > 1 ? originChoices : locationSearchService.hostelChoices(fromTo[2])) : locationSearchService.hostelChoices(question);
+  if (choices.length > 1 && (intent.hasLocateTrigger || intent.hasProximityTrigger || /\bfrom\b.*\bto\b/i.test(question))) {
+    return { answer: 'Which hostel do you mean?\n\n' + choices.map(p => '- ' + p.name).join('\n') + '\n\nAsk for one by name to view it on the map.',
+      queryType: { isNavigation: true, intentType: 'clarify_place' }, navigation: null,
+      sources: [], resources: [], recommendedResources: [], timetableMatches: 0 };
+  }
   // Keep two-place language separate from ordinary place lookup. No path is
   // claimed until the independent routing service has a verified network.
-  const fromTo = (question || "").match(/\bfrom\s+(.+?)\s+to\s+(.+?)(?:[?.!]|$)/i);
   if (fromTo) {
     const origin = locationSearchService.findBestMatch(fromTo[1]);
     const destination = locationSearchService.findBestMatch(fromTo[2]);
@@ -83,7 +91,6 @@ function tryHandleNavigation(question) {
       };
     }
   }
-  const intent = navigationIntentDetector.classify(question);
   if (!intent.hasLocateTrigger && !intent.hasProximityTrigger) return null;
 
   const matches = locationSearchService.findAllMatches(question, { limit: 2 });

@@ -18,10 +18,12 @@ window.CampusSearch = (function () {
     let requestNumber = 0;
     input.addEventListener("input", () => {
       clearTimeout(timer);
+      const myRequest = ++requestNumber;
       const query = input.value.trim();
+      results.hidden = true;
+      results.replaceChildren();
       if (!query) { results.hidden = true; results.replaceChildren(); return; }
       timer = setTimeout(async () => {
-        const myRequest = ++requestNumber;
         try {
           const response = await fetch(`${CampusDataClient.API_BASE}/search?q=${encodeURIComponent(query)}`);
           if (!response.ok) throw new Error("Search unavailable");
@@ -45,7 +47,7 @@ window.CampusSearch = (function () {
             results.appendChild(button);
           });
           results.hidden = false;
-        } catch (_) { onStatus("Campus search is unavailable."); }
+        } catch (_) { if (myRequest === requestNumber) onStatus("Campus search is unavailable."); }
       }, 200);
     });
     input.addEventListener("keydown", (event) => {

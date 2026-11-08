@@ -103,8 +103,8 @@ window.CampusMap = (function () {
         // map still shows, it just has no markers until this is fixed.
         console.error("[CampusMap] Failed to load campus API data:", err);
         showToast("Campus places are unavailable. Check the campus API connection.");
-        campusesData = campusesData || {};
-        return campusesData;
+        dataLoadPromise = null;
+        return campusesData || {};
       });
     return dataLoadPromise;
   }
@@ -600,7 +600,8 @@ window.CampusMap = (function () {
         attribution: SATELLITE_ATTRIBUTION
       }).addTo(leafletMap);
       markerLayer = L.layerGroup().addTo(leafletMap);
-
+    }
+    if (!getCampus(currentCampus)) {
       loadData().then(() => {
         // If the default active campus (from the host HTML) turns out to
         // have no map data, land on the first available one instead of

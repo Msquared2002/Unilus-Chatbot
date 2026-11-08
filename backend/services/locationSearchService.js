@@ -26,7 +26,7 @@ function tokenize(text) {
   return normalize(text)
     .replace(/[^a-z0-9\s]/g, " ")
     .split(/\s+/)
-    .filter(Boolean);
+    .filter(Boolean).map(token => token === 'hostels' ? 'hostel' : token);
 }
 
 /**
@@ -42,7 +42,17 @@ function aliasMatches(alias, queryTokens) {
 }
 
 function aliasesFor(place) {
-  return [...(place.search_aliases || []), place.name];
+  return [...(place.search_aliases || []), place.name, ...(place.category === 'hostel' ? ['hostel'] : [])];
+}
+
+function hostelChoices(query) {
+  const tokens = tokenize(query);
+  if (!tokens.includes('hostel')) return [];
+  const hostels = campusRepository.getAllPlaces().filter(p => p.category === 'hostel');
+  const common = new Set(['hostel','school','of','unilus','side']);
+  const names = hostels.map(p => tokenize(p.name).filter(t => !common.has(t)));
+  const specific = hostels.filter((p,i) => names[i].some(t => tokens.includes(t) && names.every((other,j) => i===j || !other.includes(t))));
+  return specific.length === 1 ? [] : specific.length > 1 ? specific : hostels;
 }
 
 /**
@@ -103,4 +113,4 @@ function findBestMatch(query) {
   return top || null;
 }
 
-module.exports = { findAllMatches, findBestMatch, tokenize, aliasMatches };
+module.exports = { findAllMatches, findBestMatch, tokenize, aliasMatches, hostelChoices };

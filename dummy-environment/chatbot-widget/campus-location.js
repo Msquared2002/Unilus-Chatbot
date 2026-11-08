@@ -58,7 +58,10 @@ window.CampusLocation = (function () {
   }
 
   function recenter(map, boundary, onStatus) {
-    if (current?.onCampus) map.flyTo([current.lat, current.lng], Math.max(map.getZoom(), 17));
+    if (current?.onCampus) {
+      map.flyTo([current.lat, current.lng], Math.max(map.getZoom(), 17));
+      onStatus("Location found on Silverest Campus.");
+    }
     else request(map, boundary, onStatus);
   }
 
