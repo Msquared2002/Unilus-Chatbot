@@ -4,7 +4,9 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
 html,body{margin:0;height:100%;font:14px system-ui,sans-serif;background:#071b18;color:white}#layout{display:grid;grid-template-columns:320px 1fr;height:100%}aside{padding:18px;overflow:auto;border-right:1px solid #2d6758}h1{font-size:19px;margin:0 0 8px}p{line-height:1.4;color:#bfd2cc}button,select{width:100%;padding:9px;margin:4px 0;border:1px solid #6b9c8b;border-radius:7px;background:#123e32;color:white}button{cursor:pointer}button.active{background:#0da969}button:disabled{opacity:.45}#map{height:100%}#status{white-space:pre-wrap;margin-top:12px;color:#d1e8dc}.swatch{display:inline-block;width:15px;height:4px;margin-right:5px;vertical-align:middle}#list button{text-align:left}
-</style></head><body><div id="layout"><aside>
+</style><script src="js/runtime-config.js"></script>
+<script src="js/api-config.js"></script>
+</head><body><div id="layout"><aside>
 <h1>Silverest pathway editor</h1><p>Development tool. Trace only paths and entrances verified on site. Save exports into the campus data folder, then rebuild the graph.</p>
 <label>Path type<select id="kind"><option>footway</option><option>crossing</option><option>steps</option><option>shared_road</option></select></label>
 <button id="draw">Draw path</button><button id="finish">Finish path</button><button id="edit">Edit selected vertices</button><button id="delete">Delete selected path</button>
@@ -17,7 +19,7 @@ html,body{margin:0;height:100%;font:14px system-ui,sans-serif;background:#071b18
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 (async function(){
-  const api='http://localhost:5000/api/campus', status=document.getElementById('status');
+  const api=(window.UNILUS_API_BASE || '/api')+'/campus', status=document.getElementById('status');
   let data;
   try {const res=await fetch(api+'/routing/editor-data');if(!res.ok)throw Error('Start backend with CAMPUS_ROUTING_EDITOR=true');data=await res.json();}
   catch(e){status.textContent=e.message;return;}

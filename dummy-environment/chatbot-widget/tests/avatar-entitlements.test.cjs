@@ -36,7 +36,7 @@ function loginForm() {
   }
   const saved = storage();
   const location = { destination: null, replace(value) { this.destination = value; } };
-  vm.runInNewContext(read('../../js/portal-login.js'), {
+  vm.runInNewContext(read('../../js/portal-demo-login.js'), {
     window: { UnilusDemoSession: session, UnilusDemoProgrammes: catalogue, location }, sessionStorage: saved,
     document: { querySelector: (selector) => nodes[selector], createElement: () => ({}) }
   });

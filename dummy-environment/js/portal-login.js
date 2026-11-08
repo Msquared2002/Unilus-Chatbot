@@ -1,6 +1,6 @@
 (function () {
   const session = window.UnilusDemoSession;
-  const API = window.UNILUS_API_BASE || "http://localhost:5000/api";
+  const API = window.UNILUS_API_BASE || "/api";
   const form = document.querySelector("[data-portal-login]");
   const usernameInput = document.querySelector("#portal-username");
   const passwordInput = document.querySelector("#portal-password");
@@ -103,6 +103,7 @@
         return;
       }
 
+      if(!['localhost','127.0.0.1'].includes(location.hostname)){showError('Sign-in service unavailable. Please try again later.');return;}
       // Backend unavailable: fall back to the local demo account so a demo never dead-ends.
       const offline = session.authenticate(username, password, OFFLINE_DEFAULT_PROGRAMME);
       if (!offline) {

@@ -23,6 +23,7 @@
 
 const crypto = require("crypto");
 const db = require("./db");
+const workflow=require("./ticketWorkflowService");
 
 const STATUSES = ["Open", "In Progress", "Resolved", "Closed"];
 const DEFAULT_DEPARTMENT = "Registry";
@@ -154,6 +155,7 @@ function adminView(row) {
     }
     return {
         ...publicView(row),
+        assignedTo: row.assignee || null,
         question: row.question,
         summary: row.summary,
         history,
@@ -196,6 +198,8 @@ const cleanRef = (ref) => String(ref || "").trim().toUpperCase();
  * @returns {Promise<{ ticket: object, created: boolean }>}
  */
 async function createTicket({ sessionId, question, history = [], contact = null }) {
+ return db.transaction(async()=>{
+    if(db.dialect==="postgres")await db.get("SELECT pg_advisory_xact_lock(hashtext(?))",[sessionId+":"+question.toLowerCase().trim()]);
     const duplicate = await db.get(
         `SELECT * FROM tickets
          WHERE session_id = ? AND lower(question) = lower(?)
@@ -237,6 +241,7 @@ async function createTicket({ sessionId, question, history = [], contact = null 
     await db.run(`UPDATE tickets SET ticket_ref = ? WHERE id = ?`, [ref, id]);
 
     return { ticket: publicView(await db.get(`SELECT * FROM tickets WHERE ticket_ref = ?`, [ref])), created: true };
+ });
 }
 
 async function getTicketByRef(ref) {
@@ -244,7 +249,10 @@ async function getTicketByRef(ref) {
 }
 
 async function getTicketForAdmin(ref) {
-    return adminView(await db.get(`SELECT * FROM tickets WHERE ticket_ref = ?`, [cleanRef(ref)]));
+    const row=await db.get(`SELECT * FROM tickets WHERE ticket_ref = ?`, [cleanRef(ref)]);
+    if(!row)return null;
+    const assignment=await db.get("SELECT assignee FROM ticket_assignments WHERE ticket_ref = ?",[row.ticket_ref]);
+    return adminView({...row,assignee:assignment?.assignee});
 }
 
 async function getLatestTicketForSession(sessionId) {
@@ -265,27 +273,30 @@ async function listTickets({ status = null, limit = 50 } = {}) {
         ? await db.all(`SELECT * FROM tickets WHERE status = ? ORDER BY id DESC LIMIT ?`, [normalized, cappedLimit])
         : await db.all(`SELECT * FROM tickets ORDER BY id DESC LIMIT ?`, [cappedLimit]);
 
-    return rows.map(adminView);
+    return Promise.all(rows.map(async row=>{const assignment=await db.get("SELECT assignee FROM ticket_assignments WHERE ticket_ref = ?",[row.ticket_ref]);return adminView({...row,assignee:assignment?.assignee});}));
 }
 
 /**
  * @returns the updated ticket (admin view), or null if the ref doesn't exist.
  * Throws if the status isn't one of STATUSES (routes validate first).
  */
-async function updateTicketStatus(ref, status) {
+async function updateTicketStatus(ref, status, actor = 'authorized-staff') {
     const normalized = normalizeStatus(status);
     if (!normalized) {
         throw new Error(`Invalid status. Use one of: ${STATUSES.join(", ")}`);
     }
 
-    const wanted = cleanRef(ref);
-    const info = await db.run(
-        `UPDATE tickets SET status = ?, updated_at = ${db.now} WHERE ticket_ref = ?`,
-        [normalized, wanted]
-    );
-
-    if (info.changes === 0) return null;
-    return adminView(await db.get(`SELECT * FROM tickets WHERE ticket_ref = ?`, [wanted]));
+    const wanted=cleanRef(ref);
+    return db.transaction(async()=>{
+      if(db.dialect==='postgres')await db.get('SELECT pg_advisory_xact_lock(hashtext(?))',['ticket:'+wanted]);
+      const current=await db.get('SELECT * FROM tickets WHERE ticket_ref = ?',[wanted]);
+      if(!current)return null;
+      const transitions={Open:['In Progress','Resolved'],'In Progress':['Resolved'],Resolved:['In Progress','Closed'],Closed:['In Progress']};
+      if(current.status!==normalized&&!transitions[current.status]?.includes(normalized))throw Object.assign(Error('Unsupported status transition'),{status:400});
+      await db.run(`UPDATE tickets SET status = ?, updated_at = ${db.now} WHERE ticket_ref = ?`,[normalized,wanted]);
+      if(current.status!==normalized)await workflow.add(wanted,{kind:'status',body:normalized,actor,visibility:'student'});
+      return getTicketForAdmin(wanted);
+    });
 }
 
 

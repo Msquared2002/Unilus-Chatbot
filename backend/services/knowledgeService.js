@@ -32,7 +32,7 @@ const DEFAULT_MIN_SCORE = 0.22;
 const RRF_K = 60;
 const DEFAULT_MAX_CONTEXT_CHARS = 2400;
 
-const store = new JsonVectorStore(path.join(__dirname, "../data/vectors/knowledge_vectors.json"));
+const store = process.env.VECTOR_BACKEND === "database" ? new (require("./databaseVectorStore").DatabaseVectorStore)() : new JsonVectorStore(path.join(__dirname, "../data/vectors/knowledge_vectors.json"));
 
 function uniqueQueries(query, searchQueries = []) {
   const seen = new Set();
@@ -411,11 +411,15 @@ async function searchKnowledge(
     embedFn = embeddingService.createEmbedding,
     store: storeOverride = null,
     expandNeighbors = true,
+    onTiming = null,
   } = {}
 ) {
   const activeStore = storeOverride || store;
   const filter = documentType ? (metadata) => metadata.document_type === documentType : null;
+  const reportTiming=(stage,ms)=>{if(onTiming)onTiming({stage,ms});};
+  let phase=performance.now();
   const records = await activeStore.list({ filter });
+  reportTiming("corpus",performance.now()-phase);
   if (!records.length) return [];
 
   const queries = uniqueQueries(query, searchQueries);
@@ -428,12 +432,16 @@ async function searchKnowledge(
 
     let denseResults = [];
     try {
+      phase=performance.now();
       const queryEmbedding = await embedFn(searchQuery);
+      reportTiming("embedding",performance.now()-phase);
+      phase=performance.now();
       denseResults = await activeStore.search(queryEmbedding, {
         topK: denseTopK,
         minScore: 0,
-        filter,
+        filter, records,
       });
+      reportTiming("dense",performance.now()-phase);
     } catch (err) {
       // Hybrid retrieval should still work lexically when the embedding model
       // is temporarily unavailable. The caller can log/inspect diagnostics,
@@ -449,11 +457,13 @@ async function searchKnowledge(
       modeWeight: 1.0,
     }));
 
+    phase=performance.now();
     const lexicalResults = lexicalSearchService.searchRecords(searchQuery, records, {
       topK: lexicalTopK,
       filter: null, // records are already filtered above
     });
 
+    reportTiming("lexical",performance.now()-phase);
     lexicalResults.forEach((result, index) => addRrfCandidate(candidateMap, result, {
       rank: index + 1,
       queryIndex,
@@ -496,6 +506,7 @@ async function searchKnowledge(
       audience: meta.audience || [],
       fee_scope: meta.fee_scope || null,
       source_type: meta.source_type || null,
+      access: meta.access || null,
       observed_date: meta.observed_date || null,
       source_image_filenames: meta.source_image_filenames || [],
       place_id: meta.place_id || null,

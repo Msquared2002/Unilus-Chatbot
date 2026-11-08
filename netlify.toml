@@ -1,3 +1,12 @@
 [build]
   publish = "dummy-environment"
-  command = ""
+  command = "node scripts/configureFrontend.cjs && npm --prefix dummy-environment/chatbot-widget ci --include=dev && npm --prefix dummy-environment/chatbot-widget run build"
+[build.environment]
+  NODE_VERSION = "24"
+  NODE_ENV = "production"
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "DENY"

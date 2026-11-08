@@ -2,6 +2,7 @@ const express = require("express");
 
 const router = express.Router();
 
+router.use((req,res,next)=>req.user?next():res.status(401).json({error:'Sign in required'}));
 const timetableService = require("../services/timetableService");
 
 

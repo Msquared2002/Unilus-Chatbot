@@ -1,0 +1,47 @@
+services:
+  - type: web
+    name: unilus-chatbot-free-demo
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: frankfurt
+    numInstances: 1
+    autoDeploy: false
+    healthCheckPath: /readyz
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: VECTOR_BACKEND
+        value: database
+      - key: WARM_MODEL_ON_START
+        value: "yes"
+      - key: TRUST_PROXY_HOPS
+        value: "1"
+      - key: DATABASE_CONNECT_TIMEOUT_MS
+        value: "20000"
+      - key: DATABASE_POOL_MAX
+        value: "2"
+      - key: KNOWLEDGE_WARM_SNAPSHOT_ON_START
+        value: "yes"
+      - key: KNOWLEDGE_CACHE_MAX_BYTES
+        value: "33554432"
+      - key: QUERY_PLANNER_ENABLED
+        value: "true"
+      - key: DATABASE_URL
+        sync: false
+      - key: DATABASE_CA_FILE
+        value: /etc/secrets/supabase-ca.crt
+      - key: AUTH_JWT_SECRET
+        sync: false
+      - key: AUTH_USERS_FILE
+        value: /etc/secrets/demo-users.json
+      - key: GROQ_API_KEY
+        sync: false
+      - key: CORS_ORIGINS
+        value: https://unilus-demo.netlify.app
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_STORAGE_KEY
+        sync: false
+      - key: SUPABASE_DOCUMENT_BUCKET
+        sync: false

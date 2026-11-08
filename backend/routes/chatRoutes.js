@@ -14,9 +14,9 @@ router.post("/", async (req, res) => {
             ? req.body.question.trim()
             : "";
 
-    const sessionId =
-        req.body.sessionId ||
-        crypto.randomUUID();
+    let sessionId;
+    try {sessionId=await require('../services/sessionOwnershipService').resolveSession(req.body.sessionId,req.user);}
+    catch(e){return res.status(e.status||503).json({error:'Conversation unavailable. Start a new conversation.'});}
 
     // The access level comes from the signed token (see attachUser), never
     // from the request body. A "student" value sent in the body is ignored,
@@ -38,6 +38,7 @@ router.post("/", async (req, res) => {
         authProblem: req.authProblem || null
     };
 
+    if(question.length>4000)return res.status(400).json({error:"Question too long"});
     // Empty or missing question: answer politely instead of crashing
     // somewhere deeper in the pipeline.
     if (!question) {
@@ -76,6 +77,10 @@ router.post("/", async (req, res) => {
 
             timetableMatches: result.timetableMatches,
 
+            advisor: result.advisor,
+            suggestedActions: result.suggestedActions,
+            route: result.route,
+            routeStatus: result.routeStatus,
             navigation: result.navigation,
             routeIntent: result.routeIntent,
 
@@ -93,7 +98,7 @@ router.post("/", async (req, res) => {
 
     } catch (error) {
 
-        console.error("Chat route error:", error);
+        console.error("Chat request failed");
 
         // Return a normal-looking reply (HTTP 200) with a friendly
         // message so the widget displays it instead of falling back to

@@ -38,6 +38,8 @@ function getClient() {
 }
 
 function enabled() {
+    return false; // Approved and policy answers remain verbatim; semantic rewrites are not a trust boundary.
+
     return String(process.env.TONE_REWRITE || "on").toLowerCase() !== "off";
 }
 

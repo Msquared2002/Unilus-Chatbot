@@ -27,6 +27,15 @@ class VectorStore {
   }
 
   // eslint-disable-next-line no-unused-vars
+  async replaceSource(source, records) {
+    const previous=this._load();
+    const next=previous.filter(r=>(r.metadata||{}).source_file!==source);
+    for(const r of records)if(!r.id||!r.embedding||!r.metadata)throw Error('Invalid vector record');
+    this._records=next.concat(records);
+    try{this._persist();}catch(e){this._records=previous;throw e;}
+    return previous.length-next.length;
+  }
+
   async search(queryEmbedding, { topK = 5, filter = null } = {}) {
     throw new Error("search() not implemented");
   }
@@ -71,7 +80,7 @@ class JsonVectorStore extends VectorStore {
   _load() {
     if (this._records) return this._records;
     if (!fs.existsSync(this.filePath)) {
-      this._records = [];
+      this._records = /knowledge_vectors\.json$/.test(this.filePath) && fs.existsSync(path.join(__dirname,'../bootstrap/knowledge-v1.json.gz')) ? require('./bootstrapKnowledge').records : [];
       return this._records;
     }
     this._records = JSON.parse(fs.readFileSync(this.filePath, "utf8"));

@@ -1,0 +1,6 @@
+-- REFERENCE ONLY: no separate grants phase is executable here.
+-- Atomic table, sequence, RLS, runtime-policy and ledger restrictions now live in
+-- backend/migrations/001_integrated_core.sql, executed through scripts/migrate.js.
+-- Review deployment/provision-runtime-role.sql separately; never place passwords in SQL.
+-- Review PUBLIC CREATE revocation and migration-owner default changes with the existing developer.
+-- Provider internal schemas and supabase_admin defaults are unchanged.

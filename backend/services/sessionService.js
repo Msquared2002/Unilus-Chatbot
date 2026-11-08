@@ -52,6 +52,7 @@ function createSessionId() {
 
 
 async function appendMessage(sessionId, role, content) {
+    if(role==='user' && require('./applicantResultParser').extract(content).length)content=require('./applicantResultParser').withoutResults(content).trim() || '[Academic results omitted from persistent history]';
     await db.run(
         `INSERT INTO conversations (session_id, role, content) VALUES (?, ?, ?)`,
         [sessionId, role, content]

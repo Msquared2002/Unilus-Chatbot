@@ -1,0 +1,9 @@
+{
+  "model": "Xenova/all-MiniLM-L6-v2",
+  "dimensions": 384,
+  "records": 1447,
+  "sha256": "cbbbd51f3b6e5b437664a032dac2bc1724f4884a25d5016abe4d8393a325e6ea",
+  "compressedSha256": "5d808891d19b764a02593026e13dc2a07f401b3da69b3a1a1748dcef9ea9f6fd",
+  "sourceManifest": "data/vectors/index_manifest.json",
+  "scope": "Versioned existing university corpus; advisor data remains separate. Exam-document ingestion must be verified independently."
+}

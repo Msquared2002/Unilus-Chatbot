@@ -14,6 +14,7 @@
 const express = require("express");
 
 const router = express.Router();
+router.use((req,res,next)=>{if(req.user?.role==='staff')return res.status(403).json({error:'Administrator required for global knowledge management'});next();});
 const faq = require("../services/faqService");
 const support = require("../services/supportService");
 const { requireStaff } = require("../middleware/requireStaff");
@@ -23,7 +24,7 @@ router.get("/admin/recurring", requireStaff, async (req, res) => {
     try {
         res.json(await faq.getRecurring());
     } catch (error) {
-        console.error("Recurring questions error:", error);
+        console.error("Recurring questions error:");
         res.status(500).json({ error: "Failed to load recurring questions" });
     }
 });
@@ -33,7 +34,7 @@ router.get("/admin/answers", requireStaff, async (req, res) => {
     try {
         res.json(await faq.listAnswers());
     } catch (error) {
-        console.error("Saved answers list error:", error);
+        console.error("Saved answers list error:");
         res.status(500).json({ error: "Failed to load saved answers" });
     }
 });
@@ -83,7 +84,7 @@ router.delete("/admin/answers/:id", requireStaff, async (req, res) => {
         }
         res.json({ ok: true });
     } catch (error) {
-        console.error("Answer delete error:", error);
+        console.error("Answer delete error:");
         res.status(500).json({ error: "Failed to delete answer" });
     }
 });

@@ -9,6 +9,17 @@
  */
 
 const { buildSearchText } = require("./searchTextService");
+const preparedDocuments = new WeakMap();
+function prepareDocument(record, cache=true) {
+  const searchText = record.search_text || buildSearchText(record.text || "", record.metadata || {});
+  const previous = cache && preparedDocuments.get(record);
+  if (previous && previous.searchText === searchText) return previous;
+  const tokens = tokenize(searchText, { keepStopWords:false });
+  const value = {record,searchText,counts:termCounts(tokens),length:tokens.length};
+  if (cache) preparedDocuments.set(record,value);
+  return value;
+}
+function prepareRecords(records) { for(const record of records)prepareDocument(record); return records.length; }
 
 const STOP_WORDS = new Set([
   "a", "an", "and", "are", "as", "at", "be", "been", "but", "by", "can",
@@ -51,17 +62,13 @@ function termCounts(tokens) {
   return counts;
 }
 
-function searchRecords(query, records, { topK = 20, filter = null, k1 = 1.4, b = 0.75 } = {}) {
+function searchRecords(query, records, { topK = 20, filter = null, k1 = 1.4, b = 0.75, cache=true } = {}) {
   const queryTerms = [...new Set(tokenize(query))];
   if (!queryTerms.length || !records.length) return [];
 
   const docs = records
     .filter((r) => (filter ? filter(r.metadata || {}) : true))
-    .map((record) => {
-      const searchText = record.search_text || buildSearchText(record.text || "", record.metadata || {});
-      const tokens = tokenize(searchText, { keepStopWords: false });
-      return { record, tokens, counts: termCounts(tokens), length: tokens.length };
-    });
+    .map(record => prepareDocument(record,cache));
 
   if (!docs.length) return [];
 
@@ -108,4 +115,4 @@ function searchRecords(query, records, { topK = 20, filter = null, k1 = 1.4, b =
     .slice(0, topK);
 }
 
-module.exports = { searchRecords, tokenize, stemToken, STOP_WORDS };
+module.exports = { searchRecords, prepareRecords, tokenize, stemToken, STOP_WORDS };

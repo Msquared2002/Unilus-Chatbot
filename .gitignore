@@ -23,3 +23,29 @@ backend/data/knowledge_updates.json
 backend/data/vectors/knowledge_vectors.backup.json
 backend/data/documents/uploads/
 backend/eval/results-*.csv
+
+# Integration-generated runtime data
+*.sqlite
+*.sqlite3
+*.db-wal
+*.db-shm
+
+# Private configuration and generated verification inventories never ship.
+*.env
+*.key
+*.pfx
+*.p12
+deployment/*.json
+!deployment/storage-plan.json
+deployment/*.jsonl
+deployment/*.txt
+deployment/*.csv
+supabase/linked-project.json
+**/.env.*
+!**/.env.example
+*.pem
+deployment/*.md
+!deployment/HOSTING.md
+docs/presentation-preparation/
+deployment/runtime.env.example
+supabase/.temp/

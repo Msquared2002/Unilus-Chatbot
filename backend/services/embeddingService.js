@@ -26,7 +26,7 @@ async function loadModel() {
       extractor = model;
       console.log(`Embedding model loaded: ${MODEL_NAME}`);
       return model;
-    });
+    }).catch(error=>{loadingPromise=null;throw error;});
   }
   return loadingPromise;
 }

@@ -70,7 +70,8 @@ function formatTicketStatus(ticket) {
 async function handleTicketStatusQuestion(question, sessionId) {
     const refMatch = question.match(TICKET_REF);
     if (refMatch) {
-        const ticket = await supportService.getTicketByRef(refMatch[0]);
+        const full = await supportService.getTicketForAdmin(refMatch[0]);
+        const ticket = full && full.session_id===sessionId ? await supportService.getTicketByRef(refMatch[0]) : null;
         return ticket
             ? formatTicketStatus(ticket)
             : `I couldn't find a ticket with reference ${refMatch[0].toUpperCase()}. Please check the number and try again.`;
@@ -395,7 +396,7 @@ async function buildFallback(question, queryType, timetableMatches = 0, sessionI
     };
 }
 
-async function answerQuestion(question, sessionId, audience = "public", profile = null) {
+async function answerQuestionCore(question, sessionId, audience = "public", profile = null) {
     if (!sessionId) {
         sessionId = sessionService.createSessionId();
     }
@@ -490,6 +491,15 @@ async function answerQuestion(question, sessionId, audience = "public", profile 
         };
     }
 
+    if(queryType?.isTimetable && !queryType.isKnowledge && timetable.length){
+        const entries=harmonizeDisplayCourseNames(timetable.map(toDisplayTimetableEntry));
+        const clean=v=>String(v??'').replace(/\|/g,'/').replace(/\n/g,' ');
+        const header='| Day | Time | Course | Lecturer | Venue |\n|---|---|---|---|---|\n';
+        const answer=header+entries.map(e=>'| '+[e.day,e.time,e.display_course_name||e.course_name,e.display_lecturer_name||e.lecturer_name,e.display_venue_name||e.venue_name].map(clean).join(' | ')+' |').join('\n');
+        await sessionService.appendMessage(sessionId,'assistant',answer);
+        return {answer,queryType,sources:[],resources:[],recommendedResources:[],timetableMatches:timetable.length,_actionRecords:timetable,sessionId};
+    }
+
     // Programme/cohort timetable requests are deterministic structured-data
     // lookups. If the user omitted year/semester (or the requested cohort is
     // absent), return a precise clarification instead of asking the LLM to
@@ -540,7 +550,9 @@ async function answerQuestion(question, sessionId, audience = "public", profile 
 
     const context = formatContext({ timetable, knowledge, resources });
 
-    const answer = await aiService.askAI(question, context, {
+    let answer;
+    try {
+        answer = await aiService.askAI(question, context, {
         allowedUrls: collectAllowedUrls({ knowledge, resources }),
         groundingText: buildPrimaryGroundingText(knowledge),
         // Recent turns from THIS session, oldest first, so a follow-up
@@ -549,6 +561,11 @@ async function answerQuestion(question, sessionId, audience = "public", profile 
         // separately as the current question, not as history).
         history: priorHistory,
     });
+    }catch{
+        answer='The AI explanation service is temporarily unavailable. Please use the official sources below or try again shortly.';
+        const links=resources.filter(r=>r.url).map(r=>`[${r.title}](${r.url})`);
+        if(links.length)answer+='\n\n'+links.join('\n');
+    }
 
     // Evidence existed but was a loose/irrelevant match — the model
     // correctly said so per its system prompt. Redirect to a contact
@@ -584,12 +601,24 @@ async function answerQuestion(question, sessionId, audience = "public", profile 
         // { title, url, reason } shape. Additive: `resources` above is
         // unchanged for any existing consumer.
         recommendedResources: buildRecommendedResources(resources),
+        _actionRecords: timetable,
         timetableMatches: timetable.length,
         usedFallback: false,
         sessionId,
     };
 }
 
+async function answerQuestion(question, sessionId, audience='public', profile=null) {
+    // Applicant grades remain in the bounded advisor store, never in persistent chat history or tone rewriting.
+    const advisor=require('./programmeAdvisorService').tryAnswer(question,sessionId);
+    if(advisor)return advisor;
+    const parser=require('./applicantResultParser');
+    const safeQuestion=parser.extract(question).length?parser.withoutResults(question).trim():question;
+    const result=await answerQuestionCore(safeQuestion,sessionId,audience,profile);
+    const records=result._actionRecords || [];delete result._actionRecords;
+    try{result.suggestedActions=require('./suggestedActionService').selectActions(question,result,records);}catch{result.suggestedActions=[];}
+    return result;
+}
 module.exports = {
     answerQuestion,
     formatContext,

@@ -29,7 +29,7 @@ const path = require("path");
 const MIN_SECRET_LENGTH = 32;
 const DEFAULT_TTL_HOURS = 8;
 const ROLES = ["student", "staff", "admin"];
-const USERS_FILE = path.join(__dirname, "../data/demo_users.json");
+const USERS_FILE = process.env.AUTH_USERS_FILE || path.join(__dirname, "../data/demo_users.json");
 
 
 /* ------------------------------ config ------------------------------ */
@@ -74,6 +74,7 @@ function publicUser(user) {
         username: user.username,
         name: user.name || user.username,
         role: user.role,
+        department: user.department || null,
         programme: user.programme || null,
         year: user.year || null, // profile:public
         semester: user.semester || null,
@@ -138,6 +139,7 @@ function signToken(user) {
         sub: user.username,
         name: user.name,
         role: user.role,
+        department: user.department || null,
         programme: user.programme || null,
         year: user.year || null, // profile:token
         semester: user.semester || null,
@@ -198,6 +200,7 @@ function verifyToken(token) {
             username: payload.sub,
             name: payload.name || payload.sub,
             role: payload.role,
+            department: payload.department || null,
             programme: payload.programme || null,
             year: payload.year || null, // profile:verify
             semester: payload.semester || null,

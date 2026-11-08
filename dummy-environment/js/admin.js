@@ -189,13 +189,13 @@ async function detail(id) {
 }
 
 function signInPage() {
-  app.innerHTML = heading("Staff sign in", "Enter the admin key to open the support queue.") +
-  `<section class="panel"><form class="detail-form" data-signin><label>Admin key<input name="key" type="password" autocomplete="current-password" required></label><p class="form-feedback" data-feedback aria-live="polite"></p><button class="button-primary" type="submit">Sign in</button></form></section>`;
+  app.innerHTML = heading("Staff sign in", "Sign in with an authorized synthetic staff or administrator account.") +
+  `<section class="panel"><form class="detail-form" data-signin><label>Username<input name="username" autocomplete="username" required></label><label>Password<input name="password" type="password" autocomplete="current-password" required></label><p class="form-feedback" data-feedback aria-live="polite"></p><button class="button-primary" type="submit">Sign in</button></form></section>`;
   app.querySelector("[data-signin]").addEventListener("submit", async e => {
     e.preventDefault();
     const form = e.currentTarget, feedback = form.querySelector("[data-feedback]");
     feedback.textContent = "";
-    try { await ticketService.signIn(form.elements.key.value.trim()); route(); }
+    try { await ticketService.signIn(form.elements.username.value.trim(),form.elements.password.value); route(); }
     catch (error) { feedback.textContent = error.code === "SIGN_IN" ? "That key was not accepted, or ADMIN_API_KEY is not set in backend/.env." : error.message; }
   });
 }

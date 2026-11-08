@@ -297,7 +297,7 @@ test("specific lecturer and course timetable context is not capped at eight rows
 
 test("incomplete programme timetable request asks for year and semester deterministically", async () => {
   const { answerQuestion } = require("../services/chatService");
-  const result = await answerQuestion("show me the BIT timetable");
+  const result = await answerQuestion("show me the BIT timetable", undefined, "student");
   assert.match(result.answer, /need the study year and semester/i);
   assert.equal(result.timetableMatches, 0);
 });

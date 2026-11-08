@@ -1,7 +1,7 @@
 // The campus API owns names, IDs, coordinates and geometry. This file only
 // adapts its records to the existing Leaflet widget's [lat, lng] convention.
 window.CampusDataClient = (function () {
-  const API_BASE = "http://localhost:5000/api/campus";
+  const API_BASE = (window.UNILUS_API_BASE || "/api")+"/campus";
   const PRESENTATION_URL = "chatbot-widget/campus-data/presentation.json";
 
   async function getJson(url) {

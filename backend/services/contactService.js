@@ -58,6 +58,7 @@ async function getContactVectors() {
 
 
 async function findFallbackContact(question) {
+    try {
     const vectors = await getContactVectors();
     const queryVector = await createEmbedding(question);
 
@@ -77,6 +78,7 @@ async function findFallbackContact(question) {
     }
 
     return null;
+    }catch{return null;}
 }
 
 

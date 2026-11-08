@@ -85,7 +85,7 @@ function isStudentAudience(audience) {
 function filterKnowledgeByAudience(knowledge, audience) {
   if (isStudentAudience(audience)) return knowledge;
   return knowledge.filter(
-    (chunk) => !AUDIENCE_RESTRICTED_KNOWLEDGE_SOURCES.has(chunk.source_file)
+    (chunk) => !AUDIENCE_RESTRICTED_KNOWLEDGE_SOURCES.has(chunk.source_file) && chunk.access !== "restricted"
   );
 }
 
@@ -139,12 +139,14 @@ function extractProgrammeStage(text) {
   let year = null;
   let semester = null;
 
-  const yearMatch = raw.match(/\b([1-9])(?:st|nd|rd|th)?\s*(?:year|yr)\b/i)
-    || raw.match(/\b(?:year|yr)\s*([1-9])\b/i);
+  const ordinals={first:1,second:2,third:3,fourth:4,fifth:5,sixth:6};
+  const stageText=raw.replace(/\b(first|second|third|fourth|fifth|sixth)\b/gi,w=>ordinals[w.toLowerCase()]);
+  const yearMatch = stageText.match(/\b([1-9])(?:st|nd|rd|th)?\s*(?:year|yr)\b/i)
+    || stageText.match(/\b(?:year|yr)\s*([1-9])\b/i);
   if (yearMatch) year = Number(yearMatch[1]);
 
-  const semesterMatch = raw.match(/\b([1-9])(?:st|nd|rd|th)?\s*(?:semester|sem)\b/i)
-    || raw.match(/\b(?:semester|sem)\s*([1-9])\b/i);
+  const semesterMatch = stageText.match(/\b(?:semester|sem)\s*([1-9])\b/i)
+    || stageText.match(/\b([1-9])(?:st|nd|rd|th)?\s*(?:semester|sem)\b/i);
   if (semesterMatch) semester = Number(semesterMatch[1]);
 
   // Student shorthand such as "BIT 3,2" means year 3, semester 2.
@@ -357,7 +359,7 @@ async function retrieveAnswer(query, history = [], audience = "public", profile 
   // session costs no extra planner call.
   let effectiveQuery = query;
   let historyPlan = null;
-  if (hasHistory && queryUnderstandingService.plannerEnabled()) {
+  if (hasHistory && /\b(that|those|it|what about|the exam|another day)\b/i.test(query) && queryUnderstandingService.plannerEnabled()) {
     historyPlan = await queryUnderstandingService.planQuery(query, { history });
     if (historyPlan.usedPlanner && historyPlan.normalizedQuery) {
       effectiveQuery = historyPlan.normalizedQuery;

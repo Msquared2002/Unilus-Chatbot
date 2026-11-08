@@ -1,0 +1,21 @@
+.git
+**/node_modules
+**/.env
+**/*.db
+**/*.sqlite
+**/*.sqlite3
+**/*.log
+**/data/documents/uploads
+**/data/conversations.db*
+**/__pycache__
+integration-preservation
+
+# Prevent alternate private environment files and private keys entering the image.
+**/.env.*
+!**/.env.example
+**/*.key
+**/*.pfx
+**/*.p12
+**/data/demo_users.json
+**/data/knowledge_updates.json
+**/data/unanswered-questions-log.jsonl

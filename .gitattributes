@@ -1,0 +1,3 @@
+backend/migrations/*.sql -text whitespace=cr-at-eol
+deployment/*.sql -text whitespace=cr-at-eol
+*.gz -text

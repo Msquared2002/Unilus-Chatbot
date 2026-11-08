@@ -81,7 +81,7 @@ router.post("/login", (req, res) => {
 
         res.json({ token, tokenType: "Bearer", expiresAt, user });
     } catch (error) {
-        console.error("Login error:", error);
+        console.error("Login error:");
         res.status(500).json({ error: "Sign-in failed. Please try again." });
     }
 });

@@ -8,7 +8,7 @@ Purpose: Keeps model fallback and grounding safeguards centralized at the genera
 // Lazily instantiated so non-LLM code paths/tests do not require a key.
 let groq = null;
 function getClient() {
-    if (!groq) groq = new Groq();
+    if (!groq) groq = new Groq({timeout:15000,maxRetries:0});
     return groq;
 }
 
@@ -320,7 +320,7 @@ ${question}
                 console.log("Rate limit reached:", model);
                 continue;
             }
-            console.log("Model failed:", model, error.message);
+            console.log("Model request failed:", model, error.status || "unavailable");
         }
     }
 

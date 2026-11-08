@@ -1118,3 +1118,11 @@
     min-width: 900px !important;
   }
 }
+.context-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.context-actions:empty{display:none}
+.context-actions button{font:inherit;font-size:.85rem;border:1px solid var(--brand);border-radius:16px;padding:8px 12px;background:var(--bg-accent-soft);color:var(--text);cursor:pointer;max-width:100%;white-space:normal}
+.context-actions button:hover{background:var(--bg-hover)}
+.context-actions button:focus-visible,.map-confirm-btn:focus-visible{outline:3px solid var(--brand);outline-offset:3px}
+.context-actions button:disabled{opacity:.55;cursor:default}
+
+.startup-notice { display:block; margin-top:8px; font-size:0.85em; line-height:1.4; }

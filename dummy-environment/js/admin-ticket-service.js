@@ -6,7 +6,7 @@ Purpose: Shows the real tickets the chatbot creates, and adds the "teach the cha
 
 // Backend address. Same origin when the page is served by the backend (port 5000); otherwise localhost:5000.
 // Override by setting window.UNILUS_API_BASE before this module loads.
-const API = window.UNILUS_API_BASE || (location.port === "5000" ? `${location.origin}/api` : "http://localhost:5000/api");
+const API = window.UNILUS_API_BASE || "/api";
 const KEY = "unilusAdminKey";
 const NOT_YET = "The backend does not save this yet. Status changes and saved answers are saved.";
 
@@ -79,12 +79,12 @@ function shape(row) {
     priority: PRIORITY[row.priority] || "Normal",
     status,
     departmentId: toDepartmentId(row.department),
-    assignedTo: null,
+    assignedTo: row.assignedTo || null,
     student: { name: "Chat student", email: "Not captured by the chatbot", programme: "Not provided" },
     createdAt: row.created_at,
     updatedAt: row.updated_at || row.created_at,
-    conversation: [{ role: "student", author: "Student (via chatbot)", body: row.question, createdAt: row.created_at }],
-    internalNotes: [],
+    conversation: (row.history || []).map(m=>({role:m.role,author:m.role,body:m.content,createdAt:row.created_at})).concat((row.events||[]).filter(e=>e.kind==="reply").map(e=>({role:"staff",author:e.actor,body:e.body,createdAt:e.created_at}))),
+    internalNotes: (row.events||[]).filter(e=>e.kind==="note").map(e=>({author:e.actor,body:e.body,createdAt:e.created_at})),
     attachments: [],
     aiEscalationContext: {
       classification: row.category,
@@ -102,10 +102,10 @@ async function api(path, options = {}) {
   const { rawBody, ...rest } = options; // rawBody: send a file as-is (document upload)
   const response = await fetch(API + path, {
     ...rest,
-    headers: { "Content-Type": rawBody ? "application/octet-stream" : "application/json", "x-admin-key": sessionStorage.getItem(KEY) || "" },
+    headers: { "Content-Type": rawBody ? "application/octet-stream" : "application/json", Authorization: "Bearer "+(sessionStorage.getItem("unilusStaffToken") || "") },
   });
   if (response.status === 401) {
-    sessionStorage.removeItem(KEY);
+    sessionStorage.removeItem(KEY);sessionStorage.removeItem("unilusStaffToken");
     const error = new Error("Sign in again to continue.");
     error.code = "SIGN_IN";
     throw error;
@@ -134,18 +134,14 @@ async function fetchTicket(id) {
 }
 
 export const ticketService = {
-  /* sign-in (shared admin key from backend/.env) */
-  isSignedIn() { return Boolean(sessionStorage.getItem(KEY)); },
-  async signIn(key) {
-    sessionStorage.setItem(KEY, key);
-    try { await api("/admin/stats"); }
-    catch (error) {
-      sessionStorage.removeItem(KEY);
-      if (error.code === "SIGN_IN") throw new Error("That key is not accepted. Check ADMIN_API_KEY in backend/.env.");
-      throw error;
-    }
+  isSignedIn() { return Boolean(sessionStorage.getItem('unilusStaffToken')); },
+  async signIn(username,password) {
+    const response=await fetch(API+'/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password})});
+    const body=await response.json();
+    if(!response.ok||!['staff','admin'].includes(body.user?.role))throw Error(body.error || 'Staff account required');
+    sessionStorage.setItem('unilusStaffToken',body.token);
   },
-  signOut() { sessionStorage.removeItem(KEY); clearCache(); },
+  signOut(){sessionStorage.removeItem('unilusStaffToken');sessionStorage.removeItem(KEY);clearCache();},
   stats: () => api("/admin/stats"),
 
   /* Knowledge base: documents the chatbot answers from */
@@ -186,7 +182,7 @@ export const ticketService = {
     if (!ticket) return null;
     const departmentChanged = (patch.departmentId || null) !== (ticket.departmentId || null);
     const assigneeChanged = (patch.assignedTo || null) !== (ticket.assignedTo || null);
-    if (departmentChanged || assigneeChanged) throw new Error(`Re-routing and assigning officers are not available yet. ${NOT_YET}`);
+    if(departmentChanged||assigneeChanged){await api(`/admin/tickets/${encodeURIComponent(id)}/assignment`,{method:"POST",body:JSON.stringify({department:departments.find(d=>d.id===patch.departmentId)?.name || patch.departmentId,assignee:patch.assignedTo})});clearCache();}
     if (patch.status && patch.status !== ticket.status) {
       if (!transitions[ticket.status]?.includes(patch.status)) throw new Error(`Status cannot move from ${ticket.status} to ${patch.status}.`);
       const updated = shape(await api(`/admin/tickets/${encodeURIComponent(id)}`, { method: "PATCH", body: JSON.stringify({ status: TO_API[patch.status] }) }));
@@ -195,9 +191,9 @@ export const ticketService = {
     }
     return ticket;
   },
-  async routeTicket() { throw new Error(`Routing is not available yet. ${NOT_YET}`); },
-  async addInternalNote() { throw new Error(`Internal notes are not available yet. ${NOT_YET}`); },
-  async addStaffReply() { throw new Error(`Replies to students are not available yet. ${NOT_YET}`); },
+  async routeTicket(id,departmentId) { const ticket=await fetchTicket(id);return this.updateTicket(id,{departmentId,assignedTo:ticket?.assignedTo,status:ticket?.status}); },
+  async addInternalNote(id,body) { return api(`/admin/tickets/${encodeURIComponent(id)}/events`,{method:"POST",body:JSON.stringify({kind:"note",body})}); },
+  async addStaffReply(id,body) { return api(`/admin/tickets/${encodeURIComponent(id)}/events`,{method:"POST",body:JSON.stringify({kind:"reply",body})}); },
 
   /* "Teach the chatbot": recurring questions and staff-approved answers */
   faq: {

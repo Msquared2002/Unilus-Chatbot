@@ -26,7 +26,7 @@ const MAX_SEARCH_QUERIES = 2;
 let client = null;
 
 function getClient() {
-  if (!client) client = new Groq({ apiKey: process.env.GROQ_API_KEY });
+  if (!client) client = new Groq({ apiKey: process.env.GROQ_API_KEY, timeout: 10000, maxRetries: 0 });
   return client;
 }
 

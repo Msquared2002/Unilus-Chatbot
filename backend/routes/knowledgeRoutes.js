@@ -22,6 +22,7 @@
 const express = require("express");
 
 const router = express.Router();
+router.use((req,res,next)=>{if(req.user?.role==='staff')return res.status(403).json({error:'Administrator required for global knowledge management'});next();});
 const { requireStaff } = require("../middleware/requireStaff");
 const updater = require("../services/knowledgeUpdater");
 
@@ -36,7 +37,7 @@ function sendError(res, error, fallbackMessage) {
     if (error instanceof updater.KnowledgeError) {
         return res.status(error.status).json({ error: error.message });
     }
-    console.error(fallbackMessage, error);
+    console.error(fallbackMessage);
     res.status(500).json({ error: fallbackMessage });
 }
 

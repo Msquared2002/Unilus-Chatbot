@@ -312,7 +312,7 @@ function uploadDocument({ filename, buffer, access, title, uploadedBy = "unknown
             }
             records = [];
             for (const chunk of chunks) {
-                chunk.metadata = { ...(chunk.metadata || {}), source_file: (chunk.metadata && chunk.metadata.source_file) || name };
+                chunk.metadata = { ...(chunk.metadata || {}), access:safeAccess, source_file: (chunk.metadata && chunk.metadata.source_file) || name };
                 records.push(await toRecord(chunk));
             }
         } catch (err) {
@@ -330,8 +330,16 @@ function uploadDocument({ filename, buffer, access, title, uploadedBy = "unknown
         }
 
         const store = knowledgeService.getStore();
-        const replaced = await store.removeWhere((r) => (r.metadata || {}).source_file === name);
-        await store.upsert(records);
+        let replaced;
+        try {
+            replaced = process.env.VECTOR_BACKEND === "database"
+            ? await require("./managedKnowledgeService").publish({name,buffer,records,access:safeAccess,title})
+            : await store.replaceSource(name,records);
+        } catch(error) {
+            if(previous){fs.writeFileSync(target,previous.file);if(previous.sidecar)fs.writeFileSync(sidecar,previous.sidecar);else if(fs.existsSync(sidecar))fs.unlinkSync(sidecar);}
+            else{if(fs.existsSync(target))fs.unlinkSync(target);if(fs.existsSync(sidecar))fs.unlinkSync(sidecar);}
+            throw error;
+        }
 
         syncRestrictedSources();
         await updateManifest();
@@ -356,11 +364,12 @@ function deleteDocument({ filename, deletedBy = "unknown" }) {
             throw new KnowledgeError(404, `"${name}" is not an uploaded document. Only documents added through the upload endpoint can be deleted here.`);
         }
 
+        const removed = process.env.VECTOR_BACKEND === 'database' ? await require('./managedKnowledgeService').remove(name) : await knowledgeService.getStore().removeWhere(r=>(r.metadata||{}).source_file===name);
         fs.unlinkSync(target);
         const sidecar = sidecarPathFor(target);
         if (fs.existsSync(sidecar)) fs.unlinkSync(sidecar);
 
-        const removed = await knowledgeService.getStore().removeWhere((r) => (r.metadata || {}).source_file === name);
+
 
         syncRestrictedSources();
         await updateManifest();

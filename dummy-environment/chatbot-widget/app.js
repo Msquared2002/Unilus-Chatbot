@@ -1,3 +1,7 @@
+let chatPending = false;
+let chatSessionId;
+let chatIdentity=currentIdentity();
+function currentIdentity(){return sessionStorage.getItem('unilusAuthToken') || 'guest';}
 let avatarReactionTimer = null;
 let latestAvatarRequest = 0;
 
@@ -39,12 +43,18 @@ document.getElementById("input-area").addEventListener("submit", function (e) {
 // the one temporary fallback this currently requires.
 
 
-async function sendMessage() {
+async function sendMessage(question) {
 
   const input = document.getElementById("user-input");
-  const text = input.value.trim();
+  const text = typeof question === "string" ? question.trim() : input.value.trim();
 
-  if (!text) return;
+  if (!text || chatPending) return;
+  const identity=currentIdentity();
+  if(chatIdentity!==identity){chatIdentity=identity;chatSessionId=undefined;sessionStorage.removeItem('unilusChatSession');}
+  chatSessionId=chatSessionId || sessionStorage.getItem('unilusChatSession') || undefined;
+  chatPending = true;
+  const oldActions = [...document.querySelectorAll(".context-actions button:not(:disabled), .map-confirm-btn:not(:disabled)")];
+  oldActions.forEach(button => button.disabled = true);
 
 
   addMessage(text, "user");
@@ -56,32 +66,46 @@ async function sendMessage() {
 
 
   const typingRow = addTypingIndicator();
+  const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+  const requestDeadline = setTimeout(() => controller?.abort(), 120000);
+  const slowNotice = setTimeout(() => {
+    if (request !== latestAvatarRequest) return;
+    const notice = document.createElement('span');
+    notice.className = 'startup-notice'; notice.setAttribute('role','status');
+    notice.textContent = 'Still connecting. The assistant may be waking up; please keep this window open.';
+    typingRow.querySelector('.bubble')?.appendChild(notice);
+  }, 12000);
 
 
   try {
 
-    const headers = { "Content-Type": "application/json" };
-    let token = null, chatSession = null;
-    try {
-      token = sessionStorage.getItem("unilusAuthToken");        // set by the portal sign-in
-      chatSession = sessionStorage.getItem("unilusChatSession"); // keeps follow-up questions together
-    } catch { /* storage unavailable: carry on as a visitor */ }
-    if (token) headers.Authorization = `Bearer ${token}`;
+    const response = await fetch(
+      (window.UNILUS_API_BASE || "/api")+"/chat",
+      {
+        method: "POST",
+        ...(controller ? {signal:controller.signal} : {}),
 
-    const response = await fetch("http://localhost:5000/api/chat", {
-      method: "POST",
-      headers,
-      body: JSON.stringify(chatSession ? { question: text, sessionId: chatSession } : { question: text })
-    });
+        headers: {
+          "Content-Type": "application/json",
+          ...(currentIdentity()!=="guest"?{Authorization:"Bearer "+currentIdentity()}:{})
+        },
 
+        body: JSON.stringify({
+          question: text, sessionId: chatSessionId
+        })
+      }
+    );
+
+    if(response.status===403){chatSessionId=undefined;sessionStorage.removeItem("unilusChatSession");}
+    if (response.status === 503) throw Object.assign(new Error('Assistant is starting'), {warming:true});
     if (!response.ok) throw new Error(`Chat request failed: ${response.status}`);
 
-    const data = await response.json();
 
-    try {
-      if (data.sessionId) sessionStorage.setItem("unilusChatSession", data.sessionId);
-      if (data.authProblem) sessionStorage.removeItem("unilusAuthToken"); // expired or refused token
-    } catch { /* ignore */ }
+    const data = await response.json();
+    if (request !== latestAvatarRequest) return;
+    if (typeof data.sessionId === "string"){chatSessionId=data.sessionId;sessionStorage.setItem('unilusChatSession',chatSessionId);}
+    if(data.authProblem){sessionStorage.removeItem('unilusAuthToken');sessionStorage.removeItem('unilusChatSession');chatSessionId=undefined;}
+    if(data.error)throw Error('Backend request failed');
 
 
     removeTypingIndicator(typingRow);
@@ -96,24 +120,27 @@ async function sendMessage() {
 
 
     // Chatbot found a place - offer to show it, don't force the map open.
-    if (data.navigation) {
+    const mapRendered = renderActions(botRow, data.suggestedActions, data);
+    if (data.navigation && !mapRendered) {
       addMapConfirmButton(botRow, data.navigation, data.route, data.routeIntent);
     }
 
   } catch(error) {
 
+    oldActions.forEach(button => button.disabled = false);
+    if (!input.value.trim()) input.value = text;
     console.error("Chat error:", error);
 
     removeTypingIndicator(typingRow);
 
     addMessage(
-      "Sorry, I am having trouble connecting right now. Please try again.",
+      error.warming ? "The assistant is waking up. Please try again in a moment." : "Sorry, I am having trouble connecting right now. Please try again.",
       "bot",
       request === latestAvatarRequest
     );
     if (request === latestAvatarRequest) reactAvatar("worry", 2600);
 
-  }
+  } finally { clearTimeout(slowNotice); clearTimeout(requestDeadline); chatPending = false; }
 
 }
     
@@ -147,7 +174,7 @@ function addMessage(text, type, moveAvatar = true) {
 
     if (typeof marked !== "undefined") {
 
-        bubble.innerHTML = marked.parse(text);
+        bubble.innerHTML = window.DOMPurify.sanitize(marked.parse(text));
         enhanceMarkdownTables(bubble);
 
     } else {
@@ -359,4 +386,28 @@ function addTypingIndicator() {
 
 function removeTypingIndicator(row) {
   if (row && row.parentNode) row.parentNode.removeChild(row);
+}
+
+function renderActions(row, actions, data) {
+  const group = document.createElement('div');
+  group.className = 'context-actions';
+  group.setAttribute('role', 'group');
+  group.setAttribute('aria-label', 'Suggested next steps');
+  let hasMap = false;
+  for (const action of (Array.isArray(actions) ? actions : []).slice(0, 4)) {
+    if (!window.UnilusActions.validateAction(action)) continue;
+    if (action.type === 'navigation') {
+      if (!data.navigation || data.navigation.placeId !== action.payload.placeId) continue;
+      hasMap = true;
+      continue;
+    }
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = action.label;
+    button.addEventListener('click', () => { if (!button.disabled) sendMessage(action.payload.question); });
+    group.appendChild(button);
+  }
+  row.querySelector('.bubble').appendChild(group);
+  if (hasMap) addMapConfirmButton(row, data.navigation, data.route, data.routeIntent);
+  return hasMap;
 }

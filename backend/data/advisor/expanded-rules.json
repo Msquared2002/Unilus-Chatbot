@@ -1,0 +1,155 @@
+{
+  "bachelor-of-arts-in-economics": {
+    "minimumCredits": 5,
+    "required": {
+      "english": "credit",
+      "mathematics": "credit"
+    },
+    "url": "https://web.unilus.ac.zm/programs/bachelor-of-arts-in-economics/",
+    "section": "Entry Requirements",
+    "title": "Bachelor of Arts in Economics",
+    "status": "verified_partial",
+    "scope": "Published O-level academic conditions only",
+    "verifiedAt": "2026-11-06",
+    "sourceText": "The minimum entry requirements for the Bachelor of Arts in Economics are five (5) “O” level credits or better which must include English language and Mathematics",
+    "manualConditions": [
+      "Qualification equivalence and additional Admissions conditions require confirmation."
+    ]
+  },
+  "bachelor-of-science-in-actuarial-science": {
+    "minimumCredits": 5,
+    "required": {
+      "english": "credit",
+      "mathematics": "merit"
+    },
+    "url": "https://web.unilus.ac.zm/programs/bachelor-of-science-in-actuarial-science/",
+    "section": "Entry Requirements",
+    "title": "Bachelor of Science in Actuarial Science",
+    "status": "verified_partial",
+    "scope": "Published O-level academic conditions only",
+    "verifiedAt": "2026-11-06",
+    "sourceText": "Five (5) “O” levels graded credits or better which must include English Language and a merit in Mathematics.",
+    "manualConditions": [
+      "Qualification equivalence and additional Admissions conditions require confirmation."
+    ]
+  },
+  "bachelor-of-science-in-banking-and-finance": {
+    "minimumCredits": 5,
+    "required": {
+      "english": "credit",
+      "mathematics": "credit"
+    },
+    "url": "https://web.unilus.ac.zm/programs/bachelor-of-science-in-banking-and-finance/",
+    "section": "Entry Requirements",
+    "title": "Bachelor of Science in Banking and Finance",
+    "status": "verified_partial",
+    "scope": "Published O-level academic conditions only",
+    "verifiedAt": "2026-11-06",
+    "sourceText": "Five (5) “O” level credits or better which must include English language and Mathematics.",
+    "manualConditions": [
+      "Qualification equivalence and additional Admissions conditions require confirmation."
+    ]
+  },
+  "bachelor-of-science-in-economics-and-finance": {
+    "minimumCredits": 5,
+    "required": {
+      "english": "credit",
+      "mathematics": "credit"
+    },
+    "url": "https://web.unilus.ac.zm/programs/bachelor-of-science-in-economics-and-finance/",
+    "section": "Entry Requirements",
+    "title": "Bachelor of Science in Economics and Finance",
+    "status": "verified_partial",
+    "scope": "Published O-level academic conditions only",
+    "verifiedAt": "2026-11-06",
+    "sourceText": "Five (5) “O” levels graded credits or better which must include English Language and Mathematics.",
+    "manualConditions": [
+      "Qualification equivalence and additional Admissions conditions require confirmation."
+    ]
+  },
+  "bachelor-of-science-in-human-resource-management": {
+    "minimumCredits": 5,
+    "required": {
+      "english": "credit",
+      "mathematics": "credit"
+    },
+    "url": "https://web.unilus.ac.zm/programs/bachelor-of-science-in-human-resource-management/",
+    "section": "Entry Requirements",
+    "title": "Bachelor of Science in Human Resource Management",
+    "status": "verified_partial",
+    "scope": "Published O-level academic conditions only",
+    "verifiedAt": "2026-11-06",
+    "sourceText": "Five (5) “O” level credits or better which must include English language and Mathematics.",
+    "manualConditions": [
+      "Qualification equivalence and additional Admissions conditions require confirmation."
+    ]
+  },
+  "bachelor-of-science-in-insurance-and-pension-management": {
+    "minimumCredits": 5,
+    "required": {
+      "english": "credit",
+      "mathematics": "credit"
+    },
+    "url": "https://web.unilus.ac.zm/programs/bachelor-of-science-in-insurance-and-pension-management/",
+    "section": "Entry Requirements",
+    "title": "Bachelor of Science in Insurance and Pension Management",
+    "status": "verified_partial",
+    "scope": "Published O-level academic conditions only",
+    "verifiedAt": "2026-11-06",
+    "sourceText": "Five (5) “O” level credits or better which must include English language and Mathematics.",
+    "manualConditions": [
+      "Qualification equivalence and additional Admissions conditions require confirmation."
+    ]
+  },
+  "bachelor-of-science-in-logistics-and-transport-management": {
+    "minimumCredits": 5,
+    "required": {
+      "english": "credit",
+      "mathematics": "credit"
+    },
+    "url": "https://web.unilus.ac.zm/programs/bachelor-of-science-in-logistics-and-transport-management/",
+    "section": "Entry Requirements",
+    "title": "Bachelor of Science in Logistics and Transport Management",
+    "status": "verified_partial",
+    "scope": "Published O-level academic conditions only",
+    "verifiedAt": "2026-11-06",
+    "sourceText": "Five (5) “O” level credits or better which must include English language and Mathematics.",
+    "manualConditions": [
+      "Qualification equivalence and additional Admissions conditions require confirmation."
+    ]
+  },
+  "bachelor-of-science-in-marketing": {
+    "minimumCredits": 5,
+    "required": {
+      "english": "credit",
+      "mathematics": "credit"
+    },
+    "url": "https://web.unilus.ac.zm/programs/bachelor-of-science-in-marketing/",
+    "section": "Entry Requirements",
+    "title": "Bachelor of Science in Marketing",
+    "status": "verified_partial",
+    "scope": "Published O-level academic conditions only",
+    "verifiedAt": "2026-11-06",
+    "sourceText": "Five (5) “O” level credits or better which must include English language and Mathematics.",
+    "manualConditions": [
+      "Qualification equivalence and additional Admissions conditions require confirmation."
+    ]
+  },
+  "bachelor-of-science-in-purchasing-and-supply": {
+    "minimumCredits": 5,
+    "required": {
+      "english": "credit",
+      "mathematics": "credit"
+    },
+    "url": "https://web.unilus.ac.zm/programs/bachelor-of-science-in-purchasing-and-supply/",
+    "section": "Entry Requirements",
+    "title": "Bachelor of Science in Purchasing and Supply",
+    "status": "verified_partial",
+    "scope": "Published O-level academic conditions only",
+    "verifiedAt": "2026-11-06",
+    "sourceText": "Five (5) “O” level credits or better which must include English language and Mathematics.",
+    "manualConditions": [
+      "Qualification equivalence and additional Admissions conditions require confirmation."
+    ]
+  }
+}

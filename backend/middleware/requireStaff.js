@@ -14,6 +14,7 @@ const crypto = require("crypto");
 const auth = require("../services/authService");
 
 function hasValidAdminKey(req) {
+    if(process.env.NODE_ENV==="production")return false;
     const expected = process.env.ADMIN_API_KEY;
     if (!expected) return false;
 
@@ -25,6 +26,7 @@ function hasValidAdminKey(req) {
 
 function requireStaff(req, res, next) {
     if (req.user && (req.user.role === "staff" || req.user.role === "admin")) {
+        if(req.user.role==="staff"&&!req.user.department)return res.status(403).json({error:"Staff department is not configured"});
         return next();
     }
 
