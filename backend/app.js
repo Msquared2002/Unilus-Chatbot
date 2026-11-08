@@ -9,6 +9,7 @@ app.use(express.json({limit:'64kb'}));app.use(attachUser);
 const buckets=new Map();app.use('/api',(req,res,next)=>{const key=req.ip;const now=Date.now();let b=buckets.get(key);if(!b||now-b.at>60000)b={at:now,n:0};b.n++;if(buckets.size>10000)buckets.clear();buckets.set(key,b);if(b.n>120)return res.status(429).json({error:'Too many requests; try again shortly'});next();});
 app.use('/api',(req,res,next)=>production&&!ready?res.set('Retry-After','5').status(503).json({error:'The assistant is starting. Please try again shortly.',retryable:true}):next());
 app.use('/api/auth',require('./routes/authRoutes'));
+app.use('/api/demo-academics',require('./routes/demoAcademicRoutes'));
 app.use('/api/timetable',require('./routes/timetableRoutes'));
 app.use('/api/chat',require('./routes/chatRoutes'));
 app.use('/api/campus',require('./routes/campusRoutes'));

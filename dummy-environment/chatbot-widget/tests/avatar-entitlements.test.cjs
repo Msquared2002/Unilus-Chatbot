@@ -13,6 +13,14 @@ const storage = () => {
   return { getItem: (key) => values.get(key) ?? null,
     setItem: (key, value) => values.set(key, value), removeItem: (key) => values.delete(key) };
 };
+test('fictional academic profiles initialize existing programme outfits and respect manual choices',()=>{
+ for(const [programmeId,expected]of [['bachelor-of-science-in-information-systems-and-technology','tech-hoodie'],['bachelor-of-science-in-nursing','white-nursing-uniform']]){
+  const p=catalogue.programmes.find(p=>p.id===programmeId);const student={id:'account-a:'+p.id,programmeId:p.id,programmeName:p.name,academicProfileId:'scenario-a'};
+  const entitlement=wardrobe.resolveEntitlements(student);assert.equal(wardrobe.resolveAppearance(entitlement).outfit,expected);
+  assert.equal(wardrobe.resolveAppearance(entitlement,{outfit:'default'}).outfit,'default');
+  assert.notEqual(wardrobe.preferenceKey('outfit',student),wardrobe.preferenceKey('outfit',{...student,id:'account-b:'+p.id}));
+ }
+});
 
 test('catalogue reproduces all 85 local prospectus entries without duplicates', () => {
   assert.deepEqual(catalogue.programmes, extractProgrammes(JSON.parse(read('../../../backend/data/documents/chunks.json'))).programmes);
@@ -43,9 +51,10 @@ function loginForm() {
   return { nodes, saved, location, submit() { nodes['[data-portal-login]'].listeners.submit({ preventDefault() {} }); } };
 }
 
-test('Programme selector contains every catalogue item and replaces fake identity UI', () => {
+test('production login has no programme selector; the legacy local-only fixture retains its catalogue', () => {
   const html = read('../../portal-login.html');
-  assert.match(html, /<label for="portal-programme">\s*Programme/);
+  assert.doesNotMatch(html, /<select[^>]*id="portal-programme"/);
+  assert.match(html, /id="portal-username"/); assert.match(html, /id="portal-password"/);
   assert.doesNotMatch(html, /Development Test Student|CS_TEST|NURSING_TEST|BUSINESS_TEST|LAW_TEST|UNMAPPED_TEST|unmapped/i);
   assert.deepEqual(loginForm().nodes['#portal-programme'].children.map((option) => option.value), catalogue.programmes.map((p) => p.id));
 });

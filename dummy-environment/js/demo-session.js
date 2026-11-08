@@ -1,4 +1,4 @@
-// One dummy account with a deliberately selected programme context.
+// Browser appearance context only; backend JWT ownership controls academic access.
 (function (root) {
   const SESSION_KEY = "unilusDemoSession";
   const PROGRAMME_KEY = "unilusDemoProgramme";
@@ -40,6 +40,11 @@
   }
 
   function currentStudent(storage = root.sessionStorage) {
+    if (storage?.getItem(SESSION_KEY) === 'authenticated' && storage.getItem('unilusAuthToken')) {
+      try { const p=JSON.parse(storage.getItem('unilusDemoAcademicProfile') || 'null');
+        if(p?.id&&p.accountUsername&&canonicalProgramme(p.programmeId))return { id:'demo-account:'+p.accountUsername+':'+p.programmeId,name:p.name,username:p.studentNumber,programmeId:p.programmeId,programme:p.programmeName,programmeName:p.programmeName,academicProfileId:p.id };
+      } catch { /* Refresh server context before showing academic records. */ }
+    }
     return storage?.getItem(SESSION_KEY) === "authenticated"
       ? studentForProgramme(storage.getItem(PROGRAMME_KEY)) : null;
   }
@@ -50,6 +55,8 @@
     storage.removeItem("unilusDemoStudentId");
     storage.removeItem("unilusAuthToken");    // backend sign-in token
     storage.removeItem("unilusChatSession");  // start a fresh chat next time
+    storage.removeItem('unilusDemoAcademicProfile');
+    storage.removeItem('unilusDemoAcademicProfileId');
   }
 
   const api = { SESSION_KEY, PROGRAMME_KEY, canonicalProgramme, studentForProgramme,

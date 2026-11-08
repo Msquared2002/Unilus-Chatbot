@@ -6,7 +6,7 @@
     <title>UNILUS - Student Information System</title>
     <link rel="stylesheet" href="css/shared.css" />
     <script src="js/global-navigation.js" defer></script>
-    <link rel="stylesheet" href="css/portal.css" />
+    <link rel="stylesheet" href="css/portal.css" /><link rel="stylesheet" href="css/demo-academics.css" />
   <!-- ================= UNILUS Chatbot Widget: styles ================= -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <link rel="stylesheet" href="chatbot-widget/widget.css">
@@ -28,7 +28,7 @@
         ☰
       </button>
       <nav>
-        <a href="apply.html">Apply Now⌄</a
+        <div class="demo-profile-controls" data-profile-controls hidden><button type="button" data-new-demo-profile aria-label="New fictional demo profile"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5M6 7a7 7 0 0 1 12-1l2 6M4 12l2 6a7 7 0 0 0 12-1"/></svg>New Profile</button><details><summary aria-label="Demo profile settings">⌄</summary><div><label>Demo programme setting<select data-profile-mode><option value="keep">Keep Current Programme</option><option value="random">Random Supported Programme</option><option value="specific">Select a Specific Supported Programme</option></select></label><label>Supported programme<select data-profile-programme></select></label><small>Use New Profile to apply. All academic data is fictional.</small></div></details></div><a href="apply.html">Apply Now⌄</a
         ><a class="top-pill" href="elearning.html">E-learning</a
         ><a class="top-pill" href="website.html">Home</a>
       </nav>
@@ -53,14 +53,14 @@
           ><a href="#dashboard">▢ <span>Student appeal submit</span></a
           ><a href="#dashboard">▢ <span>Apply for Accommodation</span></a
           ><a href="#dashboard">▢ <span>Quota Application</span></a
-          ><a href="#dashboard">▢ <span>CA Marks</span></a
+          ><a href="#ca-marks">▢ <span>CA Marks</span></a
           ><a href="#dashboard">▢ <span>Print Exam Slip</span></a
           ><a href="#dashboard">▢ <span>Request Mode of study Change</span></a
           ><a href="#dashboard">▢ <span>Pay Online</span></a
           ><a href="#dashboard">▢ <span>Program Checklist</span></a
           ><a href="#dashboard">▢ <span>Thesis Results</span></a
           ><a href="#dashboard">▢ <span>Registration Form</span></a
-          ><a href="#dashboard">▢ <span>Final Results</span></a
+          ><a href="#final-results">▢ <span>Final Results</span></a
           ><a href="#dashboard">▢ <span>Question Bank</span></a
           ><a href="#dashboard">▢ <span>Dissertation Tracker</span></a
           ><a href="#dashboard">▢ <span>Overload Apply</span></a
@@ -70,13 +70,13 @@
       </aside>
       <main class="portal-main">
         <div class="portal-breadcrumb"><a href="#dashboard">Home</a></div>
-        <p class="profile-prompt">
+        <p class="demo-academic-notice" data-profile-message role="status">Independent demonstration using fictional data. Never enter genuine university passwords.</p><section class="demo-academic-view" data-academic-view hidden></section><p class="profile-prompt">
           Please take the time to enter your profile information first, you can
           do this <a href="#profile">here</a>.
         </p>
         <section class="portal-welcome" id="dashboard">
           <div class="welcome-heading">
-            <h1>Welcome, <span data-demo-identity>Luka Hamududu</span></h1>
+            <h1>Welcome, <span data-demo-name>Demo student</span></h1>
             <span>Student Home</span>
             <p>
               Review notices, shortcuts, documents, and role-specific updates
@@ -312,7 +312,7 @@
     <script src="js/shared.js"></script>
     <script src="js/demo-programmes.js"></script>
     <script src="js/demo-session.js"></script>
-    <script src="js/portal.js?v=programme-session-2"></script>
+    <script src="js/portal.js?v=programme-session-2"></script><script src="js/demo-academics.js"></script>
   
 <!-- ================= UNILUS Chatbot Widget (start) ================= -->
 <!-- ================= floating widget ================= -->

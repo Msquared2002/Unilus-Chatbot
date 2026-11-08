@@ -45,3 +45,8 @@ services:
         sync: false
       - key: SUPABASE_DOCUMENT_BUCKET
         sync: false
+      # Enable only for the two existing fictional student logins at release.
+      - key: DEMO_ACADEMIC_ENABLED
+        value: "yes"
+      - key: DEMO_ACADEMIC_USERS
+        sync: false

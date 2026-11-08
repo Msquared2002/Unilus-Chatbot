@@ -83,7 +83,8 @@
     if (!entitlements.student) {
       return { outfit: "default", glasses: null, laptop: false, laptopPreference: null };
     }
-    const outfit = entitlements.outfits.includes(saved.outfit) ? saved.outfit : "default";
+    const initial = entitlements.student.academicProfileId ? ({ IT:'tech-hoodie', Nursing:'white-nursing-uniform', Medicine:'health-scrub', Business:'business', Law:'law-wig' }[entitlements.programme] || 'default') : 'default';
+    const outfit = saved.outfit == null ? initial : entitlements.outfits.includes(saved.outfit) ? saved.outfit : "default";
     const glasses = ["round-gold", "square-black", "cateye-black", "none"].includes(saved.glasses)
       ? (saved.glasses === "none" ? null : saved.glasses) : null;
     const hasLaptop = entitlements.accessories.includes("laptop");

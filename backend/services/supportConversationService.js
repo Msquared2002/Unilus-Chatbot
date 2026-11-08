@@ -82,4 +82,4 @@ async function tryHandle(question, sessionId, user = null) {
         ? response(`Please confirm this support issue:\n\n${issue}\n\nOnly this quoted issue will be saved in the demonstration support queue; your chat history will not be attached. Say "Yes, submit it" to submit, or "Cancel". Nothing has been submitted yet.`, 'pending')
         : response('What issue should the support ticket describe? I will show it to you for confirmation before submitting anything.', 'describing');
 }
-module.exports = { tryHandle, response };
+module.exports = { tryHandle, response, reset: sessionId => pending.delete(sessionId) };

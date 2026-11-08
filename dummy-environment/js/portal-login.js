@@ -63,6 +63,8 @@
       if (token) sessionStorage.setItem("unilusAuthToken", token);
       else sessionStorage.removeItem("unilusAuthToken");
       sessionStorage.removeItem("unilusChatSession"); // new sign-in, new conversation
+      sessionStorage.removeItem('unilusDemoAcademicProfile');
+      sessionStorage.removeItem('unilusDemoAcademicProfileId');
     } catch { /* ignore */ }
     window.location.replace("portal.html?v=programme-session-2");
     return true;

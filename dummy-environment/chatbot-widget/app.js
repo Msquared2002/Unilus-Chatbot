@@ -1,7 +1,18 @@
 let chatPending = false;
 let chatSessionId;
-let chatIdentity=currentIdentity();
+let chatIdentity=currentContext();
 function currentIdentity(){return sessionStorage.getItem('unilusAuthToken') || 'guest';}
+function currentContext(){return currentIdentity()+'|'+(sessionStorage.getItem('unilusDemoAcademicProfileId')||'');}
+let activeChatRequest = null;
+window.addEventListener?.('unilus-demo-profile-changing',()=>{
+  latestAvatarRequest++;
+  activeChatRequest?.controller?.abort();
+  if(activeChatRequest?.typingRow)removeTypingIndicator(activeChatRequest.typingRow);
+  activeChatRequest=null;chatPending=false;chatSessionId=undefined;
+  sessionStorage.removeItem('unilusChatSession');
+  document.getElementById('chat-box')?.replaceChildren?.();
+  clearTimeout(avatarReactionTimer);UniAvatar.idle();
+});
 let avatarReactionTimer = null;
 let latestAvatarRequest = 0;
 
@@ -49,7 +60,7 @@ async function sendMessage(question) {
   const text = typeof question === "string" ? question.trim() : input.value.trim();
 
   if (!text || chatPending) return;
-  const identity=currentIdentity();
+  const identity=currentContext();
   if(chatIdentity!==identity){chatIdentity=identity;chatSessionId=undefined;sessionStorage.removeItem('unilusChatSession');}
   chatSessionId=chatSessionId || sessionStorage.getItem('unilusChatSession') || undefined;
   chatPending = true;
@@ -67,6 +78,7 @@ async function sendMessage(question) {
 
   const typingRow = addTypingIndicator();
   const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+  activeChatRequest={controller,typingRow};
   const requestDeadline = setTimeout(() => controller?.abort(), 120000);
   const slowNotice = setTimeout(() => {
     if (request !== latestAvatarRequest) return;
@@ -91,12 +103,14 @@ async function sendMessage(question) {
         },
 
         body: JSON.stringify({
-          question: text, sessionId: chatSessionId
+          question: text, sessionId: chatSessionId,
+          demoProfileId: sessionStorage.getItem('unilusDemoAcademicProfileId') || undefined
         })
       }
     );
 
     if(response.status===403){chatSessionId=undefined;sessionStorage.removeItem("unilusChatSession");}
+    if (response.status === 409) throw Object.assign(new Error('Demo profile changed'), {profileChanged:true});
     if (response.status === 503) throw Object.assign(new Error('Assistant is starting'), {warming:true});
     if (!response.ok) throw new Error(`Chat request failed: ${response.status}`);
 
@@ -126,6 +140,7 @@ async function sendMessage(question) {
     }
 
   } catch(error) {
+    if (request !== latestAvatarRequest) return;
 
     oldActions.forEach(button => button.disabled = false);
     if (!input.value.trim()) input.value = text;
@@ -134,13 +149,13 @@ async function sendMessage(question) {
     removeTypingIndicator(typingRow);
 
     addMessage(
-      error.warming ? "The assistant is waking up. Please try again in a moment." : "Sorry, I am having trouble connecting right now. Please try again.",
+      error.profileChanged ? 'Your demo profile changed. Refresh the portal academic context before retrying.' : error.warming ? "The assistant is waking up. Please try again in a moment." : "Sorry, I am having trouble connecting right now. Please try again.",
       "bot",
       request === latestAvatarRequest
     );
     if (request === latestAvatarRequest) reactAvatar("worry", 2600);
 
-  } finally { clearTimeout(slowNotice); clearTimeout(requestDeadline); chatPending = false; }
+  } finally { clearTimeout(slowNotice); clearTimeout(requestDeadline); if(request===latestAvatarRequest){chatPending = false;activeChatRequest=null;} }
 
 }
     

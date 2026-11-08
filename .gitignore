@@ -40,6 +40,7 @@ deployment/*.json
 deployment/*.jsonl
 deployment/*.txt
 deployment/*.csv
+deployment/simulator-*.jpg
 supabase/linked-project.json
 **/.env.*
 !**/.env.example

@@ -7,7 +7,7 @@ const chatService = require("../services/chatService");
 const FRIENDLY_ERROR_ANSWER =
     "I'm having trouble reaching my AI service right now. Please try again in a minute, or contact the Academic Office on 0971263550 / info@unilus.ac.zm.";
 
-router.post("/", async (req, res) => {
+async function handleChat(req, res) {
 
     const question =
         typeof req.body.question === "string"
@@ -26,7 +26,7 @@ router.post("/", async (req, res) => {
 
     // Who is asking, taken from the signed token: used to personalise
     // ("my timetable") and to greet them by name.
-    const profile = req.user
+    const profile = req.demoAcademicProfile ? { name:req.demoAcademicProfile.name,programme:req.demoAcademicProfile.programme,year:req.demoAcademicProfile.year,semester:req.demoAcademicProfile.semester } : req.user
         ? { name: req.user.name, programme: req.user.programme, year: req.user.year, semester: req.user.semester }
         : null;
 
@@ -58,7 +58,7 @@ router.post("/", async (req, res) => {
                 sessionId,
                 audience,
                 profile,
-                { user: req.user }
+                { user: req.user, academicProfile: req.demoAcademicProfile }
             );
 
 
@@ -80,6 +80,8 @@ router.post("/", async (req, res) => {
 
             advisor: result.advisor,
             support: result.support,
+            academic: result.academic,
+            demoProfileId: req.demoAcademicProfile?.id,
             suggestedActions: result.suggestedActions,
             route: result.route,
             routeStatus: result.routeStatus,
@@ -123,6 +125,12 @@ router.post("/", async (req, res) => {
 
     }
 
+}
+router.post('/',async(req,res)=>{
+    const demo=require('../services/demoAcademicService');
+    if(!demo.allowed(req.user))return handleChat(req,res);
+    try{return await demo.withChat(req.user,req.body.demoProfileId,req.body.sessionId,async profile=>{req.demoAcademicProfile=profile;req.body.sessionId=profile.sessionId;return handleChat(req,res);});}
+    catch(e){return res.status(e.status||503).json({error:e.status?e.message:'Demo academic context unavailable',profileChanged:e.status===409});}
 });
 
 
