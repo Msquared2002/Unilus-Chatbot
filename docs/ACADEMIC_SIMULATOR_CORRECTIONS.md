@@ -1,5 +1,7 @@
 # Academic simulator accuracy and UX corrections
 
+Historical report for `3b40b14`. Its assessment distribution and verification counts are superseded by [the CA 30 / examination 70 correction](ACADEMIC_CA30_RELEASE.md). Grade boundaries and progression safeguards remain unchanged.
+
 Local correction of `626a869`, retaining conversational hotfix `eba44d5`. No push, deployment, migration, shared database write, Storage operation or remote build was performed. The original workspaces and public deployment remain unchanged. This report supersedes the original simulator's grading and assessment assumptions.
 
 ## Before and after

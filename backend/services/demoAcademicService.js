@@ -5,7 +5,7 @@ const { storageHeaders } = require('./storageCredentials');
 const timetable = require('./timetableService');
 const { toDisplayTimetableEntry } = require('./timetablePresentationService');
 const catalogue = require('../../dummy-environment/js/demo-programmes').programmes;
-const { undergraduateGrade, assessmentConfiguration, semesterOutcome } = require('./undergraduateAcademicPolicy');
+const { ACADEMIC_MODEL_VERSION, EXAM_MAXIMUM, assessmentConfiguration, assessmentRecord, courseResults, semesterOutcome } = require('./undergraduateAcademicPolicy');
 const ids = { BIT: 'bachelor-of-science-in-information-systems-and-technology', BCS: 'bachelor-of-science-in-computer-science', BSPH: 'bachelor-of-science-in-public-health', LLB: 'bachelor-of-laws' };
 const locks = new Map();
 function allowed(user) { return process.env.DEMO_ACADEMIC_ENABLED === 'yes' && user?.role === 'student' && String(process.env.DEMO_ACADEMIC_USERS || '').split(',').map(s => s.trim()).filter(Boolean).includes(user.username); }
@@ -45,25 +45,21 @@ function generate(user, previous = null, options = {}) {
     const initial = !previous && choices.find(p => p.year === +user.year && p.semester === +user.semester);
     const active = initial || choices[integer(seed, 'period', 0, choices.length - 1)];
     const id = crypto.randomUUID();
-    const profile = { id, seed, modelVersion:2, name: ['Lina','Tendo','Miro','Sena'][integer(seed,'name',0,3)] + ' Demo-' + ['River','Lake','Hill','Grove'][integer(seed,'surname',0,3)], studentNumber: 'DEMO-' + id.slice(0,8).toUpperCase(), programme: code, programmeId: programme.programmeId, programmeName: programme.name, year: active.year, semester: active.semester, activePeriod: active.key, periods: [], simulated: true,
-        policy:'Handbook full-time/evening scheme: assignment 10, mid-semester exam 20, class tests 10, final exam 60. Class tests are shown separately because their portal column mapping is unverified.',
+    const profile = { id, seed, modelVersion:ACADEMIC_MODEL_VERSION, name: ['Lina','Tendo','Miro','Sena'][integer(seed,'name',0,3)] + ' Demo-' + ['River','Lake','Hill','Grove'][integer(seed,'surname',0,3)], studentNumber: 'DEMO-' + id.slice(0,8).toUpperCase(), programme: code, programmeId: programme.programmeId, programmeName: programme.name, year: active.year, semester: active.semester, activePeriod: active.key, periods: [], simulated: true,
+        policy:'Fictional demonstration scheme: coursework 30 and examination 70; this differs from the published handbook.',
         mappingNotice:'Available timetable course identities only; full registration, attendance and prerequisite records are not available.' };
     for (const period of choices.filter(p => p.year*2+p.semester <= active.year*2+active.semester)) {
         const completed = period.key !== active.key;
         const courses = period.courses.map((course, i) => {
             const assessments = assessmentConfiguration(course.assessmentConfiguration).map(({name,weight},j) => {
                 const scenario=(i+1)%3;
-                const status = !weight ? 'not-applicable' : completed || scenario === 0 || j < 2 ? 'available' : scenario === 1 ? 'pending' : 'locked';
+                const status = !weight || completed || scenario === 0 || j < 1 ? 'available' : scenario === 1 ? 'pending' : 'locked';
                 const sample=integer(seed,period.key+course.code+name,0,100);
-                const score = status === 'available' ? (sample===0?0:35+sample%62) : null;
-                return { name, weight, status, score, contribution: !weight?0:score===null?null:Math.round(score*weight/10)/10 };
+                const score = status === 'available' ? (weight===0||sample===0?0:integer(seed,period.key+course.code+name+'marks',Math.ceil(weight*.4),weight)) : null;
+                return assessmentRecord({name,weight},score,status);
             });
-            const visible = assessments.filter(a => a.status === 'available'), ca = Math.round(visible.reduce((n,a) => n+a.contribution,0)*10)/10;
-            const ready=assessments.every(a=>a.status==='available'||a.status==='not-applicable');
-            const examScore=completed?integer(seed,period.key+course.code+'exam',40,96):null;
-            const finalExam=completed?{score:examScore,weight:60,contribution:Math.round(examScore*6)/10}:null;
-            const finalMark = completed ? Math.round(ca + finalExam.contribution) : null;
-            return { ...course, assessments, visibleCA: ca, totalCA: ready ? ca : null, ready, finalExam, finalMark, finalGrade: finalMark === null ? null : undergraduateGrade(finalMark) };
+            const examScore=completed?integer(seed,period.key+course.code+'exam',28,EXAM_MAXIMUM):null;
+            return { ...course, assessments, ...courseResults(assessments,examScore) };
         });
         const record={ key: period.key, year: period.year, semester: period.semester, academicYear: new Date().getUTCFullYear() - (active.year-period.year), completed, completeCourseLoadVerified:false, courses };
         record.outcome=semesterOutcome(record);profile.periods.push(record);
@@ -101,7 +97,7 @@ async function load(user) {
     if(sid!==profile.sessionId){profile.sessionId=sid;await object(user,profile);}
     return profile;
 }
-function publicProfile(profile,user) { const { seed, ...data } = profile; return { ...data, ...(profile.modelVersion!==2?{periods:[],requiresNewProfile:true}:{}), accountUsername:user.username }; }
+function publicProfile(profile,user) { const { seed, ...data } = profile; return { ...data, ...(profile.modelVersion!==ACADEMIC_MODEL_VERSION?{periods:[],requiresNewProfile:true}:{}), accountUsername:user.username }; }
 async function get(user) { return locked(user,async()=>publicProfile(await load(user),user)); }
 async function renew(user,options) { return locked(user,async()=>{
     const previous=await load(user);
@@ -114,7 +110,7 @@ async function renew(user,options) { return locked(user,async()=>{
 }); }
 async function withChat(user, expected, requestedSession, fn) { return locked(user,async()=>{
     const profile=await load(user);
-    if(profile.modelVersion!==2) throw fail('Choose New Profile to use the corrected assessment scheme.');
+    if(profile.modelVersion!==ACADEMIC_MODEL_VERSION) throw fail('Choose New Profile to use the corrected assessment scheme.');
     if(expected!==profile.id || requestedSession && requestedSession!==profile.sessionId) throw fail('The demo profile changed. Refresh its academic context before retrying.');
     return fn(profile);
 }); }

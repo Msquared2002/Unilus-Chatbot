@@ -1,6 +1,6 @@
 function mean(values) { return values.length ? Math.round(values.reduce((a,b)=>a+b,0)/values.length*10)/10 : null; }
 const cell = value => String(value).replace(/\|/g,'\\|').replace(/[\r\n]/g,' ');
-const table = (heading,rows) => `| Course | ${heading} |\n| --- | --- |\n`+rows.map(([course,value])=>`| ${cell(course.code)} — ${cell(course.name)} | ${cell(value)} |`).join('\n');
+const table = (heading,rows,codeOnly=false) => `| Course | ${heading} |\n| --- | --- |\n`+rows.map(([course,value])=>`| ${cell(course.code)}${codeOnly?'':' — '+cell(course.name)} | ${cell(value)} |`).join('\n');
 const pending = course => course.assessments.filter(a=>a.status==='pending'||a.status==='locked');
 function tryAnswer(question, profile) {
     if (!profile || /\b(?:ticket|support)\b/i.test(question)) return null;
@@ -33,10 +33,10 @@ function tryAnswer(question, profile) {
         } else {
             let selected=records;const ranking=/lowest|highest/.test(q);
             if(ranking)selected=records.filter(c=>c.ready).sort((a,b)=>/highest/.test(q)?b.totalCA-a.totalCA:a.totalCA-b.totalCA).slice(0,1);
-            answer=label+'\n\n'+(selected.length?table('CA /40',selected.map(c=>[c,c.ready?c.totalCA.toFixed(1):c.visibleCA.toFixed(1)+' · partial'])):'No complete CA results are available to rank yet.');
-            if(ranking&&records.some(c=>!c.ready))answer+='\n\nPending totals are excluded from this comparison.';
-            else if(records.some(c=>!c.ready))answer+='\n\nPartial totals have assessments still pending.';
-            answer+='\n\nWould you like to see which assessments are pending?';
+            answer=(ranking?label:`Here are your CA marks for Year ${period.year}, Semester ${period.semester}:`)+'\n\n'+(selected.length?table('CA',selected.map(c=>[c,c.ready?String(c.totalCA):'—']),true):'No complete CA results are available to rank yet.');
+            if(ranking&&records.some(c=>!c.ready))answer+='\n\nOnly complete CA totals are ranked.';
+            else if(records.some(c=>!c.ready))answer+='\n\nSome marks are awaiting upload. Would you like to see which assessments are pending?';
+            else answer+='\n\nAll coursework marks are available.';
         }
     }
     return {answer,queryType:{isSimulatedAcademic:true},academic:{profileId:profile.id,periodKey:period?.key||null,courses:records},sources:[],resources:[],recommendedResources:[],suggestedActions:[],timetableMatches:0,usedFallback:false};

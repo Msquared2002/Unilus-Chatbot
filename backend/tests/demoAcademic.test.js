@@ -14,28 +14,38 @@ test('guest, staff, non-demo account and forged IDs cannot retrieve another acad
 test('verified observed course codes, mathematically consistent CA and unfinished finals',()=>{
  const map=service.mappings(),{undergraduateGrade}=require('../services/undergraduateAcademicPolicy');
  for(const p of [pa,pb])for(const period of p.periods){const codes=map[p.programme].periods[period.key].courses.map(c=>c.code);assert.ok(codes.length>=3);
-  for(const c of period.courses){assert.ok(codes.includes(c.code));assert.match(c.code,/^[A-Z]{2,6}\d{3}$/);assert.doesNotMatch(c.name,/Group [A-Z](?:\s|$)/);assert.equal(c.assessments.reduce((n,a)=>n+a.weight,0),40);
+  for(const c of period.courses){assert.ok(codes.includes(c.code));assert.match(c.code,/^[A-Z]{2,6}\d{3}$/);assert.doesNotMatch(c.name,/Group [A-Z](?:\s|$)/);assert.equal(c.assessments.reduce((n,a)=>n+a.weight,0),30);assert.deepEqual(c.assessments.map(a=>a.name),['Assignment 1','Midexam 1','Practical','Project 1']);
    const sum=Math.round(c.assessments.reduce((s,x)=>s+(x.contribution||0),0)*10)/10;assert.equal(c.visibleCA,sum);assert.equal(c.totalCA,c.ready?sum:null);
-   for(const a of c.assessments){if(a.status==='available')assert.equal(a.contribution,Math.round(a.score*a.weight/10)/10);else assert.equal(a.score,null);if(!a.weight){assert.equal(a.status,'not-applicable');assert.equal(a.contribution,0);}}
-   if(period.completed){assert.equal(c.finalMark,Math.round(c.totalCA+c.finalExam.contribution));assert.equal(c.finalGrade,undergraduateGrade(c.finalMark));}else{assert.equal(c.finalMark,null);assert.equal(c.finalGrade,null);}}
- }assert.match(pa.policy,/class tests 10/);assert.ok(pa.periods.find(p=>p.key===pa.activePeriod).courses.some(c=>!c.ready));
+   for(const a of c.assessments){if(a.status==='available'){assert.equal(a.contribution,a.score);assert.ok(a.score>=0&&a.score<=a.weight);}else{assert.equal(a.score,null);assert.equal(a.contribution,null);}if(!a.weight){assert.equal(a.status,'available');assert.equal(a.score,0);assert.equal(a.contribution,0);}}
+   if(period.completed){assert.equal(c.finalExam.weight,70);assert.ok(c.finalExam.score>=0&&c.finalExam.score<=70);assert.equal(c.finalMark,c.totalCA+c.finalExam.score);assert.ok(c.finalMark>=0&&c.finalMark<=100);assert.equal(c.finalGrade,undergraduateGrade(c.finalMark));}else{assert.equal(c.finalMark,null);assert.equal(c.finalGrade,null);}}
+ }assert.match(pa.policy,/coursework 30 and examination 70/);assert.ok(pa.periods.find(p=>p.key===pa.activePeriod).courses.some(c=>!c.ready));assert.ok(pa.periods.find(p=>p.key===pa.activePeriod).courses.some(c=>c.ready));
 });
 test('portal and structured chat return identical CA and letter-only final records',async()=>{const current=pa.periods.find(p=>p.key===pa.activePeriod);const r=await chat(pa,'What are my CA marks?');assert.equal(r.data.queryType.isSimulatedAcademic,true);assert.deepEqual(r.data.academic.courses,current.courses);const prior=pa.periods.find(p=>p.key==='2-2');const finals=await chat(pa,'Show my final results year 2 semester 2');assert.deepEqual(finals.data.academic.courses,prior.courses);assert.doesNotMatch(finals.data.answer,/\/100|simulation rules|not university/);assert.match(finals.data.answer,/\| Grade \|/);assert.match((await chat(pa,'What was my best course last semester?')).data.answer,/unavailable/);assert.match((await chat(pa,'Show me my final results')).data.answer,/not published/);assert.match((await chat(pa,'What programme and year am I in?')).data.answer,new RegExp(pa.studentNumber));});
-test('comparisons, pending assessment queries and missing mapped periods are deterministic',async()=>{const r=await chat(pa,'Compare my Year 2 and Year 3 performance');assert.match(r.data.answer,/Year 2, Semester 2/);assert.match(r.data.answer,/Some requested years/);const pending=await chat(pa,'Which courses still have pending assessment marks?');assert.match(pending.data.answer,/Class tests/);assert.doesNotMatch(pending.data.answer,/Practical|Project 1/);assert.match((await chat(pa,'Show my final results year 4 semester 2')).data.answer,/unavailable/);});
-test('profile survives a separate Node process restart with the same durable records',()=>{const script=`const s=require('./services/demoAcademicService'),db=require('./services/db');s.get(${JSON.stringify(a)}).then(p=>{console.log(JSON.stringify(p));return db.close()}).catch(()=>process.exit(1));`;const out=execFileSync(process.execPath,['-e',script],{cwd:path.join(__dirname,'..'),env:{...process.env},encoding:'utf8'});assert.deepEqual(JSON.parse(out.trim()),pa);});
+test('comparisons, pending assessment queries and missing mapped periods are deterministic',async()=>{const r=await chat(pa,'Compare my Year 2 and Year 3 performance');assert.match(r.data.answer,/Year 2, Semester 2/);assert.match(r.data.answer,/Some requested years/);const pending=await chat(pa,'Which courses still have pending assessment marks?');assert.match(pending.data.answer,/Midexam 1/);assert.doesNotMatch(pending.data.answer,/Class tests|Practical|Project 1/);assert.match((await chat(pa,'Show my final results year 4 semester 2')).data.answer,/unavailable/);});
+test('both profiles and chatbot results survive a separate Node process restart',()=>{
+ for(const [user,expected] of [[a,pa],[b,pb]]){
+  const script=`const s=require('./services/demoAcademicService'),db=require('./services/db'),user=${JSON.stringify(user)};(async()=>{const p=await s.get(user);const reply=await s.withChat(user,p.id,p.sessionId,active=>require('./services/demoAcademicChatService').tryAnswer('What are my CA marks?',active));console.log(JSON.stringify({profile:p,reply}));await db.close();})().catch(()=>process.exit(1));`;
+  const out=execFileSync(process.execPath,['-e',script],{cwd:path.join(__dirname,'..'),env:{...process.env},encoding:'utf8'}),result=JSON.parse(out.trim());assert.deepEqual(result.profile,expected);assert.deepEqual(result.reply.academic.courses,expected.periods.find(p=>p.key===expected.activePeriod).courses);
+ }
+});
+test('CA chat uses plain point totals, blanks for missing totals and no denominator or partial labels',async()=>{
+ const r=await chat(pa,'What are my CA marks?'),courses=pa.periods.find(p=>p.key===pa.activePeriod).courses;
+ assert.match(r.data.answer,/Here are your CA marks for Year 3, Semester 2:/);assert.match(r.data.answer,/\| Course \| CA \|/);assert.doesNotMatch(r.data.answer,/partial|N\/A|Class tests|\/30|\/40|\/100|out of/i);
+ for(const c of courses)assert.ok(r.data.answer.includes(`| ${c.code} | ${c.ready?c.totalCA:'—'} |`));
+});
 test('unsupported programme fails without changing the current profile',async()=>{const r=await request('/api/demo-academics/profile',{mode:'specific',programme:'INVENTED',expectedProfileId:pa.id});assert.equal(r.status,422);assert.deepEqual((await request('/api/demo-academics/profile')).data,pa);});
 test('focused academic requests use structured data without verbose policies',async()=>{
  for(const question of ["What's my lowest CA?","What's my highest CA?",'Which assessments are pending?','Did I clear the semester?','Which subjects require attention?','Compare my results across semesters']){
   const r=await chat(pa,question);assert.equal(r.data.queryType.isSimulatedAcademic,true,question);assert.equal(r.data.academic.profileId,pa.id);assert.doesNotMatch(r.data.answer,/Fictional academic simulation|simulation rules|\/100|not university records/);
  }
  const ranked=pa.periods.find(p=>p.key===pa.activePeriod).courses.filter(c=>c.ready);
- const high=await chat(pa,"What's my highest CA?");assert.ok(high.data.answer.includes(Math.max(...ranked.map(c=>c.totalCA)).toFixed(1)));
+ const high=await chat(pa,"What's my highest CA?");assert.ok(high.data.answer.includes(String(Math.max(...ranked.map(c=>c.totalCA)))));
 });
 test('pending-assessment follow-up stays structured and cannot confirm an older support topic',async()=>{
  const count=(await db.get('SELECT count(*) AS n FROM tickets')).n;
  assert.equal((await chat(pa,'Create a ticket for my synthetic problem')).data.support.status,'pending');
  await chat(pa,'What are my CA marks?');const yes=await chat(pa,'Yes please');
- assert.equal(yes.data.queryType.isSimulatedAcademic,true);assert.match(yes.data.answer,/Class tests/);assert.equal((await db.get('SELECT count(*) AS n FROM tickets')).n,count);
+ assert.equal(yes.data.queryType.isSimulatedAcademic,true);assert.match(yes.data.answer,/Midexam 1/);assert.equal((await db.get('SELECT count(*) AS n FROM tickets')).n,count);
 });
 test('New Profile resets conversation and support confirmation without changing JWT/account identity',async()=>{assert.equal((await chat(pa,'Create a ticket for my synthetic problem')).data.support.status,'pending');const before=(await db.get('SELECT count(*) AS n FROM tickets')).n;const old=pa;pa=(await request('/api/demo-academics/profile',{mode:'keep',expectedProfileId:pa.id})).data;assert.notEqual(pa.id,old.id);assert.notEqual(pa.sessionId,old.sessionId);assert.equal(pa.programme,old.programme);assert.equal(pa.accountUsername,a.username);assert.equal(auth.verifyToken(ta).user.username,a.username);assert.equal((await chat(old,'Yes, submit it')).status,409);assert.equal((await chat(pa,'Yes, submit it')).data.support.status,'none');assert.equal((await db.get('SELECT count(*) AS n FROM tickets')).n,before);assert.deepEqual((await request('/api/demo-academics/profile',undefined,tb)).data,pb);});
 test('specific and random selections only use mapped programmes and stable returned periods',async()=>{pa=(await request('/api/demo-academics/profile',{mode:'specific',programme:'BCS',expectedProfileId:pa.id})).data;assert.equal(pa.programme,'BCS');assert.deepEqual((await request('/api/demo-academics/profile')).data,pa);pa=(await request('/api/demo-academics/profile',{mode:'random',expectedProfileId:pa.id})).data;assert.ok(service.mappings()[pa.programme]);assert.equal((await request('/api/demo-academics/profile',{mode:'keep',expectedProfileId:'forged'})).status,409);});
@@ -66,10 +76,14 @@ test('private Storage adapter persists profiles, uses server-only headers and fa
     }finally{global.fetch=originalFetch;for(const k of keys){if(saved[k]===undefined)delete process.env[k];else process.env[k]=saved[k];}}
 });
 
-test('old assessment profiles require explicit New Profile and never silently regenerate',async()=>{
+test('old assessment versions require explicit New Profile and never silently regenerate',async()=>{
  const crypto=require('node:crypto'),file=path.join(process.env.DEMO_ACADEMIC_STORE_DIR,crypto.createHash('sha256').update(a.username).digest('hex')+'.json');
- const stored=fs.readFileSync(file,'utf8'),old=JSON.parse(stored);delete old.modelVersion;fs.writeFileSync(file,JSON.stringify(old));
- try{const r=await request('/api/demo-academics/profile');assert.equal(r.data.id,old.id);assert.equal(r.data.requiresNewProfile,true);assert.deepEqual(r.data.periods,[]);assert.equal(JSON.parse(fs.readFileSync(file,'utf8')).seed,old.seed);assert.equal((await chat(old,'What are my CA marks?')).status,409);
- const renewed=await request('/api/demo-academics/profile',{expectedProfileId:old.id,mode:'keep'});assert.equal(renewed.data.modelVersion,2);assert.notEqual(renewed.data.id,old.id);
+ const stored=fs.readFileSync(file,'utf8'),old=JSON.parse(stored);
+ try{for(const version of [undefined,1,2,3]){
+  if(version===undefined)delete old.modelVersion;else old.modelVersion=version;
+  const bytes=JSON.stringify(old);fs.writeFileSync(file,bytes);
+  const r=await request('/api/demo-academics/profile');assert.equal(r.data.id,old.id);assert.equal(r.data.requiresNewProfile,true);assert.deepEqual(r.data.periods,[]);assert.equal((await chat(old,'What are my CA marks?')).status,409);assert.equal(fs.readFileSync(file,'utf8'),bytes);
+ }
+ const renewed=await request('/api/demo-academics/profile',{expectedProfileId:old.id,mode:'keep'});assert.equal(renewed.data.modelVersion,4);assert.notEqual(renewed.data.id,old.id);assert.notEqual(renewed.data.sessionId,old.sessionId);assert.equal(renewed.data.accountUsername,a.username);assert.equal(auth.verifyToken(ta).user.username,a.username);assert.equal((await chat(old,'What are my CA marks?')).status,409);assert.equal((await chat(renewed.data,'What are my CA marks?')).status,200);assert.deepEqual((await request('/api/demo-academics/profile',undefined,tb)).data,pb);
  }finally{fs.writeFileSync(file,stored);}
 });
