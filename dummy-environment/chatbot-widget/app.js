@@ -133,6 +133,8 @@ async function sendMessage(question) {
     if (request === latestAvatarRequest) reactAvatar(responseEmotion(data, data.answer), 2200);
 
 
+    if (data.queryType?.isSimulatedAcademic) botRow.classList.add('academic-message');
+
     // Chatbot found a place - offer to show it, don't force the map open.
     const mapRendered = renderActions(botRow, data.suggestedActions, data);
     if (data.navigation && !mapRendered) {

@@ -1126,3 +1126,9 @@
 .context-actions button:disabled{opacity:.55;cursor:default}
 
 .startup-notice { display:block; margin-top:8px; font-size:0.85em; line-height:1.4; }
+/* Academic two-column results should wrap course titles, unlike timetable columns. */
+.message-row.bot.academic-message .bubble table{width:100%!important;table-layout:fixed!important;min-width:100%!important}
+.message-row.bot.academic-message .bubble :is(th,td){white-space:normal!important;min-width:0!important;max-width:none!important;overflow-wrap:break-word!important}
+.message-row.bot.academic-message .bubble :is(th,td):first-child{width:67%}
+.message-row.bot.academic-message .bubble :is(th,td):nth-child(2){width:33%}
+.message-row.bot.academic-message .bubble table{font-size:13px;line-height:1.5}

@@ -28,7 +28,16 @@
         ☰
       </button>
       <nav>
-        <div class="demo-profile-controls" data-profile-controls hidden><button type="button" data-new-demo-profile aria-label="New fictional demo profile"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5M6 7a7 7 0 0 1 12-1l2 6M4 12l2 6a7 7 0 0 0 12-1"/></svg>New Profile</button><details><summary aria-label="Demo profile settings">⌄</summary><div><label>Demo programme setting<select data-profile-mode><option value="keep">Keep Current Programme</option><option value="random">Random Supported Programme</option><option value="specific">Select a Specific Supported Programme</option></select></label><label>Supported programme<select data-profile-programme></select></label><small>Use New Profile to apply. All academic data is fictional.</small></div></details></div><a href="apply.html">Apply Now⌄</a
+        <div class="demo-profile-controls" data-profile-controls hidden>
+          <button type="button" data-new-demo-profile aria-label="New fictional demo profile"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5M6 7a7 7 0 0 1 12-1l2 6M4 12l2 6a7 7 0 0 0 12-1"/></svg>New Profile</button>
+          <details><summary role="button" aria-label="Demo profile settings" aria-expanded="false" aria-controls="profile-settings-panel">⌄</summary>
+            <div id="profile-settings-panel" aria-label="Profile settings">
+              <label>Programme setting<select data-profile-mode><option value="keep">Keep Current Programme</option><option value="random">Random Supported Programme</option><option value="specific">Select a Specific Supported Programme</option></select></label>
+              <label>Supported programme<select data-profile-programme></select></label>
+              <small>Choose New Profile to apply these settings.</small>
+            </div>
+          </details>
+        </div><a href="apply.html">Apply Now⌄</a
         ><a class="top-pill" href="elearning.html">E-learning</a
         ><a class="top-pill" href="website.html">Home</a>
       </nav>

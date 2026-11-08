@@ -1,5 +1,7 @@
 # Combined conversational hotfix and academic simulator — local review
 
+Historical implementation report for `626a869`. The grading, course coverage, assessment presentation and latest verification below are superseded by [the focused corrections report](ACADEMIC_SIMULATOR_CORRECTIONS.md).
+
 Status: implemented and verified locally. No push, deployment, cloud build, migration, knowledge bootstrap, bucket change or remote test write was performed for this feature. This commit descends from conversational hotfix `eba44d5cfbde12519667ab380e09bfd04f3e84c1`; release both together. The public release remains outside this local change.
 
 ## Behaviour and security
