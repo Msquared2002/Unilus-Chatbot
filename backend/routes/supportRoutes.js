@@ -76,7 +76,7 @@ router.get("/tickets/:ref", async (req, res) => {
 
         if (!ticket) {
 
-            return res.status(404).json({ error: "Ticket not found" });
+            return res.status(403).json({ error: "Ticket unavailable" });
 
         }
 

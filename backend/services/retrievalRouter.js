@@ -363,7 +363,7 @@ function isContextualFollowup(query) {
 }
 function resolveTimetableFollowup(query, history = []) {
   const day = extractDay(query);
-  if (!day || !/^(?:(?:and|also|what about|how about|on|for)\s+)?(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)(?:\s+please)?[?!.\s]*$/i.test(query.trim())) return null;
+  if (!day || !/^(?:(?:show|and|also|what about|how about|on|for)\s+)?(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)(?:\s+please)?[?!.\s]*$/i.test(query.trim())) return null;
   for (const turn of history.slice(-6).reverse()) {
     if (turn.role !== 'user') continue;
     if (extractDay(turn.content) && isContextualFollowup(turn.content)) continue;

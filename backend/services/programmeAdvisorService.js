@@ -49,6 +49,7 @@ function tryAnswer(question, sessionId) {
  if(/finished|all my results/i.test(question))profile.resultsComplete=true;
  profile.outstanding=[];
  const prefs=preference.preferences(require('./applicantResultParser').withoutResults(question));
+ if(!personal){extracted.interests=[];for(const key of ['careers','activities','strengths','fields'])prefs[key]=[];prefs.style=null;}
  const priorPrefs=profile.preferences || {careers:[],activities:[],strengths:[],fields:[]};
  profile.preferences={...priorPrefs,style:prefs.style||priorPrefs.style};
  for(const key of ['careers','activities','strengths','fields'])profile.preferences[key]=[...new Set([...(priorPrefs[key]||[]),...prefs[key]])].slice(-10);
@@ -84,8 +85,8 @@ function tryAnswer(question, sessionId) {
    else named=[...named,...prior.filter(p=>!named.some(n=>n.id===p.id))];
   }
  }
- if(comparison && named.length<2) return {answer:'Which two programmes would you like to compare? Please name them so I can use their verified information.',queryType:{isProgrammeAdvisor:true},sources:[],resources:[],recommendedResources:[],timetableMatches:0,suggestedActions:[]};
- if(comparison){profile.considering=named.slice(0,3).map(p=>p.id);store.set(sessionId,profile);}
+ if(comparison && named.length<2 && !(named.length===1 && /\b(?:first|second)\b/i.test(question))) return {answer:'Which two programmes would you like to compare? Please name them so I can use their verified information.',queryType:{isProgrammeAdvisor:true},sources:[],resources:[],recommendedResources:[],timetableMatches:0,suggestedActions:[]};
+ if(comparison){if(named.length>=2)profile.considering=named.slice(0,3).map(p=>p.id);store.set(sessionId,profile);}
 
  const statusText={additional_grade_information_required:'I would need your subject grades to assess the published requirements.',missing_or_unrecognized:'Some required subjects or grades have not been identified yet.',requirements_not_sufficiently_documented:'The available official information does not document enough admission conditions for an eligibility decision.',meets_checked_published_conditions:'Your reported grades meet the published conditions checked here; UNILUS Admissions makes the final decision.',does_not_meet_checked_condition:'At least one reported grade does not meet a published condition.',conflicting_requirements:'The available admission sources conflict; please confirm with UNILUS Admissions.'};
  const explain=r=>statusText[r.status]||'UNILUS Admissions should verify your qualifications against the published requirements.';

@@ -10,7 +10,7 @@ const programmes = [
 ];
 function isTuitionQuery(text) {
   return /\b(?:fees?|tuition|cost(?:s)?|how much)\b/i.test(text) &&
-    !/\b(?:accommodation|hostels?|application|registration|graduation|exemption|transcript|payment|bank|ticket|complaint)\b/i.test(text);
+    !/\b(?:gym|membership|swimming|pool|accommodation|hostels?|application|registration|graduation|exemption|transcript|payment|bank|ticket|complaint)\b/i.test(text);
 }
 function parse(text) {
   const q = normalize(text), matches = programmes.filter(([, re]) => re.test(q)).map(([name]) => name);

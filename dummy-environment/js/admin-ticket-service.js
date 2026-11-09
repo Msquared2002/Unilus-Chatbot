@@ -12,6 +12,7 @@ const NOT_YET = "The backend does not save this yet. Status changes and saved an
 
 /* ---------------- Department catalogue and keyword routing (unchanged) ---------------- */
 const departments = [
+  { id: "registry", name: "Registry", category: "General", keywords: [] },
   { id: "academic-office", name: "Academic Office", category: "Academic", keywords: ["timetable", "exam", "examination", "results", "registration", "course", "semester", "module", "transcript", "academic"] },
   { id: "finance", name: "Finance Office", category: "Finance", keywords: ["fees", "fee", "payment", "receipt", "invoice", "balance", "tuition", "clearance", "account"] },
   { id: "ict", name: "ICT Support", category: "ICT", keywords: ["password", "login", "portal", "lms", "website", "error", "technical", "account access"] },
@@ -56,7 +57,7 @@ const transitions = {
 };
 const PRIORITY = { Critical: "Urgent", High: "High", Medium: "Normal", Low: "Low" };
 const DEPARTMENT_IDS = {
-  "academic office": "academic-office", registry: "academic-office",
+  "academic office": "academic-office", registry: "registry",
   "finance office": "finance", finance: "finance",
   "ict support": "ict", ict: "ict",
   "admissions office": "admissions", admissions: "admissions",

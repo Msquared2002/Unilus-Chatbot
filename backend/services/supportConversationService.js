@@ -7,8 +7,8 @@ const pending = new Map();
 const TTL = 10 * 60 * 1000;
 const LIMIT = 500;
 const requestPattern = /\b(?:create|open|raise|submit|log|file)\s+(?:(?:a|an|the|my|support|new|formal)\s+)*ticket\b/i;
-const confirmation = /^(?:yes[,\s]+)?(?:submit|create|open)\s+(?:it|(?:this|the|my)\s+(?:support\s+)?ticket)[.!\s]*$/i;
-const cancel = /^(?:cancel(?: it| the ticket| this ticket)?|no(?: thanks)?|not now|never ?mind|don't submit it)[.!\s]*$/i;
+const confirmation = /^(?:(?:yes[,\s]+)?(?:submit|create|open)\s+(?:it|(?:this|the|my)\s+(?:support\s+)?ticket)|confirmed|yes[,\s]+I confirm|go ahead and submit|please submit the ticket|proceed with submission)[.!\s]*$/i;
+const cancel = /^(?:cancel(?: it| the ticket| this ticket)?|no(?: thanks)?|not now|never ?mind|don't submit(?: it)?|no[,\s]+do not submit it)[.!\s]*$/i;
 function response(answer, status, ticket = null) {
     return { answer, queryType: { isSupport: true }, support: { status }, ticket,
         sources: [], resources: [], recommendedResources: [], suggestedActions: [], timetableMatches: 0, usedFallback: false };
@@ -18,7 +18,7 @@ function prune() {
 }
 function issueFromRequest(question) {
     const after = question.slice((question.match(requestPattern)?.index || 0) + (question.match(requestPattern)?.[0].length || 0));
-    return after.replace(/^\s*(?:for me\b|please\b)\s*/i, '').replace(/^\s*(?:for|about|regarding|because|:)\s*/i, '').replace(/[?.!]+$/g, '').trim();
+    return after.replace(/^\s*(?:for me\b|please\b)\s*/i, '').replace(/^\s*(?:for|about|regarding|because|:)\s*/i, '').replace(/^[\s.!:]*Issue:\s*/i,'').replace(/(?:[.!]\s*|,?\s*but\s+)(?:ask (?:me )?for confirmation before submitting(?: the ticket)?|please help me report this issue,? but do not submit it until I confirm|do not submit it until I confirm)[.!\s]*$/i,'').replace(/[?.!]+$/g, '').trim();
 }
 async function tryHandle(question, sessionId, user = null) {
     prune();
@@ -30,7 +30,7 @@ async function tryHandle(question, sessionId, user = null) {
     if (!requested && !confirmed && !entry) return null;
     if (!await ownership.owns(sessionId, user)) return response('This support request is unavailable. Start a new conversation before requesting support.', 'unavailable');
     if (entry && entry.owner !== owner) return response('This support request is unavailable.', 'unavailable');
-    if (requested && /\b(?:do not|don't|never|no need to|don't want to)\s+(?:create|open|raise|submit|log|file)\b/i.test(question)) {
+    if (requested && /\b(?:do not|don't|never|no need to|don't want to)\s+(?:create|open|raise|submit|log|file)\b/i.test(question) && !/\b(?:until I confirm|before (?:I confirm|confirmation))\b/i.test(question)) {
         if (!entry?.submitting) pending.delete(key);
         return response('No new support ticket will be submitted.', 'cancelled');
     }

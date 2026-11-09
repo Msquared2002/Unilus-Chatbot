@@ -68,23 +68,28 @@ function formatTicketStatus(ticket) {
 // "status of UNI-2026-0042", or "what's the status of my ticket" (uses the
 // most recent ticket opened in this session). Returns null when the message
 // isn't about a ticket, so normal handling continues.
-async function handleTicketStatusQuestion(question, sessionId) {
+async function handleTicketStatusQuestion(question, sessionId, user = null) {
+    if (!await require('./sessionOwnershipService').owns(sessionId, user)) return null;
+    async function describe(ticket) {
+        const replies = (await require('./ticketWorkflowService').list(ticket.ref)).filter(event => event.kind === 'reply');
+        return formatTicketStatus(ticket) + (replies.length ? '\n\nLatest staff reply (quoted):\n\n' + replies.at(-1).body.split('\n').map(line => '> ' + line).join('\n') : '\n\nNo student-visible staff response is available yet.');
+    }
     const refMatch = question.match(TICKET_REF);
     if (refMatch) {
         const full = await supportService.getTicketForAdmin(refMatch[0]);
-        const ticket = full && full.session_id===sessionId ? await supportService.getTicketByRef(refMatch[0]) : null;
+        const ticket = full && (user ? await require('./sessionOwnershipService').owns(full.session_id,user) : full.session_id===sessionId) ? await supportService.getTicketByRef(refMatch[0]) : null;
         return ticket
-            ? formatTicketStatus(ticket)
+            ? await describe(ticket)
             : `I couldn't find a ticket with reference ${refMatch[0].toUpperCase()}. Please check the number and try again.`;
     }
 
-    const asksAboutTicket = /\b(ticket|reference (number|no))\b/i.test(question)
-        && /\b(status|update|progress|resolved|follow ?up)\b/i.test(question);
+    const asksAboutTicket = /\b(ticket|complaint|request|staff|university)\b/i.test(question)
+        && /\b(status|update|progress|resolved|follow ?up|replied|reply|response|respond|message|say)\b/i.test(question);
     if (!asksAboutTicket) return null;
 
     const latest = await supportService.getLatestTicketForSession(sessionId);
     return latest
-        ? formatTicketStatus(latest)
+        ? await describe(latest)
         : "Please send me your ticket reference number (it looks like UNI-2026-0001) and I'll check its status.";
 }
 
@@ -375,7 +380,7 @@ async function buildFallback(question, queryType, timetableMatches = 0, sessionI
     };
 }
 
-async function answerQuestionCore(question, sessionId, audience = "public", profile = null) {
+async function answerQuestionCore(question, sessionId, audience = "public", profile = null, user = null) {
     if (!sessionId) {
         sessionId = sessionService.createSessionId();
     }
@@ -405,7 +410,7 @@ async function answerQuestionCore(question, sessionId, audience = "public", prof
     }
 
     // Ticket status ("status of UNI-2026-0042", "any update on my ticket").
-    const ticketStatusAnswer = await handleTicketStatusQuestion(question, sessionId);
+    const ticketStatusAnswer = await handleTicketStatusQuestion(question, sessionId, user);
     if (ticketStatusAnswer) {
         await sessionService.appendMessage(sessionId, "assistant", ticketStatusAnswer);
         return {
@@ -635,13 +640,13 @@ async function answerQuestion(question, sessionId, audience='public', profile=nu
         await sessionService.appendMessage(sessionId, 'assistant', supportReply.answer);
         return { ...supportReply, sessionId };
     }
-    const advisor = !conversation.reply(question, profile) && !conversation.personalResults(question)
+    const advisor = !conversation.reply(question, profile) && (!conversation.personalResults(question) || /\b(?:which programme|choos(?:e|ing) a programme|programme.*interests)\b/i.test(question))
         ? require('./programmeAdvisorService').tryAnswer(question,sessionId) : null;
     if (advisor) { markAdvisorTopic(sessionId, true); return advisor; }
     if (!conversation.reply(question, profile)) markAdvisorTopic(sessionId, false);
     const parser=require('./applicantResultParser');
     const safeQuestion=parser.extract(question).length?parser.withoutResults(question).trim():question;
-    const result=await answerQuestionCore(safeQuestion,sessionId,audience,profile);
+    const result=await answerQuestionCore(safeQuestion,sessionId,audience,profile,user);
     const records=result._actionRecords || [];delete result._actionRecords;
     try{result.suggestedActions=require('./suggestedActionService').selectActions(question,result,records);}catch{result.suggestedActions=[];}
     if (result.support || result.queryType?.isConversation) result.suggestedActions = [];

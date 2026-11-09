@@ -61,6 +61,7 @@ test('missing stage shows schedule, ambiguous programmes and contradictory categ
   assert.equal(fees.tryAnswer('Computer Science fees local 2025 and 2026').tuition.status, 'clarification');
   assert.equal(fees.tryAnswer('Master of Computer Science fees local'), null);
   for (const q of ['accommodation fees','application fees','registration fees','create a ticket about BIT fees']) assert.equal(fees.tryAnswer(q), null);
+  for(const q of ['Gym fees','Fees for the gym','How much is gym membership?','Swimming pool fees'])assert.equal(fees.tryAnswer(q),null);
   for (const q of ['pharmacy tuition local 2026','biomedical science fees','nursing fees']) assert.equal(fees.tryAnswer(q), null, 'existing clinical programme retrieval remains available');
 });
 test('category corrections in fee follow-ups replace prior category rather than mixing it', () => {
