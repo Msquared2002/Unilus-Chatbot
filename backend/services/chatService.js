@@ -606,6 +606,15 @@ function markAdvisorTopic(sessionId, active) {
 async function answerQuestion(question, sessionId, audience='public', profile=null, { user = null, academicProfile = null } = {}) {
     // Applicant grades remain in the bounded advisor store, never in persistent chat history or tone rewriting.
     question = conversation.stripGreeting(question);
+    const feeReply = require('./tuitionFeeService').tryAnswer(question, sessionId ? await sessionService.getRecentHistory(sessionId) : []);
+    if (feeReply) {
+        sessionId ||= sessionService.createSessionId();
+        supportConversation.reset(sessionId);
+        markAdvisorTopic(sessionId, false);
+        await sessionService.appendMessage(sessionId, 'user', question);
+        await sessionService.appendMessage(sessionId, 'assistant', feeReply.answer);
+        return { ...feeReply, sessionId };
+    }
     const academicService = require('./demoAcademicChatService');
     let academic = academicService.tryAnswer(question, academicProfile);
     if (!academic && academicProfile && /^(?:yes|yes please|please do|show me)[.!]?$/i.test(question.trim())) {

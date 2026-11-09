@@ -1,0 +1,2596 @@
+{
+  "version": 1,
+  "sources": {
+    "UNDERGRADUATE-FEES-ZMW.pdf": "ba2d9913b44f0c69bb3153fa8d76aa7c8d981799602381a886a2ea4dcd9ff459",
+    "UNDERGRADUATE-FEES-USD.pdf": "f25730585dc454ef4e1122e547a6a06972c5ae76d70b55e77e5541b0d7a912ce",
+    "UNILUS-PROSPECTUS-2026-11.pdf": "fc753c9655ef4730c5da0e392ec32332e480603a470f50e4936c7d2d3432fc08",
+    "BACHELOR-OF-MEDICINE-AND-SURGERY-ZMW-FEES-UNILUS-2026-1.pdf": "b8f5834c8e2f7d3e8132f537d0954c25717e4889141f4078a6f77265f17a21b9",
+    "BACHELOR-OF-MEDICINE-AND-SURGERY-USD-FEES-UNILUS-2026-1.pdf": "4e3991b5f5c8ac47cebc9b85003a39a245dab7435e553c1ba004d9216ad0f703"
+  },
+  "schedules": [
+    {
+      "programme": "BACHELOR OF SCIENCE IN CYBER SECURITY",
+      "academicYear": 2025,
+      "category": "local_sadc",
+      "currency": "ZMW",
+      "amountType": "published semester fees",
+      "source": "UNDERGRADUATE-FEES-ZMW.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "BACHELOR OF SCIENCE IN CYBER SECURITY \t12,800 \t12,800 \t12,800 \t12,800 \t13,600 \t13,600 \t13,600 \t13,600",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 12800
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 12800
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 12800
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 12800
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 13600
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 13600
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 13600
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 13600
+        }
+      ]
+    },
+    {
+      "programme": "BACHELOR OF SCIENCE IN COMPUTER SCIENCE",
+      "academicYear": 2025,
+      "category": "local_sadc",
+      "currency": "ZMW",
+      "amountType": "published semester fees",
+      "source": "UNDERGRADUATE-FEES-ZMW.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "BACHELOR OF SCIENCE IN COMPUTER SCIENCE \t12800 \t12800 \t12800 \t12800 \t13600 \t13600 \t13600 \t13600",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 12800
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 12800
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 12800
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 12800
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 13600
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 13600
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 13600
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 13600
+        }
+      ]
+    },
+    {
+      "programme": "BACHELOR OF SCIENCE IN ECONOMICS AND FINANCE",
+      "academicYear": 2025,
+      "category": "local_sadc",
+      "currency": "ZMW",
+      "amountType": "published semester fees",
+      "source": "UNDERGRADUATE-FEES-ZMW.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "BACHELOR OF SCIENCE IN ECONOMICS AND FINANCE \t14,100 \t11,800 \t11,800 \t11,800 \t12,400 \t12,400 \t14,850 \t14,850",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 14100
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 11800
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 11800
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 11800
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 12400
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 12400
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 14850
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 14850
+        }
+      ]
+    },
+    {
+      "programme": "BACHELOR OF SCIENCE IN HUMAN RESOURCE",
+      "academicYear": 2025,
+      "category": "local_sadc",
+      "currency": "ZMW",
+      "amountType": "published semester fees",
+      "source": "UNDERGRADUATE-FEES-ZMW.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "BACHELOR OF SCIENCE IN HUMAN RESOURCE \t14,100 \t11,800 \t11,800 \t11,800 \t12,400 \t12,400 \t14,850 \t14,850",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 14100
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 11800
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 11800
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 11800
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 12400
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 12400
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 14850
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 14850
+        }
+      ]
+    },
+    {
+      "programme": "BACHELOR OF SCIENCE IN BANKING AND FINANCE",
+      "academicYear": 2025,
+      "category": "local_sadc",
+      "currency": "ZMW",
+      "amountType": "published semester fees",
+      "source": "UNDERGRADUATE-FEES-ZMW.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "BACHELOR OF SCIENCE IN BANKING AND FINANCE \t14,100 \t11,800 \t11,800 \t11,800 \t12,400 \t12,400 \t14,850 \t14,850",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 14100
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 11800
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 11800
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 11800
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 12400
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 12400
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 14850
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 14850
+        }
+      ]
+    },
+    {
+      "programme": "BACHELOR OF BUSINESS ADMINISTRATION",
+      "academicYear": 2025,
+      "category": "local_sadc",
+      "currency": "ZMW",
+      "amountType": "published semester fees",
+      "source": "UNDERGRADUATE-FEES-ZMW.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "BACHELOR OF BUSINESS ADMINISTRATION \t14,100 \t11,800 \t11,800 \t11,800 \t12,400 \t12,400 \t14,850 \t14,850",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 14100
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 11800
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 11800
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 11800
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 12400
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 12400
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 14850
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 14850
+        }
+      ]
+    },
+    {
+      "programme": "BACHELOR OF SCIENCE IN ACCOUNTANCY",
+      "academicYear": 2025,
+      "category": "local_sadc",
+      "currency": "ZMW",
+      "amountType": "published semester fees",
+      "source": "UNDERGRADUATE-FEES-ZMW.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "BACHELOR OF SCIENCE IN ACCOUNTANCY \t14,100 \t11,800 \t11,800 \t11,800 \t14,850 \t12,400 \t12,400 \t14,850",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 14100
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 11800
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 11800
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 11800
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 14850
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 12400
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 12400
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 14850
+        }
+      ]
+    },
+    {
+      "programme": "BACHELOR OF SCIENCE IN PURCHASING AND SUPPLY",
+      "academicYear": 2025,
+      "category": "local_sadc",
+      "currency": "ZMW",
+      "amountType": "published semester fees",
+      "source": "UNDERGRADUATE-FEES-ZMW.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "BACHELOR OF SCIENCE IN PURCHASING AND SUPPLY \t14,100 \t14,100 \t11,800 \t11,800 \t12,400 \t12,400 \t14,850 \t14,850",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 14100
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 14100
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 11800
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 11800
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 12400
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 12400
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 14850
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 14850
+        }
+      ]
+    },
+    {
+      "programme": "BACHELOR OF SCIENCE IN MARKETING",
+      "academicYear": 2025,
+      "category": "local_sadc",
+      "currency": "ZMW",
+      "amountType": "published semester fees",
+      "source": "UNDERGRADUATE-FEES-ZMW.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "BACHELOR OF SCIENCE IN MARKETING \t14,100 \t11,800 \t11,800 \t11,800 \t12,400 \t12,400 \t14,850 \t14,850",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 14100
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 11800
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 11800
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 11800
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 12400
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 12400
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 14850
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 14850
+        }
+      ]
+    },
+    {
+      "programme": "BSC IN INSURANCE AND PENSION MANAGEMENT",
+      "academicYear": 2025,
+      "category": "local_sadc",
+      "currency": "ZMW",
+      "amountType": "published semester fees",
+      "source": "UNDERGRADUATE-FEES-ZMW.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "BSC IN INSURANCE AND PENSION MANAGEMENT \t14,100 \t11,800 \t11,800 \t11,800 \t12,400 \t12,400 \t12,400 \t14,850",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 14100
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 11800
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 11800
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 11800
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 12400
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 12400
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 12400
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 14850
+        }
+      ]
+    },
+    {
+      "programme": "BACHELOR OF ARTS IN ECONOMICS",
+      "academicYear": 2025,
+      "category": "local_sadc",
+      "currency": "ZMW",
+      "amountType": "published semester fees",
+      "source": "UNDERGRADUATE-FEES-ZMW.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "BACHELOR OF ARTS IN ECONOMICS \t14,100 \t11,800 \t11,800 \t11,800 \t12,400 \t12,400 \t14,850 \t14,850",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 14100
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 11800
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 11800
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 11800
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 12400
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 12400
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 14850
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 14850
+        }
+      ]
+    },
+    {
+      "programme": "BACHELOR OF ACTUARIAL SCIENCE",
+      "academicYear": 2025,
+      "category": "local_sadc",
+      "currency": "ZMW",
+      "amountType": "published semester fees",
+      "source": "UNDERGRADUATE-FEES-ZMW.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "BACHELOR OF ACTUARIAL SCIENCE \t14,100 \t11,800 \t11,800 \t14,100 \t12,400 \t12,400 \t14,850 \t14,850",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 14100
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 11800
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 11800
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 14100
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 12400
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 12400
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 14850
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 14850
+        }
+      ]
+    },
+    {
+      "programme": "BSC IN TRANSPORT AND LOGISTICS MANAGEMENT",
+      "academicYear": 2025,
+      "category": "local_sadc",
+      "currency": "ZMW",
+      "amountType": "published semester fees",
+      "source": "UNDERGRADUATE-FEES-ZMW.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "BSC IN TRANSPORT AND LOGISTICS MANAGEMENT \t14,100 \t11,800 \t11,800 \t11,800 \t12,400 \t12,400 \t14,850 \t14,850",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 14100
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 11800
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 11800
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 11800
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 12400
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 12400
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 14850
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 14850
+        }
+      ]
+    },
+    {
+      "programme": "BSC IN POLITICS AND INTER RELATIONS",
+      "academicYear": 2025,
+      "category": "local_sadc",
+      "currency": "ZMW",
+      "amountType": "published semester fees",
+      "source": "UNDERGRADUATE-FEES-ZMW.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "BSC IN POLITICS AND INTER RELATIONS \t11,360 \t11,360 \t11,360 \t11,360 \t11,800 \t11,800 \t11,800 \t14,100",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 11360
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 11360
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 11360
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 11360
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 11800
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 11800
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 11800
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 14100
+        }
+      ]
+    },
+    {
+      "programme": "BACHELOR OF SCIENCE IN DEVELOPMENT STUDIES",
+      "academicYear": 2025,
+      "category": "local_sadc",
+      "currency": "ZMW",
+      "amountType": "published semester fees",
+      "source": "UNDERGRADUATE-FEES-ZMW.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "BACHELOR OF SCIENCE IN DEVELOPMENT STUDIES \t11,360 \t13,550 \t13,550 \t11,360 \t11,800 \t11,800 \t14,100 \t16,400",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 11360
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 13550
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 13550
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 11360
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 11800
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 11800
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 14100
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 16400
+        }
+      ]
+    },
+    {
+      "programme": "BACHELOR OF SCIENCE IN PUBLIC ADMINISTRATION",
+      "academicYear": 2025,
+      "category": "local_sadc",
+      "currency": "ZMW",
+      "amountType": "published semester fees",
+      "source": "UNDERGRADUATE-FEES-ZMW.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "BACHELOR OF SCIENCE IN PUBLIC ADMINISTRATION \t11,360 \t11,360 \t9,170 \t11,360 \t11,800 \t11,800 \t14,100 \t16,400",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 11360
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 11360
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 9170
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 11360
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 11800
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 11800
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 14100
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 16400
+        }
+      ]
+    },
+    {
+      "programme": "BACHELOR OF SCIENCE IN INFORMATION TECHNOLOGY",
+      "academicYear": 2025,
+      "category": "local_sadc",
+      "currency": "ZMW",
+      "amountType": "published semester fees",
+      "source": "UNDERGRADUATE-FEES-ZMW.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "BACHELOR OF SCIENCE IN INFORMATION TECHNOLOGY \t12,000 \t12,000 \t12,000 \t14,300 \t15,050 \t15,050 \t12,600 \t12,600",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 12000
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 12000
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 12000
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 14300
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 15050
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 15050
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 12600
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 12600
+        }
+      ]
+    },
+    {
+      "programme": "BACHELOR OF LAWS",
+      "academicYear": 2025,
+      "category": "local_sadc",
+      "currency": "ZMW",
+      "amountType": "published semester fees",
+      "source": "UNDERGRADUATE-FEES-ZMW.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "BACHELOR OF LAWS \t12,600 \t12,600 \t12,600 \t12,600 \t13,400 \t16,100 \t18,800 \t18,800",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 12600
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 12600
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 12600
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 12600
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 13400
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 16100
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 18800
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 18800
+        }
+      ]
+    },
+    {
+      "programme": "BACHELOR OF SCIENCE IN PUBLIC HEALTH",
+      "academicYear": 2025,
+      "category": "local_sadc",
+      "currency": "ZMW",
+      "amountType": "published semester fees",
+      "source": "UNDERGRADUATE-FEES-ZMW.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "BACHELOR OF SCIENCE IN PUBLIC HEALTH \t14,950 \t16,750 \t14,450 \t14,450 \t15,200 \t15,200 \t15,200 \t15,200",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 14950
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 16750
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 14450
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 14450
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 15200
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 15200
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 15200
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 15200
+        }
+      ]
+    },
+    {
+      "programme": "BACHELOR OF SCIENCE IN CYBER SECURITY",
+      "academicYear": 2025,
+      "category": "foreign",
+      "currency": "USD",
+      "amountType": "published semester fees",
+      "source": "UNDERGRADUATE-FEES-USD.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "BACHELOR OF SCIENCE IN CYBER SECURITY \t1640 \t1610 \t1610 \t1610 \t1690 \t1690 \t1690 \t1690",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 1640
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 1610
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 1610
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 1610
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 1690
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 1690
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 1690
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 1690
+        }
+      ]
+    },
+    {
+      "programme": "BACHELOR OF SCIENCE IN COMPUTER SCIENCE",
+      "academicYear": 2025,
+      "category": "foreign",
+      "currency": "USD",
+      "amountType": "published semester fees",
+      "source": "UNDERGRADUATE-FEES-USD.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "BACHELOR OF SCIENCE IN COMPUTER SCIENCE \t1,640 \t1,610 \t1,610 \t1,610 \t1,690 \t1,690 \t1,690 \t1,690",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 1640
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 1610
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 1610
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 1610
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 1690
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 1690
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 1690
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 1690
+        }
+      ]
+    },
+    {
+      "programme": "BACHELOR OF SCIENCE IN ECONOMICS AND FINANCE",
+      "academicYear": 2025,
+      "category": "foreign",
+      "currency": "USD",
+      "amountType": "published semester fees",
+      "source": "UNDERGRADUATE-FEES-USD.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "BACHELOR OF SCIENCE IN ECONOMICS AND FINANCE \t1,950 \t1,610 \t1,610 \t1,610 \t1,690 \t1,690 \t2,050 \t2,050",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 1950
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 1610
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 1610
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 1610
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 1690
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 1690
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 2050
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 2050
+        }
+      ]
+    },
+    {
+      "programme": "BACHELOR OF SCIENCE IN HUMAN RESOURCE",
+      "academicYear": 2025,
+      "category": "foreign",
+      "currency": "USD",
+      "amountType": "published semester fees",
+      "source": "UNDERGRADUATE-FEES-USD.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "BACHELOR OF SCIENCE IN HUMAN RESOURCE \t1,950 \t1,610 \t1,610 \t1,610 \t1,690 \t1,690 \t2,050 \t2,050",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 1950
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 1610
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 1610
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 1610
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 1690
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 1690
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 2050
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 2050
+        }
+      ]
+    },
+    {
+      "programme": "BACHELOR OF SCIENCE IN BANKING AND FINANCE",
+      "academicYear": 2025,
+      "category": "foreign",
+      "currency": "USD",
+      "amountType": "published semester fees",
+      "source": "UNDERGRADUATE-FEES-USD.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "BACHELOR OF SCIENCE IN BANKING AND FINANCE \t1,950 \t1,610 \t1,610 \t1,610 \t1,690 \t1,690 \t2,050 \t2,050",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 1950
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 1610
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 1610
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 1610
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 1690
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 1690
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 2050
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 2050
+        }
+      ]
+    },
+    {
+      "programme": "BACHELOR OF BUSINESS ADMINISTRATION",
+      "academicYear": 2025,
+      "category": "foreign",
+      "currency": "USD",
+      "amountType": "published semester fees",
+      "source": "UNDERGRADUATE-FEES-USD.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "BACHELOR OF BUSINESS ADMINISTRATION \t1,950 \t1,610 \t1,610 \t1,610 \t1,690 \t1,690 \t2,050 \t2,050",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 1950
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 1610
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 1610
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 1610
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 1690
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 1690
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 2050
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 2050
+        }
+      ]
+    },
+    {
+      "programme": "BACHELOR OF SCIENCE IN ACCOUNTANCY",
+      "academicYear": 2025,
+      "category": "foreign",
+      "currency": "USD",
+      "amountType": "published semester fees",
+      "source": "UNDERGRADUATE-FEES-USD.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "BACHELOR OF SCIENCE IN ACCOUNTANCY \t1,950 \t1,610 \t1,610 \t1,610 \t2,050 \t1,690 \t1,690 \t2,050",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 1950
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 1610
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 1610
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 1610
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 2050
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 1690
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 1690
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 2050
+        }
+      ]
+    },
+    {
+      "programme": "BACHELOR OF SCIENCE IN PURCHASING AND SUPPLY",
+      "academicYear": 2025,
+      "category": "foreign",
+      "currency": "USD",
+      "amountType": "published semester fees",
+      "source": "UNDERGRADUATE-FEES-USD.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "BACHELOR OF SCIENCE IN PURCHASING AND SUPPLY \t1,950 \t1,950 \t1,610 \t1,610 \t1,690 \t1,690 \t2,050 \t2,050",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 1950
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 1950
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 1610
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 1610
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 1690
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 1690
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 2050
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 2050
+        }
+      ]
+    },
+    {
+      "programme": "BACHELOR OF SCIENCE IN MARKETING",
+      "academicYear": 2025,
+      "category": "foreign",
+      "currency": "USD",
+      "amountType": "published semester fees",
+      "source": "UNDERGRADUATE-FEES-USD.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "BACHELOR OF SCIENCE IN MARKETING \t1,950 \t1,610 \t1,610 \t1,610 \t1,690 \t1,690 \t2,050 \t2,050",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 1950
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 1610
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 1610
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 1610
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 1690
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 1690
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 2050
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 2050
+        }
+      ]
+    },
+    {
+      "programme": "BSC IN INSURANCE AND PENSION MANAGEMENT",
+      "academicYear": 2025,
+      "category": "foreign",
+      "currency": "USD",
+      "amountType": "published semester fees",
+      "source": "UNDERGRADUATE-FEES-USD.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "BSC IN INSURANCE AND PENSION MANAGEMENT \t1,950 \t1,610 \t1,610 \t1,610 \t1,690 \t1,690 \t1,690 \t2,050",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 1950
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 1610
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 1610
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 1610
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 1690
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 1690
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 1690
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 2050
+        }
+      ]
+    },
+    {
+      "programme": "BACHELOR OF ARTS IN ECONOMICS",
+      "academicYear": 2025,
+      "category": "foreign",
+      "currency": "USD",
+      "amountType": "published semester fees",
+      "source": "UNDERGRADUATE-FEES-USD.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "BACHELOR OF ARTS IN ECONOMICS \t1,950 \t1,610 \t1,610 \t1,610 \t1,690 \t1,690 \t2,050 \t2,050",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 1950
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 1610
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 1610
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 1610
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 1690
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 1690
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 2050
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 2050
+        }
+      ]
+    },
+    {
+      "programme": "BACHELOR OF ACTUARIAL SCIENCE",
+      "academicYear": 2025,
+      "category": "foreign",
+      "currency": "USD",
+      "amountType": "published semester fees",
+      "source": "UNDERGRADUATE-FEES-USD.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "BACHELOR OF ACTUARIAL SCIENCE \t1,950 \t1,610 \t1,610 \t1,950 \t1,690 \t1,690 \t2,050 \t2,050",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 1950
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 1610
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 1610
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 1950
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 1690
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 1690
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 2050
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 2050
+        }
+      ]
+    },
+    {
+      "programme": "BSC IN TRANSPORT AND LOGISTICS MANAGEMENT",
+      "academicYear": 2025,
+      "category": "foreign",
+      "currency": "USD",
+      "amountType": "published semester fees",
+      "source": "UNDERGRADUATE-FEES-USD.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "BSC IN TRANSPORT AND LOGISTICS MANAGEMENT \t1,950 \t1,610 \t1,610 \t1,610 \t1,690 \t1,690 \t2,050 \t2,050",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 1950
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 1610
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 1610
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 1610
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 1690
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 1690
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 2050
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 2050
+        }
+      ]
+    },
+    {
+      "programme": "BSC IN POLITICS AND INTER RELATIONS",
+      "academicYear": 2025,
+      "category": "foreign",
+      "currency": "USD",
+      "amountType": "published semester fees",
+      "source": "UNDERGRADUATE-FEES-USD.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "BSC IN POLITICS AND INTER RELATIONS \t1,610 \t1,610 \t1,610 \t1,610 \t1,690 \t1,690 \t1,690 \t2,050",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 1610
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 1610
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 1610
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 1610
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 1690
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 1690
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 1690
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 2050
+        }
+      ]
+    },
+    {
+      "programme": "BACHELOR OF SCIENCE IN DEVELOPMENT STUDIES",
+      "academicYear": 2025,
+      "category": "foreign",
+      "currency": "USD",
+      "amountType": "published semester fees",
+      "source": "UNDERGRADUATE-FEES-USD.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "BACHELOR OF SCIENCE IN DEVELOPMENT STUDIES \t1,610 \t1,950 \t1,950 \t1,610 \t1,690 \t1,690 \t2,050 \t2,410",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 1610
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 1950
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 1950
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 1610
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 1690
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 1690
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 2050
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 2410
+        }
+      ]
+    },
+    {
+      "programme": "BACHELOR OF SCIENCE IN PUBLIC ADMINISTRATION",
+      "academicYear": 2025,
+      "category": "foreign",
+      "currency": "USD",
+      "amountType": "published semester fees",
+      "source": "UNDERGRADUATE-FEES-USD.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "BACHELOR OF SCIENCE IN PUBLIC ADMINISTRATION \t1,610 \t1,610 \t1,270 \t1,610 \t1,690 \t1,690 \t2,050 \t2,410",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 1610
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 1610
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 1270
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 1610
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 1690
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 1690
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 2050
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 2410
+        }
+      ]
+    },
+    {
+      "programme": "BACHELOR OF SCIENCE IN INFORMATION TECHNOLOGY",
+      "academicYear": 2025,
+      "category": "foreign",
+      "currency": "USD",
+      "amountType": "published semester fees",
+      "source": "UNDERGRADUATE-FEES-USD.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "BACHELOR OF SCIENCE IN INFORMATION TECHNOLOGY \t1,640 \t1,640 \t1,640 \t1,980 \t2,080 \t2,080 \t1,720 \t1,720",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 1640
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 1640
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 1640
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 1980
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 2080
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 2080
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 1720
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 1720
+        }
+      ]
+    },
+    {
+      "programme": "BACHELOR OF LAWS",
+      "academicYear": 2025,
+      "category": "foreign",
+      "currency": "USD",
+      "amountType": "published semester fees",
+      "source": "UNDERGRADUATE-FEES-USD.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "BACHELOR OF LAWS \t1,610 \t1,610 \t1,610 \t1,610 \t1,690 \t2,050 \t2,410 \t2,410",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 1610
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 1610
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 1610
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 1610
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 1690
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 2050
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 2410
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 2410
+        }
+      ]
+    },
+    {
+      "programme": "BACHELOR OF SCIENCE IN PUBLIC HEALTH",
+      "academicYear": 2025,
+      "category": "foreign",
+      "currency": "USD",
+      "amountType": "published semester fees",
+      "source": "UNDERGRADUATE-FEES-USD.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "BACHELOR OF SCIENCE IN PUBLIC HEALTH \t2,050 \t2,340 \t2,000 \t2,000 \t2,100 \t2,100 \t2,100 \t2,100",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 2050
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 2340
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 2000
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 2000
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 2100
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 2100
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 2100
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 2100
+        }
+      ]
+    },
+    {
+      "programme": "Bachelor of Science in Computer Science",
+      "academicYear": 2026,
+      "category": "local_sadc",
+      "currency": "ZMW",
+      "amountType": "published semester fees",
+      "source": "UNILUS-PROSPECTUS-2026-11.pdf",
+      "page": 13,
+      "yearBasis": "2026 prospectus edition",
+      "rawRow": "ZMW: 12,800 \t12,800 \t12,800 \t12,800 \t13,600 13,600 13,600 \t13,600",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 12800
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 12800
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 12800
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 12800
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 13600
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 13600
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 13600
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 13600
+        }
+      ]
+    },
+    {
+      "programme": "Bachelor of Science in Computer Science",
+      "academicYear": 2026,
+      "category": "foreign",
+      "currency": "USD",
+      "amountType": "published semester fees",
+      "source": "UNILUS-PROSPECTUS-2026-11.pdf",
+      "page": 13,
+      "yearBasis": "2026 prospectus edition",
+      "rawRow": "USD: 1,640 \t1,610 \t1,610 \t1,610 \t1,690 \t1,690 \t1,690 \t1,690",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 1640
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 1610
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 1610
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 1610
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 1690
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 1690
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 1690
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 1690
+        }
+      ]
+    },
+    {
+      "programme": "Bachelor of Science in Cyber Security",
+      "academicYear": 2026,
+      "category": "local_sadc",
+      "currency": "ZMW",
+      "amountType": "published semester fees",
+      "source": "UNILUS-PROSPECTUS-2026-11.pdf",
+      "page": 13,
+      "yearBasis": "2026 prospectus edition",
+      "rawRow": "ZMW: 12,800 \t12,800 \t12,800 \t12,800 \t13,600 13,600 13,600 \t13,600",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 12800
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 12800
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 12800
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 12800
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 13600
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 13600
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 13600
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 13600
+        }
+      ]
+    },
+    {
+      "programme": "Bachelor of Science in Cyber Security",
+      "academicYear": 2026,
+      "category": "foreign",
+      "currency": "USD",
+      "amountType": "published semester fees",
+      "source": "UNILUS-PROSPECTUS-2026-11.pdf",
+      "page": 13,
+      "yearBasis": "2026 prospectus edition",
+      "rawRow": "USD: 1,640 \t1,610 \t1,610 \t1,610 \t1,690 \t1,690 \t1,690 \t1,690",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 1640
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 1610
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 1610
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 1610
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 1690
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 1690
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 1690
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 1690
+        }
+      ]
+    },
+    {
+      "programme": "Bachelor of Science in Information Systems and Technology",
+      "academicYear": 2026,
+      "category": "local_sadc",
+      "currency": "ZMW",
+      "amountType": "published semester fees",
+      "source": "UNILUS-PROSPECTUS-2026-11.pdf",
+      "page": 14,
+      "yearBasis": "2026 prospectus edition",
+      "rawRow": "ZMW: 12,000 12,000 12,000 \t14,300 \t15,050 15,050 12,600 \t12,600",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 12000
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 12000
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 12000
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 14300
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 15050
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 15050
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 12600
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 12600
+        }
+      ]
+    },
+    {
+      "programme": "Bachelor of Science in Information Systems and Technology",
+      "academicYear": 2026,
+      "category": "foreign",
+      "currency": "USD",
+      "amountType": "published semester fees",
+      "source": "UNILUS-PROSPECTUS-2026-11.pdf",
+      "page": 14,
+      "yearBasis": "2026 prospectus edition",
+      "rawRow": "USD: 1,640 \t1,640 \t1,640 \t1,980 \t2,080 \t2,080 \t1,720 \t1,720",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 1640
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 1640
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 1640
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 1980
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 2080
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 2080
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 1720
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 1720
+        }
+      ]
+    },
+    {
+      "programme": "Bachelor of Laws",
+      "academicYear": 2026,
+      "category": "local_sadc",
+      "currency": "ZMW",
+      "amountType": "published semester fees",
+      "source": "UNILUS-PROSPECTUS-2026-11.pdf",
+      "page": 21,
+      "yearBasis": "2026 prospectus edition",
+      "rawRow": "ZMW: 12,600 \t12,600 \t12,600 \t12,600 \t13,400 \t16,100 \t18,800 \t18,800",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 12600
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 12600
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 12600
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 12600
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 13400
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 16100
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 18800
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 18800
+        }
+      ]
+    },
+    {
+      "programme": "Bachelor of Laws",
+      "academicYear": 2026,
+      "category": "foreign",
+      "currency": "USD",
+      "amountType": "published semester fees",
+      "source": "UNILUS-PROSPECTUS-2026-11.pdf",
+      "page": 21,
+      "yearBasis": "2026 prospectus edition",
+      "rawRow": "USD: 1,610 \t1,610 \t1,610 \t1,610 \t1,690 \t2,050 \t2,410 \t2,410",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 1610
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 1610
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 1610
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 1610
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 1690
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 2050
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 2410
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 2410
+        }
+      ]
+    },
+    {
+      "programme": "Bachelor of Medicine and Surgery",
+      "academicYear": 2026,
+      "category": "local_sadc",
+      "currency": "ZMW",
+      "amountType": "published semester fees",
+      "source": "BACHELOR-OF-MEDICINE-AND-SURGERY-ZMW-FEES-UNILUS-2026-1.pdf",
+      "page": 1,
+      "yearBasis": "document heading",
+      "rawRow": "Total Fees per Semester \t20,550 \t20,050 \t24,200 \t24,200 \t24,950 \t24,950 \t23,300 \t23,300 \t26,300 \t26,300 \t25,300 \t25,300",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 20550
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 20050
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 24200
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 24200
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 24950
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 24950
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 23300
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 23300
+        },
+        {
+          "studyYear": 5,
+          "semester": 1,
+          "amount": 26300
+        },
+        {
+          "studyYear": 5,
+          "semester": 2,
+          "amount": 26300
+        },
+        {
+          "studyYear": 6,
+          "semester": 1,
+          "amount": 25300
+        },
+        {
+          "studyYear": 6,
+          "semester": 2,
+          "amount": 25300
+        }
+      ]
+    },
+    {
+      "programme": "Bachelor of Medicine and Surgery",
+      "academicYear": 2026,
+      "category": "foreign",
+      "currency": "USD",
+      "amountType": "published semester fees",
+      "source": "BACHELOR-OF-MEDICINE-AND-SURGERY-USD-FEES-UNILUS-2026-1.pdf",
+      "page": 1,
+      "yearBasis": "official 2026 source filename; body omits calendar year",
+      "rawRow": "Total Fees per Semester \t2,080 \t2,000 \t2,420 \t2,420 \t2,420 \t2,420 \t2,190 \t2,190 \t2,590 \t2,560 \t2,390 \t2,390",
+      "semesters": [
+        {
+          "studyYear": 1,
+          "semester": 1,
+          "amount": 2080
+        },
+        {
+          "studyYear": 1,
+          "semester": 2,
+          "amount": 2000
+        },
+        {
+          "studyYear": 2,
+          "semester": 1,
+          "amount": 2420
+        },
+        {
+          "studyYear": 2,
+          "semester": 2,
+          "amount": 2420
+        },
+        {
+          "studyYear": 3,
+          "semester": 1,
+          "amount": 2420
+        },
+        {
+          "studyYear": 3,
+          "semester": 2,
+          "amount": 2420
+        },
+        {
+          "studyYear": 4,
+          "semester": 1,
+          "amount": 2190
+        },
+        {
+          "studyYear": 4,
+          "semester": 2,
+          "amount": 2190
+        },
+        {
+          "studyYear": 5,
+          "semester": 1,
+          "amount": 2590
+        },
+        {
+          "studyYear": 5,
+          "semester": 2,
+          "amount": 2560
+        },
+        {
+          "studyYear": 6,
+          "semester": 1,
+          "amount": 2390
+        },
+        {
+          "studyYear": 6,
+          "semester": 2,
+          "amount": 2390
+        }
+      ]
+    }
+  ]
+}

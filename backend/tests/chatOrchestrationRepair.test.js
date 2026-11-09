@@ -192,7 +192,7 @@ test('knowledge follow-up uses bounded history and the existing planner once', a
     assert.equal(calls.find(c => c.kind === 'retrieval').options.entities.fee_scope, 'accommodation');
 });
 test('a self-contained factual question is not mistaken for a contextless follow-up', async () => {
-    const r = await ask('What are the tuition fees that I should pay?');
+    const r = await ask('What are the university regulations that I should follow?');
     assert.equal(r.data.sources.length, 1); assert.equal(calls.filter(c => c.kind === 'planner').length, 1);
     assert.equal(calls.find(c => c.kind === 'planner').options.messages.length, 2);
 });
@@ -225,7 +225,7 @@ test('planner and generation failures preserve safe replies and cannot create ti
     assert.equal(calls.filter(c => c.kind === 'planner').length, 1);
     calls = []; const unresolved = await ask('What about international students?', r.data.sessionId);
     assert.match(unresolved.data.answer, /Which programme, timetable or university topic/); assert.equal(calls.filter(c => c.kind === 'planner').length, 1);
-    mode = 'generationFailure'; const unavailable = await ask('What are the tuition fees?'); assert.match(unavailable.data.answer, /temporarily unavailable/);
+    mode = 'generationFailure'; const unavailable = await ask('What are the university conduct regulations?'); assert.match(unavailable.data.answer, /temporarily unavailable/);
     assert.equal(await countTickets(), before);
 });
 test('planner rewrites never confer student timetable authorization', async () => {

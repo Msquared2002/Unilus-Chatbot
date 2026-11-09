@@ -20,6 +20,7 @@
  */
 
 const Groq = require("groq-sdk");
+const budget = require('./groqRequestBudget');
 
 const DEFAULT_MODEL = process.env.QUERY_PLANNER_MODEL || "openai/gpt-oss-20b";
 const MAX_SEARCH_QUERIES = 2;
@@ -211,9 +212,10 @@ async function planQuery(query, { completionFn = null, force = false, history = 
   // still never answers the student (see system prompt below).
   const historyMessages = (Array.isArray(history) ? history : [])
     .filter((turn) => turn && typeof turn.content === "string" && turn.content.trim())
+    .slice(-4)
     .map((turn) => ({
       role: turn.role === "assistant" ? "assistant" : "user",
-      content: turn.content,
+      content: budget.clip(turn.content, 500),
     }));
 
   const messages = [
@@ -244,6 +246,7 @@ Rules:
 - Do not invent a programme, fee amount, policy, deadline or requirement.
 - Convert natural paraphrases into useful university terminology when safe (for example, taking a break from studies -> deferment; how much I pay -> fees/fee schedule).
 - Expand abbreviations only when the meaning is clear from the question.
+- BIT means Bachelor of Science in Information Systems and Technology; never silently equate it with Information Technology. Preserve undergraduate versus postgraduate level.
 - Resolve 'this year'/'current year' to ${currentYear}; otherwise do not invent a year.
 - Search queries should be short, keyword-rich and meaningfully different, not full answers.
 - fee_scope is only for fee questions. Use one of: programme_tuition, accommodation, application, graduation, examination, registration, or null.
@@ -251,10 +254,11 @@ Rules:
 - If prior conversation turns are supplied before the student's current message, use them ONLY to resolve vague references in the current message (pronouns like "it", or phrases like "the exam", "that course", "what about Wednesday") into whatever was concretely named earlier (a course code, programme, topic, etc.). Write the resolved concrete reference directly into normalizedQuery and searchQueries. Do not treat anything said in prior turns as a new fact to report, and do not answer the student's question using prior turns.`,
     },
     ...historyMessages,
-    { role: "user", content: query },
+    { role: "user", content: budget.clip(query, 800) },
   ];
 
   try {
+    if (!budget.fits(messages)) return fallbackPlan(query, 'planner request exceeds local budget');
     let content;
     if (completionFn) {
       content = await completionFn({ model: DEFAULT_MODEL, messages });

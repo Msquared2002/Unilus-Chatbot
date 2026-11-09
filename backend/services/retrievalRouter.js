@@ -233,6 +233,11 @@ function classifyQuery(query) {
   const isTimetable = Boolean(
     courseCode || venueCode || lecturer || hasTimetableKeyword || hasProgrammeStageSignal || (day && !hasKnowledgeKeyword)
   );
+  // Fee schedules use programme/year/semester too; those are not class schedules.
+  if (/\b(?:fees?|tuition|costs?)\b/i.test(query)) {
+    return { isTimetable: false, isKnowledge: true, isMixed: false,
+      entities: { courseCode: null, venueCode: null, day: null, lecturer: null, ...programmeStage } };
+  }
   const isKnowledge = hasKnowledgeKeyword || (!isTimetable); // every question is at least a knowledge candidate by default
 
   return {

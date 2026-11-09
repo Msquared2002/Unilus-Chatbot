@@ -1,4 +1,5 @@
 const Groq = require("groq-sdk");
+const budget = require('./groqRequestBudget');
 /*
 Changes: Generates evidence-grounded chatbot answers and sanitizes model output.
 Affects: chatService.js answer responses and supportable resource links.
@@ -227,15 +228,16 @@ Never mention retrieval, vectors, embeddings, databases, context windows, rankin
 }
 
 async function createCompletion(model, messages, temperature = 0.1) {
+    if (!budget.fits(messages)) throw Object.assign(new Error('Request exceeds local token budget'), { status: 413 });
     return getClient().chat.completions.create({
         model,
-        max_tokens: 2500,
+        max_tokens: budget.OUTPUT_TOKENS,
         temperature,
         messages,
     });
 }
 
-async function askAI(question, context = "", { allowedUrls = [], groundingText = "", history = [] } = {}) {
+async function askAI(question, context = "", { allowedUrls = [], groundingText = "", history = [], completionFn = createCompletion } = {}) {
     let lastError;
 
     // URLs present in formatted evidence are automatically allowed in addition
@@ -250,33 +252,20 @@ async function askAI(question, context = "", { allowedUrls = [], groundingText =
     // Prior turns in this conversation, oldest first, so the model can
     // resolve follow-ups like "what about Wednesday?" -- see grounding
     // rule 11: history gives context, never new facts.
-    const historyMessages = history.map((turn) => ({
+    const historyMessages = history.slice(-2).map((turn) => ({
         role: turn.role === "assistant" ? "assistant" : "user",
-        content: turn.content,
+        content: budget.clip(turn.content, 160),
     }));
 
-    const baseMessages = [
-        {
-            role: "system",
-            content: buildSystemPrompt(),
-        },
-        ...historyMessages,
-        {
-            role: "user",
-            content: `
-UNILUS Information:
-
-${context}
-
-Question-specific focus rules:
-${focusHints.length ? focusHints.map((hint) => `- ${hint}`).join("\n") : "- Use the general answer-discipline rules."}
-
-Student Question:
-
-${question}
-`,
-        },
-    ];
+    question = budget.clip(question, 600);
+    const systemMessage = { role: 'system', content: buildSystemPrompt() };
+    const suffix = '\nQuestion-specific focus rules:\n' + focusHints.map(h => '- ' + h).join('\n') + '\nStudent Question:\n' + question;
+    const makeMessages = evidence => [systemMessage, ...historyMessages, { role: 'user', content: 'UNILUS Information:\n' + evidence + suffix }];
+    // Reserve evidence space before optional history; never drop grounding rules.
+    while (historyMessages.length && budget.cost(makeMessages('')) > budget.INPUT_BUDGET - 600) historyMessages.shift();
+    const available = budget.INPUT_BUDGET - budget.cost(makeMessages('')) - 80;
+    const boundedContext = budget.clip(context, available);
+    const baseMessages = makeMessages(boundedContext + (boundedContext.length < context.length ? '\n[Evidence shortened; do not infer omitted facts.]' : ''));
 
     const controllingGroundingText = groundingText || context;
 
@@ -284,7 +273,7 @@ ${question}
         try {
             console.log("Trying model:", model);
 
-            const response = await createCompletion(model, baseMessages, 0.1);
+            const response = await completionFn(model, baseMessages, 0.1);
             let rawAnswer = response.choices[0].message.content;
             let unsupported = findUnsupportedNumericTokens(rawAnswer, controllingGroundingText);
 
@@ -300,8 +289,10 @@ ${question}
                         content: `Revise the draft. These numeric token(s) are not supported by the controlling UNILUS evidence: ${unsupported.join(", ")}. Copy every amount/date/account number/percentage exactly from the controlling evidence. If sources conflict, use PRIMARY evidence and do not substitute a SUPPORTING value. Keep the answer concise and do not add unrelated sections.`,
                     },
                 ];
-                const retry = await createCompletion(model, retryMessages, 0);
-                rawAnswer = retry.choices[0].message.content;
+                if (budget.fits(retryMessages)) {
+                    const retry = await completionFn(model, retryMessages, 0);
+                    rawAnswer = retry.choices[0].message.content;
+                }
                 unsupported = findUnsupportedNumericTokens(rawAnswer, controllingGroundingText);
 
                 // If a model still refuses to stay grounded after correction,
@@ -316,6 +307,9 @@ ${question}
             return sanitizeAnswerLinks(rawAnswer, effectiveAllowedUrls);
         } catch (error) {
             lastError = error;
+            // A size failure will not improve by sending the same payload to
+            // every fallback model. Let the existing safe answer fallback run.
+            if (budget.isSizeError(error)) break;
             if (error.status === 429) {
                 console.log("Rate limit reached:", model);
                 continue;
