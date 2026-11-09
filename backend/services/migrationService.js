@@ -71,6 +71,7 @@ async function migrate(client,{files,backupCounts,backupFingerprints,inspectFn=i
    if(!old){await client.query(file.sql);await client.query('INSERT INTO public.schema_migrations(version,checksum,applied_at) VALUES ($1,$2,$3)',[file.name,checksum,new Date().toISOString()]);}
   }
   await checkSecurity(client);
+  if(files.some(f=>f.name==='002_ticket_notification_reads.sql'))await require('./notificationSchemaCheck').check(client);
   for(const t of CORE)if(Number((await client.query('SELECT count(*) AS n FROM public.'+ident(t))).rows[0].n)!==before.counts[t])throw Error('ORIGINAL_ROW_COUNT_CHANGED');
   for(const t of CORE)if((await client.query("SELECT md5(COALESCE(jsonb_agg(to_jsonb(t) ORDER BY t.id)::text,'[]')) AS digest FROM public."+ident(t)+' t')).rows[0].digest!==before.fingerprints[t])throw Error('ORIGINAL_CONTENT_CHANGED');
   await client.query('COMMIT');return{preservedCounts:Object.fromEntries(CORE.map(t=>[t,before.counts[t]]))};

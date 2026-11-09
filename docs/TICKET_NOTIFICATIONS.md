@@ -1,0 +1,19 @@
+# Ticket notification foundation
+
+The authenticated student portal polls `/api/notifications` immediately and every 30 seconds while visible. It displays the latest 50 updates and an unread count over all eligible events. Mark-read acknowledgements persist per authenticated username in `ticket_notification_reads`. Tickets belong to students through the existing `chat_sessions.owner` relation, never a client-supplied username or ticket reference.
+
+Successful student-visible reply/status events are already persistent notifications. Using their IDs directly avoids a second writer, notification duplication on polling, and notifications for failed ticket transactions. Repeating the same status does not create another event. Separate intentional replies remain separate updates. Existing events are included; no backfill writes are necessary. Guests, internal notes and staff-only events are excluded. Notification payloads contain generic text, ticket reference and date, never reply bodies, staff names, issue descriptions or status details. UI text uses `textContent`.
+
+## Before deployment
+
+SQLite creates its read-receipt table locally using the existing adapter convention. PostgreSQL startup performs no DDL. The additive migration is now `backend/migrations/002_ticket_notification_reads.sql`; the deployment SQL is only a pointer. It was committed through the approved guarded runner after fresh encrypted backup validation and a read-only preflight. It uses the confirmed integer event-ID type, a foreign key, composite primary key, command-specific SELECT/INSERT policies and restricted grants. The existing guarded runner verifies the combined bundle checksum, existing ledger, fresh backup, original-record fingerprints and the new notification schema/security check before commit. The original migration file remains unchanged. Without the receipt table the notification endpoint returns a generic 503; ticket operations remain unchanged.
+
+Read-only production preflight confirmed the project, event-ID type, restricted runtime role with no memberships/admin privileges, absence of the new table and no duplicate active ticket groups. Production migration configuration was validated privately. Post-migration read-only verification confirmed the new table, foreign key, policies, grants and migration ledger, and matched original core table counts and content fingerprints to the verified backup.
+
+Local verification: full backend 379/379, widget 140/140, focused notification/database checks 6/6 and frontend polling check 1/1 passed. Production widget build passed. A final ownership tightening also passed the focused tests: another student's read acknowledgement now returns unavailable rather than a successful no-op. Real portal and hosted acceptance are pending migration and deployment.
+
+## Web Push deferred
+
+No browser permission is requested and no service worker or push subscription is registered. Closed-site notifications are not implemented. Safe Web Push additionally requires authenticated durable subscription lifecycle handling (including logout/shared devices), VAPID credentials supplied privately through environment configuration, endpoint validation and reliable delivery after successful ticket transaction commits. Those changes would exceed this small foundation. A later implementation would use `WEB_PUSH_PUBLIC_KEY`, `WEB_PUSH_PRIVATE_KEY` and `WEB_PUSH_SUBJECT`, HTTPS and a user-triggered permission action, and generic lock-screen text. Setting those variables alone does not enable push.
+
+Only the explicitly approved additive migration has been applied; application deployment follows the release gates. Focused SQLite tests verify inbox generation, ownership, guest exclusion, read-state idempotency, repeated-status deduplication and privacy. Frontend browser behavior and the prepared PostgreSQL SQL have not been exercised against production.

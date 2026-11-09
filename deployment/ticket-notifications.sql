@@ -1,0 +1,3 @@
+-- Superseded by backend/migrations/002_ticket_notification_reads.sql.
+-- Execute only through backend/scripts/migrate.js with its reviewed bundle
+-- hash and fresh verified backup. Do not run this file as standalone SQL.
