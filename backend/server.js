@@ -60,12 +60,21 @@ app.use(
 );
 
 
+// Notifications for the widget (new documents, ticket updates)
+app.use(
+    "/api/notifications",
+    require("./routes/notificationRoutes")
+);
+
+
 // Tickets, feedback and staff API routes
 // (/api/tickets/:ref, /api/feedback, /api/admin/...)
 app.use(
     "/api",
     supportRoutes
 );
+
+app.use("/api", require("./routes/staffAnswerRoutes"));
 
 
 // Knowledge base management: staff upload, delete, status, website refresh

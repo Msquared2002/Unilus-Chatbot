@@ -360,3 +360,149 @@ function addTypingIndicator() {
 function removeTypingIndicator(row) {
   if (row && row.parentNode) row.parentNode.removeChild(row);
 }
+
+
+/* ---------------- Update notifications ----------------
+Changes: Polls /api/notifications and shows new notices (new documents, ticket updates).
+Affects: The launcher button (badge) and the chat box (notice messages). Uses addMessage() above.
+Purpose: Students hear about changes without asking. The id of the newest notice shown is kept
+         in localStorage so each notice appears once per browser; if storage is unavailable the
+         widget simply shows recent notices again after a reload. */
+(function () {
+  const POLL_MS = 60000;
+  const SEEN_KEY = "unilusNotifSeen"; // per person: see seenKey()
+  const API_BASE = "http://localhost:5000/api/notifications";
+  let lastSeen = null;      // newest notice id already shown (null = never seen any)
+  let pending = [];         // notices fetched while the chat was closed
+  let badge = null;
+  let lastIdentity = null;
+
+  // Whose notices these are, read from the sign-in token (its middle part is plain JSON).
+  // Display only: the server decides who may see what from the token it verifies.
+  // Keyed per person so two people sharing a browser each get their own notices.
+  function who() {
+    try {
+      const token = sessionStorage.getItem("unilusAuthToken");
+      if (!token) return "visitor";
+      const part = token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
+      return String(JSON.parse(atob(part)).sub || "visitor").toLowerCase();
+    } catch { return "visitor"; }
+  }
+  const seenKey = () => `${SEEN_KEY}:${who()}`;
+
+  function readSeen() {
+    try { const v = localStorage.getItem(seenKey()); return v === null ? null : Number(v) || 0; } catch { return null; }
+  }
+  function writeSeen(id) {
+    lastSeen = id;
+    try { localStorage.setItem(seenKey(), String(id)); } catch { /* ignore */ }
+  }
+
+  function escapeText(text) {
+    return String(text == null ? "" : text).replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+  }
+
+  function chatIsOpen() {
+    const launcher = document.getElementById("launcher");
+    return Boolean(launcher && launcher.classList.contains("is-hidden"));
+  }
+
+  function updateBadge() {
+    const launcher = document.getElementById("launcher");
+    if (!launcher) return;
+    if (!badge) {
+      badge = document.createElement("span");
+      badge.className = "uw-badge";
+      badge.setAttribute("aria-live", "polite");
+      launcher.appendChild(badge);
+    }
+    badge.textContent = pending.length > 9 ? "9+" : String(pending.length);
+    badge.hidden = pending.length === 0;
+    launcher.setAttribute("aria-label", pending.length
+      ? `Open Unilus companion chat, ${pending.length} new update${pending.length === 1 ? "" : "s"}`
+      : "Open Unilus companion chat");
+  }
+
+  function showInChat(items) {
+    for (const item of items) {
+      const body = item.body ? `\n\n${escapeText(item.body)}` : "";
+      addMessage(`📢 **${escapeText(item.title)}**${body}`, "bot", false);
+    }
+  }
+
+  // A pop-up on the page itself (not only inside the chat) so a resolved ticket is noticed
+  // on the portal. Plain text only; removed by itself after 9 seconds or on click.
+  function toast(item) {
+    const box = document.createElement("div");
+    box.className = "uw-toast";
+    box.setAttribute("role", "status");
+    const heading = document.createElement("strong");
+    heading.textContent = item.title;
+    box.appendChild(heading);
+    if (item.body) {
+      const text = document.createElement("span");
+      text.textContent = item.body;
+      box.appendChild(text);
+    }
+    box.addEventListener("click", () => box.remove());
+    document.body.appendChild(box);
+    setTimeout(() => box.remove(), 9000);
+  }
+
+  function flushPending() {
+    if (!pending.length) return;
+    const items = pending;
+    pending = [];
+    showInChat(items);
+    updateBadge();
+  }
+
+  async function poll() {
+    try {
+      const identity = who();
+      if (identity !== lastIdentity) { lastIdentity = identity; lastSeen = readSeen(); pending = []; updateBadge(); }
+      const headers = {};
+      let token = null, chatSession = null;
+      try {
+        token = sessionStorage.getItem("unilusAuthToken");
+        chatSession = sessionStorage.getItem("unilusChatSession");
+      } catch { /* storage unavailable: poll as a visitor */ }
+      if (token) headers.Authorization = `Bearer ${token}`;
+
+      const params = new URLSearchParams({ after: String(lastSeen === null ? 0 : lastSeen) });
+      if (lastSeen === null) params.set("limit", "3"); // first visit: only the latest few
+      if (chatSession) params.set("sessionId", chatSession);
+
+      const response = await fetch(`${API_BASE}?${params}`, { headers });
+      if (!response.ok) return;
+      const data = await response.json();
+      const items = Array.isArray(data.items) ? data.items : [];
+      if (!items.length) {
+        if (lastSeen === null) writeSeen(Number(data.latestId) || 0);
+        return;
+      }
+
+      writeSeen(Math.max(...items.map((i) => Number(i.id) || 0), lastSeen || 0));
+      if (chatIsOpen()) {
+        showInChat(items);
+      } else {
+        pending = pending.concat(items);
+        updateBadge();
+        items.filter((i) => i.kind === "ticket").slice(-2).forEach(toast);
+      }
+    } catch {
+      /* offline or backend down: try again on the next poll */
+    }
+  }
+
+  function start() {
+    lastSeen = readSeen();
+    const launcher = document.getElementById("launcher");
+    if (launcher) launcher.addEventListener("click", () => setTimeout(flushPending, 700));
+    setTimeout(poll, 3000);
+    setInterval(poll, POLL_MS);
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);
+  else start();
+})();

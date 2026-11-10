@@ -27,7 +27,7 @@ router.post("/", async (req, res) => {
     // Who is asking, taken from the signed token: used to personalise
     // ("my timetable") and to greet them by name.
     const profile = req.user
-        ? { name: req.user.name, programme: req.user.programme, year: req.user.year, semester: req.user.semester }
+        ? { username: req.user.username, name: req.user.name, programme: req.user.programme, year: req.user.year, semester: req.user.semester }
         : null;
 
     // Tells the frontend whether the user is signed in, and whether a token

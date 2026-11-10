@@ -1118,3 +1118,24 @@
     min-width: 900px !important;
   }
 }
+
+/* ----- update badge on the launcher (new documents, ticket updates) ----- */
+.uw-badge{
+  position:absolute; top:-4px; right:-4px;
+  min-width:20px; height:20px; padding:0 5px;
+  border-radius:10px; background:#c62828; color:#fff;
+  font:700 12px/20px system-ui,sans-serif; text-align:center;
+  box-shadow:0 0 0 2px #fff;
+}
+.uw-badge[hidden]{ display:none; }
+
+/* ----- pop-up for ticket updates (portal and website pages) ----- */
+.uw-toast{
+  position:fixed; top:20px; right:20px; z-index:2147483000;
+  max-width:340px; padding:14px 16px;
+  background:#0d5c3d; color:#fff; border-radius:12px; cursor:pointer;
+  box-shadow:0 10px 30px rgba(0,0,0,.25);
+  font:400 14px/1.4 system-ui,sans-serif;
+  display:flex; flex-direction:column; gap:4px;
+}
+.uw-toast strong{ font-weight:700; }

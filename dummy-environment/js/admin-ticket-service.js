@@ -80,7 +80,17 @@ function shape(row) {
     status,
     departmentId: toDepartmentId(row.department),
     assignedTo: null,
-    student: { name: "Chat student", email: "Not captured by the chatbot", programme: "Not provided" },
+    // Changes: Shows who opened the ticket and the contact details they gave.
+    // Affects: Ticket detail "Student", "Email" and "Phone" fields in admin.js.
+    // Purpose: Portal students are identified by their account (details come from it);
+    //          visitors give an email in the chat. Resolving a portal ticket shows a notice
+    //          on the portal; resolving a visitor ticket emails them.
+    student: {
+      name: row.student_username ? `Portal student (${row.student_username})` : "Visitor (chat)",
+      email: row.student_email || (row.contact_status === "declined" ? "Visitor chose not to share" : row.student_username ? "None on the student account" : "Not provided yet"),
+      phone: row.student_phone || (row.contact_status === "declined" ? "Visitor chose not to share" : row.student_username ? "None on the student account" : "Not provided yet"),
+      programme: "Not provided",
+    },
     createdAt: row.created_at,
     updatedAt: row.updated_at || row.created_at,
     conversation: [{ role: "student", author: "Student (via chatbot)", body: row.question, createdAt: row.created_at }],

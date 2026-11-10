@@ -83,6 +83,36 @@ db.schema({
 });
 
 
+// Changes: Adds the student's own email / phone to tickets.
+// Affects: tickets table (existing databases are altered in place), adminView.
+// Purpose: Staff can reach the student directly. CREATE TABLE IF NOT EXISTS will
+//          not add columns to a table that already exists, so we ALTER and ignore
+//          "already exists" errors. contact_status: pending | provided | declined.
+const NEW_TICKET_COLUMNS = [
+    ["student_email", "TEXT"],
+    ["student_phone", "TEXT"],
+    ["contact_status", "TEXT"],
+    ["student_username", "TEXT"],     // set when a signed-in portal student's question was escalated
+    ["resolved_notified_at", "TEXT"], // set once the "resolved" email has been sent (never sent twice)
+];
+
+const columnsReady = (async () => {
+    for (const [name, type] of NEW_TICKET_COLUMNS) {
+        try {
+            const ifNotExists = db.dialect === "postgres" ? "IF NOT EXISTS " : "";
+            await db.run(`ALTER TABLE tickets ADD COLUMN ${ifNotExists}${name} ${type}`);
+        } catch (err) {
+            if (!/duplicate column|already exists/i.test(err.message)) {
+                console.log(`[support] could not add tickets.${name}:`, err.message);
+            }
+        }
+    }
+})();
+
+// How long after a ticket is opened the chatbot keeps listening for contact details.
+const CONTACT_WINDOW_MINUTES = 30;
+
+
 /* ------------------------------------------------------------------ */
 /* Classification (simple keyword rules; transparent and easy to tune) */
 /* ------------------------------------------------------------------ */
@@ -159,6 +189,10 @@ function adminView(row) {
         history,
         session_id: row.session_id,
         contact_id: row.contact_id,
+        student_email: row.student_email || null,
+        student_phone: row.student_phone || null,
+        student_username: row.student_username || null,
+        contact_status: row.contact_status || "none",
     };
 }
 
@@ -185,6 +219,43 @@ const cleanRef = (ref) => String(ref || "").trim().toUpperCase();
 
 
 /* ------------------------------------------------------------------ */
+/* Student contact details                                             */
+/* ------------------------------------------------------------------ */
+
+const EMAIL_PATTERN = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i;
+const PHONE_PATTERN = /\+?\d[\d\s\-().]{7,17}\d/;
+const DECLINE_PATTERN = /^\s*(no|nope|nah|skip|no thanks|no thank you|not now|rather not|i('d| would) rather not|don'?t want to)\b/i;
+
+/**
+ * Pulls an email address and/or phone number out of a chat message.
+ * Phone numbers must contain 9 to 15 digits (Zambian numbers such as
+ * 0971263550 or +260971263550 both pass). Returns nulls when nothing is found.
+ */
+function extractContactDetails(text) {
+    const message = String(text || "");
+    if (message.length > 200) return { email: null, phone: null }; // a real question, not a reply
+
+    const emailMatch = message.match(EMAIL_PATTERN);
+    const withoutEmail = emailMatch ? message.replace(emailMatch[0], " ") : message;
+
+    let phone = null;
+    const phoneMatch = withoutEmail.match(PHONE_PATTERN);
+    if (phoneMatch) {
+        const digits = phoneMatch[0].replace(/\D/g, "");
+        if (digits.length >= 9 && digits.length <= 15) {
+            phone = phoneMatch[0].trim().startsWith("+") ? `+${digits}` : digits;
+        }
+    }
+
+    return { email: emailMatch ? emailMatch[0].toLowerCase() : null, phone };
+}
+
+function isContactDecline(text) {
+    return DECLINE_PATTERN.test(String(text || ""));
+}
+
+
+/* ------------------------------------------------------------------ */
 /* Tickets                                                             */
 /* ------------------------------------------------------------------ */
 
@@ -195,7 +266,9 @@ const cleanRef = (ref) => String(ref || "").trim().toUpperCase();
  *
  * @returns {Promise<{ ticket: object, created: boolean }>}
  */
-async function createTicket({ sessionId, question, history = [], contact = null }) {
+async function createTicket({ sessionId, question, history = [], contact = null, studentContact = null, studentUsername = null }) {
+    await columnsReady;
+
     const duplicate = await db.get(
         `SELECT * FROM tickets
          WHERE session_id = ? AND lower(question) = lower(?)
@@ -219,8 +292,9 @@ async function createTicket({ sessionId, question, history = [], contact = null 
     const id = await db.insert(
         `INSERT INTO tickets
             (ticket_ref, session_id, question, summary, history_json,
-             category, priority, department, contact_id)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+             category, priority, department, contact_id,
+             student_email, student_phone, contact_status, student_username)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
             `TMP-${crypto.randomUUID()}`,
             sessionId,
@@ -231,6 +305,12 @@ async function createTicket({ sessionId, question, history = [], contact = null 
             priority,
             (contact && contact.department) || DEFAULT_DEPARTMENT,
             contact ? contact.contact_id || null : null,
+            (studentContact && studentContact.email) || null,
+            (studentContact && studentContact.phone) || null,
+            // portal = signed in, details come from the account, nobody is asked.
+            // pending = visitor, the chatbot asks for an email next.
+            studentUsername ? "portal" : (studentContact && (studentContact.email || studentContact.phone) ? "provided" : "pending"),
+            studentUsername || null,
         ]
     );
     const ref = `UNI-${new Date().getFullYear()}-${String(id).padStart(4, "0")}`;
@@ -278,14 +358,103 @@ async function updateTicketStatus(ref, status) {
         throw new Error(`Invalid status. Use one of: ${STATUSES.join(", ")}`);
     }
 
+    await columnsReady;
     const wanted = cleanRef(ref);
+    const before = await db.get(`SELECT status FROM tickets WHERE ticket_ref = ?`, [wanted]);
     const info = await db.run(
         `UPDATE tickets SET status = ?, updated_at = ${db.now} WHERE ticket_ref = ?`,
         [normalized, wanted]
     );
 
     if (info.changes === 0) return null;
-    return adminView(await db.get(`SELECT * FROM tickets WHERE ticket_ref = ?`, [wanted]));
+    const updated = adminView(await db.get(`SELECT * FROM tickets WHERE ticket_ref = ?`, [wanted]));
+
+    // Changes: Tells the person who opened the ticket (portal notice, or email for visitors).
+    // Affects: services/ticketNotifier.js. Runs for EVERY status change, whichever route
+    //          made it (ticket PATCH or "teach the chatbot"), because they all end up here.
+    // Purpose: Staff updating the knowledge base and answering the student become one step.
+    if (!before || before.status !== updated.status) {
+        require("./ticketNotifier").statusChanged(updated).catch(() => {});
+    }
+    return updated;
+}
+
+/**
+ * Marks the "resolved" email as sent. Returns true only for the caller that
+ * claims it first, so toggling Resolved -> In Progress -> Resolved never sends twice.
+ */
+async function claimResolutionEmail(ref) {
+    await columnsReady;
+    const info = await db.run(
+        `UPDATE tickets SET resolved_notified_at = ${db.now}
+         WHERE ticket_ref = ? AND resolved_notified_at IS NULL`,
+        [cleanRef(ref)]
+    );
+    return info.changes === 1;
+}
+
+async function releaseResolutionEmail(ref) {
+    await db.run(`UPDATE tickets SET resolved_notified_at = NULL WHERE ticket_ref = ?`, [cleanRef(ref)]);
+}
+
+
+/**
+ * The newest ticket in this session that is still waiting for the student's
+ * contact details (opened within CONTACT_WINDOW_MINUTES), or null.
+ */
+async function getTicketAwaitingContact(sessionId) {
+    await columnsReady;
+    const row = await db.get(
+        `SELECT * FROM tickets
+         WHERE session_id = ? AND contact_status = 'pending'
+         ORDER BY id DESC LIMIT 1`,
+        [sessionId]
+    );
+    if (!row) return null;
+
+    const opened = Date.parse(toIso(row.created_at));
+    if (Number.isFinite(opened) && Date.now() - opened > CONTACT_WINDOW_MINUTES * 60 * 1000) {
+        await db.run(`UPDATE tickets SET contact_status = 'declined' WHERE id = ?`, [row.id]);
+        return null;
+    }
+    return publicView(row);
+}
+
+/**
+ * Saves the student's email and/or phone on a ticket. Only fills in what was
+ * given; never wipes a detail that is already stored.
+ * @returns {Promise<{email: string|null, phone: string|null}|null>} what is now stored, or null if the ticket doesn't exist
+ */
+async function saveTicketContact(ref, { email = null, phone = null } = {}) {
+    await columnsReady;
+    const wanted = cleanRef(ref);
+    const existing = await db.get(`SELECT * FROM tickets WHERE ticket_ref = ?`, [wanted]);
+    if (!existing) return null;
+
+    const nextEmail = email || existing.student_email || null;
+    const nextPhone = phone || existing.student_phone || null;
+
+    await db.run(
+        `UPDATE tickets
+         SET student_email = ?, student_phone = ?, contact_status = ?, updated_at = ${db.now}
+         WHERE ticket_ref = ?`,
+        [nextEmail, nextPhone, nextEmail || nextPhone ? "provided" : "pending", wanted]
+    );
+    return { email: nextEmail, phone: nextPhone };
+}
+
+async function declineTicketContact(ref) {
+    await columnsReady;
+    await db.run(
+        `UPDATE tickets SET contact_status = 'declined' WHERE ticket_ref = ? AND contact_status = 'pending'`,
+        [cleanRef(ref)]
+    );
+}
+
+/** Checks that a ticket belongs to the given chat session (used by the contact endpoint). */
+async function ticketBelongsToSession(ref, sessionId) {
+    const row = await db.get(`SELECT session_id FROM tickets WHERE ticket_ref = ?`, [cleanRef(ref)]);
+    return Boolean(row && sessionId && row.session_id === sessionId);
 }
 
 
@@ -358,6 +527,14 @@ module.exports = {
     listTickets,
     updateTicketStatus,
     normalizeStatus,
+    extractContactDetails,
+    isContactDecline,
+    getTicketAwaitingContact,
+    saveTicketContact,
+    declineTicketContact,
+    ticketBelongsToSession,
+    claimResolutionEmail,
+    releaseResolutionEmail,
     recordFeedback,
     getStats,
 };
