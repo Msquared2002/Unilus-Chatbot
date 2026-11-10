@@ -64,6 +64,30 @@ function formatTicketStatus(ticket) {
     return text;
 }
 
+// Changes: Picks up the student's email / phone after a ticket is opened.
+// Affects: answerQuestion (runs before everything except greetings) and supportService tickets.
+// Purpose: buildFallback asks "how can staff reach you?"; the next short reply is
+//          read here. Anything that is not contact details falls through to normal
+//          handling, so the student is never trapped in this step.
+async function handleContactReply(question, sessionId) {
+    const pending = await supportService.getTicketAwaitingContact(sessionId);
+    if (!pending) return null;
+
+    const found = supportService.extractContactDetails(question);
+    if (found.email || found.phone) {
+        const saved = await supportService.saveTicketContact(pending.ref, found);
+        const given = [saved.email, saved.phone].filter(Boolean).join(" and ");
+        return `Thank you. I've added ${given} to ticket ${pending.ref}, so the ${pending.department} can reach you directly as soon as they have an update.`;
+    }
+
+    if (supportService.isContactDecline(question)) {
+        await supportService.declineTicketContact(pending.ref);
+        return `No problem. Ticket ${pending.ref} stays open, and you can ask me for its status any time.`;
+    }
+
+    return null;
+}
+
 // "status of UNI-2026-0042", or "what's the status of my ticket" (uses the
 // most recent ticket opened in this session). Returns null when the message
 // isn't about a ticket, so normal handling continues.
@@ -342,7 +366,7 @@ function collectAllowedUrls({ knowledge = [], resources = [] }) {
  * review -- see unansweredLogger.js for why this is a review queue,
  * not a self-learning mechanism.
  */
-async function buildFallback(question, queryType, timetableMatches = 0, sessionId = null) {
+async function buildFallback(question, queryType, timetableMatches = 0, sessionId = null, profile = null) {
     const fallback = await contactService.findFallbackContact(question);
     const contact = fallback ? fallback.contact : null;
 
@@ -364,24 +388,38 @@ async function buildFallback(question, queryType, timetableMatches = 0, sessionI
     // If ticketing fails for any reason, the plain contact answer above
     // is still returned.
     let ticket = null;
+    let askForContact = false;
     if (sessionId) {
         try {
+            // Signed-in portal student: their email / phone come from the account and the
+            // ticket is linked to it, so nobody is asked and the resolved notice reaches
+            // them on the portal. Visitors are asked for an email after the ticket opens.
+            const username = profile && profile.username ? profile.username : null;
             const result = await supportService.createTicket({
                 sessionId,
                 question,
                 history: await sessionService.getRecentHistory(sessionId, 12),
                 contact,
+                studentUsername: username,
+                studentContact: username ? require("./authService").getUserContact(username) : null,
             });
             ticket = result.ticket;
             answer += result.created
                 ? ` I've logged this as ticket ${ticket.ref} and passed it to the ${ticket.department}. Ask me for the "status of ${ticket.ref}" any time to check progress.`
                 : ` You already have an open ticket for this (${ticket.ref}), currently ${ticket.status}.`;
+            askForContact = result.created && !username;
         } catch (err) {
             console.log("Failed to create ticket:", err.message);
         }
     }
 
     answer = await toneService.rephrase(question, answer, { kind: "fallback" });
+
+    // Added after the tone rewrite so the request can never be reworded away.
+    // Only on a brand-new ticket; the next short reply is read by handleContactReply.
+    if (askForContact) {
+        answer += "\n\nSo we can let you know when it's resolved, please reply with your email address (you can add a phone number too, or say \"skip\").";
+    }
 
     return {
         answer,
@@ -409,6 +447,22 @@ async function answerQuestion(question, sessionId, audience = "public", profile 
         await sessionService.appendMessage(sessionId, "assistant", greeting);
         return {
             answer: greeting,
+            queryType: { isTimetable: false, isKnowledge: false, isMixed: false, entities: {} },
+            sources: [],
+            resources: [],
+            recommendedResources: [],
+            timetableMatches: 0,
+            usedFallback: false,
+            sessionId,
+        };
+    }
+
+    // Contact details for a ticket the bot just opened ("0971 234 567", "me@mail.com", "skip").
+    const contactAnswer = await handleContactReply(question, sessionId);
+    if (contactAnswer) {
+        await sessionService.appendMessage(sessionId, "assistant", contactAnswer);
+        return {
+            answer: contactAnswer,
             queryType: { isTimetable: false, isKnowledge: false, isMixed: false, entities: {} },
             sources: [],
             resources: [],
@@ -533,7 +587,7 @@ async function answerQuestion(question, sessionId, audience = "public", profile 
     const hasAnyEvidence = timetable.length > 0 || knowledge.length > 0 || resources.length > 0;
     if (!hasAnyEvidence) {
         console.log("No matching records found. Checking contact fallback...");
-        const fallbackResult = await buildFallback(question, queryType, 0, sessionId);
+        const fallbackResult = await buildFallback(question, queryType, 0, sessionId, profile);
         await sessionService.appendMessage(sessionId, "assistant", fallbackResult.answer);
         return { ...fallbackResult, sessionId };
     }
@@ -555,7 +609,7 @@ async function answerQuestion(question, sessionId, audience = "public", profile 
     // instead of returning that dead-end line as-is.
     if (/i don.t have that information/i.test(answer)) {
         console.log("LLM reported no answer. Checking contact fallback...");
-        const fallbackResult = await buildFallback(question, queryType, timetable.length, sessionId);
+        const fallbackResult = await buildFallback(question, queryType, timetable.length, sessionId, profile);
         await sessionService.appendMessage(sessionId, "assistant", fallbackResult.answer);
         return { ...fallbackResult, sessionId };
     }

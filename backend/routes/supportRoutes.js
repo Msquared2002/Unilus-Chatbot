@@ -5,6 +5,7 @@
  *
  *   Public:
  *     GET   /api/tickets/:ref        ticket status only (no question text, no history)
+ *     POST  /api/tickets/:ref/contact  { sessionId, email?, phone? }  (own ticket only)
  *     POST  /api/feedback            { sessionId, rating: "up"|"down", comment? }
  *
  *   Staff (signed in as role "staff" or "admin", OR header x-admin-key):
@@ -41,6 +42,34 @@ router.get("/tickets/:ref", async (req, res) => {
     } catch (error) {
         console.error("Ticket lookup error:", error);
         res.status(500).json({ error: "Failed to look up ticket" });
+    }
+});
+
+
+// Changes: Lets the widget attach the student's email / phone to their own ticket.
+// Affects: tickets.student_email / student_phone (staff see them in /api/admin/tickets).
+// Purpose: Same data the chat reply path saves; this is for a form or button in the UI.
+//          The sessionId must match the one that opened the ticket, so one student
+//          cannot write to another student's ticket.
+router.post("/tickets/:ref/contact", async (req, res) => {
+    try {
+        const sessionId = typeof req.body.sessionId === "string" ? req.body.sessionId : "";
+        if (!(await support.ticketBelongsToSession(req.params.ref, sessionId))) {
+            return res.status(404).json({ error: "Ticket not found" });
+        }
+
+        const found = support.extractContactDetails(
+            [req.body.email, req.body.phone].filter((v) => typeof v === "string").join(" ")
+        );
+        if (!found.email && !found.phone) {
+            return res.status(400).json({ error: "Please give a valid email address or phone number." });
+        }
+
+        await support.saveTicketContact(req.params.ref, found);
+        res.json({ ok: true });
+    } catch (error) {
+        console.error("Ticket contact error:", error);
+        res.status(500).json({ error: "Failed to save contact details" });
     }
 });
 

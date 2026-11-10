@@ -153,7 +153,7 @@ test("classifyQuery extracts programme family, year and semester", () => {
 
 test("retrieveAnswer returns the exact BIT32 cohort instead of fuzzy unrelated rows", async () => {
   const { retrieveAnswer } = require("../services/retrievalService");
-  const result = await retrieveAnswer("the BIT timetable for 3,2");
+  const result = await retrieveAnswer("the BIT timetable for 3,2", [], "student");
   assert.ok(result.timetable.length >= 10);
   assert.ok(result.timetable.every((r) => r.programme_code === "BIT32"));
   assert.ok(result.timetable.every((r) => r.year === 3 && r.semester === 2));
@@ -165,7 +165,7 @@ test("retrieveAnswer returns the exact BIT32 cohort instead of fuzzy unrelated r
 
 test("programme-stage timetable query also honors a requested day", async () => {
   const { retrieveAnswer } = require("../services/retrievalService");
-  const result = await retrieveAnswer("BIT 3rd year 2nd semester timetable on Monday");
+  const result = await retrieveAnswer("BIT 3rd year 2nd semester timetable on Monday", [], "student");
   assert.ok(result.timetable.length > 0);
   assert.ok(result.timetable.every((r) => r.programme_code === "BIT32"));
   assert.ok(result.timetable.every((r) => r.day === "Monday"));
@@ -173,7 +173,7 @@ test("programme-stage timetable query also honors a requested day", async () => 
 
 test("lecturer timetable query returns all records and keeps the Wednesday BIT326 sessions", async () => {
   const { retrieveAnswer } = require("../services/retrievalService");
-  const result = await retrieveAnswer("Mrs Rabecca Mumba timetable");
+  const result = await retrieveAnswer("Mrs Rabecca Mumba timetable", [], "student");
   const bit326Wednesday = result.timetable.filter((r) => r.course_code === "BIT326" && r.day === "Wednesday");
 
   assert.ok(result.timetable.length > 8);
@@ -183,8 +183,8 @@ test("lecturer timetable query returns all records and keeps the Wednesday BIT32
 
 test("lecturer and course matches apply day filters before returning records", async () => {
   const { retrieveAnswer } = require("../services/retrievalService");
-  const lecturer = await retrieveAnswer("Mrs Rabecca Mumba timetable Wednesday");
-  const course = await retrieveAnswer("BIT326 timetable Wednesday");
+  const lecturer = await retrieveAnswer("Mrs Rabecca Mumba timetable Wednesday", [], "student");
+  const course = await retrieveAnswer("BIT326 timetable Wednesday", [], "student");
 
   assert.ok(lecturer.timetable.length > 0);
   assert.ok(lecturer.timetable.every((r) => r.day === "Wednesday"));
@@ -194,6 +194,6 @@ test("lecturer and course matches apply day filters before returning records", a
 
 test("programme family without year/semester does not fall into unrelated fuzzy timetable search", async () => {
   const { retrieveAnswer } = require("../services/retrievalService");
-  const result = await retrieveAnswer("show me the BIT timetable");
+  const result = await retrieveAnswer("show me the BIT timetable", [], "student");
   assert.deepEqual(result.timetable, []);
 });

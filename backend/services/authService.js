@@ -81,6 +81,19 @@ function publicUser(user) {
 }
 
 
+// Changes: Looks up a signed-in user's email / phone from the account record.
+// Affects: supportService tickets (attached automatically when a signed-in student's question is escalated).
+// Purpose: Portal students are never asked for contact details. Not stored in the token, so the
+//          token stays small and an address change takes effect without signing in again.
+//          In this demo the details come from optional "email" / "phone" keys in demo_users.json;
+//          a real portal would read them from the student record.
+function getUserContact(username) {
+    const wanted = String(username || "").trim().toLowerCase();
+    const user = loadUsers().find((u) => u.username.toLowerCase() === wanted);
+    return { email: (user && user.email) || null, phone: (user && user.phone) || null };
+}
+
+
 /* ----------------------------- passwords ---------------------------- */
 
 // Format: scrypt$<salt hex>$<hash hex>
@@ -214,4 +227,5 @@ module.exports = {
     authenticate,
     signToken,
     verifyToken,
+    getUserContact,
 };

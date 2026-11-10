@@ -40,6 +40,17 @@ const embeddingService = require("./embeddingService");
 const { runtimeMetadata, buildSearchText } = require("./searchTextService");
 const knowledgeService = require("./knowledgeService");
 
+// Changes: Lets students know when the knowledge base changes.
+// Affects: services/notificationService.js (notice list shown by the widget).
+// Purpose: A failed notice must never fail an upload or a refresh, so errors are swallowed here.
+async function notifyStudents(send) {
+    try {
+        await send(require("./notificationService"));
+    } catch (err) {
+        console.log("[knowledge] could not create a student notification:", err.message);
+    }
+}
+
 const DOCUMENTS_DIR = path.join(__dirname, "../data/documents");
 const UPLOADS_DIR = path.join(DOCUMENTS_DIR, "uploads");
 const MANIFEST_PATH = path.join(__dirname, "../data/vectors/index_manifest.json");
@@ -337,12 +348,28 @@ function uploadDocument({ filename, buffer, access, title, uploadedBy = "unknown
         await updateManifest();
         recordEvent({ type: "upload", file: name, access: safeAccess, chunks: records.length, replaced_chunks: replaced, by: uploadedBy });
 
+        // Changes: Confirms the new chunks are in the live index the chat reads.
+        // Affects: The upload response only (adds "live" and "visible_to").
+        // Purpose: The chat uses the same in-memory store, so there is no re-index step;
+        //          this proves it instead of assuming it. "visible_to" explains why a
+        //          visitor who is not signed in gets no answers from a restricted file.
+        const liveChunks = (await store.list({ filter: (m) => m.source_file === name })).length;
+
+        await notifyStudents((n) => n.documentAdded({
+            title: meta.title || name.replace(/\.[^.]+$/, ""),
+            access: safeAccess,
+            replaced: replaced > 0,
+        }));
+
         return {
             file: name,
             access: safeAccess,
             chunks: records.length,
             replaced: replaced > 0,
             replaced_chunks: replaced,
+            live: liveChunks === records.length,
+            live_chunks: liveChunks,
+            visible_to: safeAccess === "public" ? "everyone" : "signed-in users only",
         };
     });
 }
@@ -436,6 +463,7 @@ function refreshWebsite({ trigger = "manual" } = {}) {
 
         const result = { aborted: false, trigger, added, updated, removed, unchanged, failed_urls: [...failed] };
         recordEvent({ type: "website_refresh", ...result }, { website: result });
+        await notifyStudents((n) => n.websiteUpdated({ added, updated }));
         return result;
     });
 }
