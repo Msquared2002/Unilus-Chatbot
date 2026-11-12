@@ -3,6 +3,7 @@ const crypto = require("crypto");
 
 const router = express.Router();
 const chatService = require("../services/chatService");
+router.use(require('./answerExportRoutes'));
 
 const FRIENDLY_ERROR_ANSWER =
     "I'm having trouble reaching my AI service right now. Please try again in a minute, or contact the Academic Office on 0971263550 / info@unilus.ac.zm.";

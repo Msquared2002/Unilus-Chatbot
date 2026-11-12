@@ -19,6 +19,8 @@ import "./campus-map.js";
 import "./widget.js";
 import "./suggested-action-registry.js";
 import "./app.js";
+import "./answer-tools.js";
+import "./voice.js";
 
 import "../js/ticket-notifications.js";
 

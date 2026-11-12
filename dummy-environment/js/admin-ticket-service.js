@@ -167,6 +167,8 @@ export const ticketService = {
 
   /* "Teach the chatbot": recurring questions and staff-approved answers */
   faq: {
+    feedback: () => api('/admin/feedback'),
+    reviewFeedback: id => api('/admin/feedback/'+encodeURIComponent(id),{method:'PATCH',body:JSON.stringify({reviewed:true})}),
     recurring: () => api("/admin/recurring"),
     answers: () => api("/admin/answers"),
     async saveAnswer(body) { const result = await api("/admin/answers", { method: "POST", body: JSON.stringify(body) }); clearCache(); return result; },

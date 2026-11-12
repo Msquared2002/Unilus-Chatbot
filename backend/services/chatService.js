@@ -613,7 +613,8 @@ async function answerQuestion(question, sessionId, audience='public', profile=nu
     question = require('./supportContactService').redact(conversation.stripGreeting(question));
     if(supportDraftId){const guarded=await supportConversation.tryHandle(question,sessionId,user,supportDraftId);if(guarded)return {...guarded,sessionId};}
     const conversational=require('./companionConversationService');
-    if(!conversation.reply(question,profile)&&! /^(?:yes|no|cancel|confirm|submit|local|sadc|foreign|semester|year|\d)/i.test(question)&&conversational.route(question)&&conversational.route(question)!=='general'){
+    const advisorCandidate=require('./programmeAdvisorService').canHandle(question,sessionId);
+    if(!conversation.reply(question,profile)&&! /^(?:yes|no|cancel|confirm|submit|local|sadc|foreign|semester|year|\d)/i.test(question)&&conversational.route(question)&&conversational.route(question)!=='general'&&!(advisorCandidate&&conversational.route(question)!=='safety'&&conversational.route(question)!=='wellbeing')){
         supportConversation.reset(sessionId);require('./personalAcademicService').clear(sessionId);markAdvisorTopic(sessionId,false);
         const result=await conversational.chat(question,user,academicProfile,sessionId);
         await sessionService.appendMessage(sessionId,'user','[Companion conversation omitted from persistent history]');
@@ -671,7 +672,7 @@ async function answerQuestion(question, sessionId, audience='public', profile=nu
         await sessionService.appendMessage(sessionId, 'assistant', supportReply.answer);
         return { ...supportReply, sessionId };
     }
-    const advisor = !conversation.reply(question, profile) && (!conversation.personalResults(question) || /\b(?:which programme|choos(?:e|ing) a programme|programme.*interests)\b/i.test(question))
+    const advisor = (!conversation.reply(question, profile)||advisorCandidate) && (!conversation.personalResults(question) || /\b(?:which programme|choos(?:e|ing) a programme|programme.*interests)\b/i.test(question))
         ? require('./programmeAdvisorService').tryAnswer(question,sessionId) : null;
     if (advisor) { markAdvisorTopic(sessionId, true); return advisor; }
     if (!conversation.reply(question, profile)) markAdvisorTopic(sessionId, false);

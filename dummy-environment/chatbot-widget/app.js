@@ -143,6 +143,7 @@ async function sendMessage(question, actionOptions={}) {
     window.UnilusFrontDesk?.render(botRow,data,{submit:sendMessage});
     window.UnilusPeerTutors?.render(botRow,data);
     window.UnilusMorning?.render(botRow,data);
+    window.UnilusAnswerTools?.render(botRow,data);
 
     // Chatbot found a place - offer to show it, don't force the map open.
     const mapRendered = renderActions(botRow, data.suggestedActions, data);

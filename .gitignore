@@ -63,3 +63,5 @@ deployment/stage-a-api.cjs
 deployment/stage-a-browser.cjs
 deployment/stage-a-gates.cjs
 deployment/stage-a-metadata.cjs
+# Local evidence for the combined developer integration.
+deployment/collab-*

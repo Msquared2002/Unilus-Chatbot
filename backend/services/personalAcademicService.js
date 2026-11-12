@@ -93,7 +93,7 @@ async function tryAnswer(question, { user, profile, sessionId, now = new Date() 
     const profileIntent=/\b(?:my (?:academic|student) profile|what programme am i studying|what year am i in)\b/.test(q);
     const academicTerms = /\b(?:results?|performance|marks?|courses?|subjects?|curriculum|degree|programme|semester|lecture|classes|class|timetable|notifications?|ticket)\b/.test(q);
     const allSemesters=/\b(?:all|every|each)\s+(?:completed\s+)?semesters?\b/.test(q);
-    const trendIntent=allSemesters||/\b(?:improv\w*|regress\w*|declin\w*|consistent|trend)\b/.test(q)&&(self||/academic|semester/.test(q));
+    const trendIntent=allSemesters||/completed semesters?.*(?:averages?|means?)|(?:averages?|means?).*completed semesters?/.test(q)||/\b(?:improv\w*|regress\w*|declin\w*|consistent|trend)\b/.test(q)&&(self||/academic|semester/.test(q));
     const semesterRank=/\bsemester\b.*\b(?:strongest|weakest|best|worst|highest|lowest)\b|\b(?:strongest|weakest|best|worst|highest|lowest)\b.*\bsemester\b/.test(q)&&!/\b(?:strongest|weakest|best|worst|highest|lowest)\s+(?:course|subject|mark|grade)\b/.test(q);
     const pasted=require('./conversationService').pastedUniversityMarks(question)||['results','ca'].includes(previous?.kind)&&!/^Advisor:|grade ?12|ecz|gce|o[ -]?level|admission|school certificate/i.test(question)&&require('./applicantResultParser').extract(question).length>0;
     const follow = previous && (allSemesters||semesterRank||/individual.*(?:marks|courses)|semester\s*[12]\s*(?:marks|results)|\b(?:which semester|better|highest|lowest|worst|best|average|where is it|who teaches|who(?:'s| is)? teaching|what time|and (?:monday|tuesday|wednesday|thursday|friday|saturday|sunday)|that course|its exam|exam mark|examination mark)\b/.test(q)||previous.awaitingCourse&&/^[a-z]{2,6}\d{3}[.!]?$/.test(q));
@@ -108,7 +108,7 @@ async function tryAnswer(question, { user, profile, sessionId, now = new Date() 
     const coursesIntent = academicTerms && /\b(?:courses?|subjects?|studying|study|take|taking|attending|curriculum)\b/.test(q) && (self || /show me|show .*year|fourth year/.test(question.toLowerCase()));
     const progressIntent = self && /how far|how many.*complet|what remains|which semester|current.*semester/.test(q);
     const legacyCA = /\bca\b|assessment|pending|clear.*semester|subjects require attention|final results/.test(q) && !/final exam/.test(q);
-    const resultsIntent = trendIntent||semesterRank||pasted||!legacyCA && ((self && /results?|performance|perform|transcript|academic (?:history|records)|average mark|best course|worst|highest mark|lowest mark|final exam|exam(?:ination)? (?:mark|score)|pass.*previous|grades/.test(q)) || ['results','ca'].includes(previous?.kind) && follow);
+    const resultsIntent = trendIntent||semesterRank||pasted||!legacyCA && ((self && /results?|performance|perform|transcript|academic (?:history|records)|average mark|best course|weakest course|worst|highest mark|lowest mark|final exam|exam(?:ination)? (?:mark|score)|pass.*previous|grades/.test(q)) || ['results','ca'].includes(previous?.kind) && follow);
     if(!previous&&/^which semester.*better|^which course.*(?:highest|lowest|worst|best)/.test(q))return reply('Which academic year or semesters would you like to use? Please specify the period; there is no current academic follow-up context.',user?.role==='student'?profile:null,'clarification');
     if (!profileIntent && !notificationIntent && !timetableIntent && !coursesIntent && !progressIntent && !resultsIntent) { state.clear(key); return null; }
     if (!profile || user?.role !== 'student') return { ...reply('Sign in with an enabled student account to view your own simulated academic information.', null, 'sign-in'), signInRequired: true };
@@ -163,7 +163,7 @@ async function tryAnswer(question, { user, profile, sessionId, now = new Date() 
         state.set(key,previous);
         let answer;if(!courses.length)answer='No complete CA totals are available for that period.';
         else if(/average/.test(q))answer='The unweighted arithmetic mean of '+courses.length+' complete CA totals is '+require('./demoAcademicChatService').mean(courses.map(c=>c.totalCA))+'. Missing totals are excluded.';
-        else if(/highest|lowest|best|worst/.test(q)){const extreme=/lowest|worst/.test(q)?Math.min(...courses.map(c=>c.totalCA)):Math.max(...courses.map(c=>c.totalCA));answer='Year '+period.year+', Semester '+period.semester+' CA totals:\n'+table(['Course','CA'],courses.filter(c=>c.totalCA===extreme).map(c=>[c.code,c.totalCA]));}
+        else if(/highest|lowest|best|worst/.test(q)){const extreme=/lowest|worst|weakest/.test(q)?Math.min(...courses.map(c=>c.totalCA)):Math.max(...courses.map(c=>c.totalCA));answer='Year '+period.year+', Semester '+period.semester+' CA totals:\n'+table(['Course','CA'],courses.filter(c=>c.totalCA===extreme).map(c=>[c.code,c.totalCA]));}
         else answer='Please specify the other period and whether you want CA totals or final results compared.';
         return reply(answer,profile,'ca',{periodKey:period?.key});
     }
@@ -189,7 +189,7 @@ async function tryAnswer(question, { user, profile, sessionId, now = new Date() 
     }
     if (resultsIntent) {
         if(/\b[a-z]{2,6}\d{3}\b/.test(q)&&!/year|semester|\b[1-4]\.[12]\b/.test(q))chosen=null;
-        if (!chosen && !/previous courses|compare|all|best|worst|average|highest|lowest|exam|transcript|academic (?:history|records)/.test(q)) {
+        if (!chosen && !/previous courses|compare|all|best|worst|weakest|average|highest|lowest|exam|transcript|academic (?:history|records)/.test(q)) {
             const last = profile.periods.filter(p => p.completed).at(-1);
             if (last) chosen = { year: last.year, semester: last.semester };
         }
@@ -214,7 +214,7 @@ async function tryAnswer(question, { user, profile, sessionId, now = new Date() 
         else if (/final exam|exam(?:ination)? (?:mark|score)/.test(q)) answer = table(['Course', 'Final examination points', 'Maximum'], rows.map(c => [c.code, c.finalExam?.score ?? 'Unavailable', c.finalExam?.weight ?? 'Unavailable']));
         else if (/pass.*(?:all|previous)|all.*pass/.test(q)) answer = `${rows.filter(c => c.finalGrade !== 'D').length} of ${rows.length} available final results meet the existing pass threshold. ${all.length - rows.length} records are outside this calculation or lack final marks. Historical status alone does not establish a pass.`;
         else {
-            if (/highest|best|lowest|worst/.test(q)) { const extreme = /lowest|worst/.test(q) ? Math.min(...rows.map(c => c.finalMark)) : Math.max(...rows.map(c => c.finalMark)); rows = rows.filter(c => c.finalMark === extreme); }
+            if (/highest|best|lowest|worst|weakest/.test(q)) { const extreme = /lowest|worst|weakest/.test(q) ? Math.min(...rows.map(c => c.finalMark)) : Math.max(...rows.map(c => c.finalMark)); rows = rows.filter(c => c.finalMark === extreme); }
             answer = table(['Period', 'Course', 'Final mark', 'Grade'], rows.map(c => [`Year ${c.periodKey[0]}, Semester ${c.periodKey[2]}`, c.code + ' — ' + c.name, c.finalMark, c.finalGrade]));
         }
         save('results', { selection: chosen, periodKeys: periods.map(p => p.key), courseCode: code||(/highest|lowest|best|worst/.test(q)&&rows.length===1?rows[0].code:null) });

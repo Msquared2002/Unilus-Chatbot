@@ -27,5 +27,5 @@ function universityAcademic(text) {
     if(/grade ?12|ecz|gce|o[ -]?levels?|school certificate|admissions?|entry requirements?|choose.*programme/i.test(q))return false;
     return /\bmy\s+(?:academic\s+)?(?:performance|transcript|academic records|academic history)\b|\b(?:all|every|each)\s+(?:completed\s+)?semesters?\b|\b(?:academic|academically|semester|transcript)\b.*\b(?:trend|improv\w*|regress\w*|declin\w*|consistent|performance|strongest|lowest|marks?|grades?|results?)\b|\b(?:improv\w*|regress\w*|declin\w*|strongest|lowest)\b.*\b(?:academically|semester)\b|university (?:course )?(?:marks|grades|results)\b/i.test(q)||pastedUniversityMarks(q);
 }
-function pastedUniversityMarks(q){return !/grade ?12|ecz|gce|o[ -]?levels?|admissions?/i.test(q)&&(/\b[A-Z]{2,6}\s?\d{3}\s*[:=|,\-]?\s+(?:\d{1,3}(?:\.\d+)?|[A-D][+]?)\b/i.test(q)||/university (?:course )?(?:marks|grades|results)\s*(?:are|:)/i.test(q));}
+function pastedUniversityMarks(q){if(/\b(?:got|scored)\s+\d{1,3}\s+(?:in|for)\s+[A-Z]{2,6}\d{3}\b/i.test(q))return true;return !/grade ?12|ecz|gce|o[ -]?levels?|admissions?/i.test(q)&&(/\b[A-Z]{2,6}\s?\d{3}\s*[:=|,\-]?\s+(?:\d{1,3}(?:\.\d+)?|[A-D][+]?)\b/i.test(q)||/university (?:course )?(?:marks|grades|results)\s*(?:are|:)/i.test(q));}
 module.exports = { reply, stripGreeting, personalResults, universityAcademic, pastedUniversityMarks };
