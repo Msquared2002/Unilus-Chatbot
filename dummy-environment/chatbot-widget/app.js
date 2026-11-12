@@ -4,7 +4,7 @@ let chatIdentity=currentContext();
 function currentIdentity(){return sessionStorage.getItem('unilusAuthToken') || 'guest';}
 function currentContext(){return currentIdentity()+'|'+(sessionStorage.getItem('unilusDemoAcademicProfileId')||'');}
 let activeChatRequest = null;
-window.addEventListener?.('unilus-demo-profile-changing',()=>{
+function clearPrivateChat(){
   latestAvatarRequest++;
   activeChatRequest?.controller?.abort();
   if(activeChatRequest?.typingRow)removeTypingIndicator(activeChatRequest.typingRow);
@@ -12,7 +12,11 @@ window.addEventListener?.('unilus-demo-profile-changing',()=>{
   sessionStorage.removeItem('unilusChatSession');
   document.getElementById('chat-box')?.replaceChildren?.();
   clearTimeout(avatarReactionTimer);UniAvatar.idle();
-});
+  chatIdentity=currentContext();
+  const input=document.getElementById('user-input');if(input)input.value='';
+}
+window.addEventListener?.('unilus-demo-profile-changing',clearPrivateChat);
+window.addEventListener?.('unilus-student-context-changed',()=>{if(chatIdentity!==currentContext())clearPrivateChat();});
 let avatarReactionTimer = null;
 let latestAvatarRequest = 0;
 
@@ -54,11 +58,12 @@ document.getElementById("input-area").addEventListener("submit", function (e) {
 // the one temporary fallback this currently requires.
 
 
-async function sendMessage(question) {
+async function sendMessage(question, actionOptions={}) {
 
   const input = document.getElementById("user-input");
   const text = typeof question === "string" ? question.trim() : input.value.trim();
 
+  if(chatIdentity!==currentContext())clearPrivateChat();
   if (!text || chatPending) return;
   const identity=currentContext();
   if(chatIdentity!==identity){chatIdentity=identity;chatSessionId=undefined;sessionStorage.removeItem('unilusChatSession');}
@@ -81,7 +86,7 @@ async function sendMessage(question) {
   activeChatRequest={controller,typingRow};
   const requestDeadline = setTimeout(() => controller?.abort(), 120000);
   const slowNotice = setTimeout(() => {
-    if (request !== latestAvatarRequest) return;
+    if (request !== latestAvatarRequest || identity !== currentContext()) return;
     const notice = document.createElement('span');
     notice.className = 'startup-notice'; notice.setAttribute('role','status');
     notice.textContent = 'Still connecting. The assistant may be waking up; please keep this window open.';
@@ -103,7 +108,7 @@ async function sendMessage(question) {
         },
 
         body: JSON.stringify({
-          question: text, sessionId: chatSessionId,
+          question: text, supportDraftId:actionOptions.supportDraftId, sessionId: chatSessionId,
           demoProfileId: sessionStorage.getItem('unilusDemoAcademicProfileId') || undefined
         })
       }
@@ -116,7 +121,7 @@ async function sendMessage(question) {
 
 
     const data = await response.json();
-    if (request !== latestAvatarRequest) return;
+    if (request !== latestAvatarRequest || identity !== currentContext()) return;
     if (typeof data.sessionId === "string"){chatSessionId=data.sessionId;sessionStorage.setItem('unilusChatSession',chatSessionId);}
     if(data.authProblem){sessionStorage.removeItem('unilusAuthToken');sessionStorage.removeItem('unilusChatSession');chatSessionId=undefined;}
     if(data.error)throw Error('Backend request failed');
@@ -135,6 +140,10 @@ async function sendMessage(question) {
 
     if (data.queryType?.isSimulatedAcademic) botRow.classList.add('academic-message');
 
+    window.UnilusFrontDesk?.render(botRow,data,{submit:sendMessage});
+    window.UnilusPeerTutors?.render(botRow,data);
+    window.UnilusMorning?.render(botRow,data);
+
     // Chatbot found a place - offer to show it, don't force the map open.
     const mapRendered = renderActions(botRow, data.suggestedActions, data);
     if (data.navigation && !mapRendered) {
@@ -142,7 +151,7 @@ async function sendMessage(question) {
     }
 
   } catch(error) {
-    if (request !== latestAvatarRequest) return;
+    if (request !== latestAvatarRequest || identity !== currentContext()) return;
 
     oldActions.forEach(button => button.disabled = false);
     if (!input.value.trim()) input.value = text;
@@ -151,7 +160,7 @@ async function sendMessage(question) {
     removeTypingIndicator(typingRow);
 
     addMessage(
-      error.profileChanged ? 'Your demo profile changed. Refresh the portal academic context before retrying.' : error.warming ? "The assistant is waking up. Please try again in a moment." : "Sorry, I am having trouble connecting right now. Please try again.",
+      window.navigator?.onLine===false ? 'You are offline. Personal information and AI need connectivity; no answer was fabricated and your draft is preserved.' : error.profileChanged ? 'Your demo profile changed. Refresh the portal academic context before retrying.' : error.warming ? "The assistant is waking up. Please try again in a moment." : "Sorry, I am having trouble connecting right now. Please try again.",
       "bot",
       request === latestAvatarRequest
     );
@@ -307,6 +316,9 @@ function enhanceMarkdownTables(bubble) {
       : "chat-table-scroll";
 
 
+    wrapper.setAttribute("tabindex", "0");
+    wrapper.setAttribute("role", "region");
+    wrapper.setAttribute("aria-label", "Scrollable chat response table");
     table.parentNode.insertBefore(wrapper, table);
 
     wrapper.appendChild(table);
@@ -354,6 +366,8 @@ function addMapConfirmButton(row, navigation, route, routeIntent) {
     gpsButton.type = "button";
     gpsButton.className = "map-confirm-btn";
     gpsButton.textContent = "Directions in Google Maps";
+    gpsButton.setAttribute('aria-label','External Google Maps directions to '+(navigation.name||navigation.placeName||'the selected campus destination'));
+    gpsButton.title='Uses the selected destination coordinates. Google Maps may display a nearby place label.';
     gpsButton.addEventListener("click", () => {
       if (typeof UnilusWidget === "undefined") return;
       const mapsTab = window.open("about:blank", "_blank");
@@ -428,3 +442,8 @@ function renderActions(row, actions, data) {
   if (hasMap) addMapConfirmButton(row, data.navigation, data.route, data.routeIntent);
   return hasMap;
 }
+
+window.addEventListener?.('unilus-chat-opened',()=>{const input=document.getElementById('user-input'),box=document.getElementById('chat-box');window.UnilusMorning?.automatic({isIdle:()=>!chatPending&&!input?.value?.trim()&&!box?.children?.length,append:data=>{if(!box)return;const scroll=box.scrollTop;const row=addMessage(data.answer,'bot',false);window.UnilusMorning.render(row,data);renderActions(row,data.suggestedActions,data);box.scrollTop=scroll;}});});
+// Keep mobile controls inside the actual visual viewport when the soft keyboard opens.
+if(window.visualViewport){const resize=()=>document.documentElement.style.setProperty('--uw-viewport-height',window.visualViewport.height+'px');window.visualViewport.addEventListener('resize',resize);resize();}
+document.getElementById('chat-box')?.addEventListener?.('focusin',event=>{if(event.target.matches?.('input,textarea,select'))event.target.scrollIntoView?.({block:'nearest'});});

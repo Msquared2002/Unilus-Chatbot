@@ -72,6 +72,7 @@ function loadUsers() {
 function publicUser(user) {
     return {
         username: user.username,
+        ...(process.env.DEMO_ACADEMIC_ENABLED==='yes'&&user.role==='student'&&user.username===process.env.DEMO_FIXED_ACCOUNT?{loginUsername:'demo'}:{}),
         name: user.name || user.username,
         role: user.role,
         department: user.department || null,
@@ -114,7 +115,12 @@ function getDummyHash() {
 /** @returns the public user object, or null if the credentials are wrong. */
 function authenticate(username, password) {
     const wanted = String(username || "").trim().toLowerCase();
-    const user = loadUsers().find((u) => u.username.toLowerCase() === wanted);
+    const users=loadUsers();
+    const fixed=process.env.DEMO_ACADEMIC_ENABLED==='yes'&&process.env.DEMO_FIXED_ACCOUNT;
+    // Alias only: preserve stable subject/ownership and password hash. Refuse collisions.
+    const conflict=fixed&&users.some(u=>u.username.toLowerCase()==='demo'&&u.username!==fixed);
+    const lookup=wanted==='demo'&&fixed&&!conflict?fixed:wanted;
+    const user=conflict&&wanted==='demo'?null:users.find(u=>u.username.toLowerCase()===lookup.toLowerCase()&&(wanted!=='demo'||!fixed||u.role==='student'));
 
     const passwordOk = verifyPassword(
         String(password || ""),

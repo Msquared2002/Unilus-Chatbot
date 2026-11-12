@@ -206,6 +206,7 @@ const UniAvatar = (function () {
   }
 
   function handlePointer(e) {
+    if(window.matchMedia?.("(prefers-reduced-motion: reduce)").matches){resetTracking();return;}
     if (!tracking || !wrapper || !motion || !eyes) return;
 
     // The stationary positioning box avoids feedback from the moving artwork.

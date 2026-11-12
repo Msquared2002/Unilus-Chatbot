@@ -19,11 +19,11 @@ async function main() {
   tableNames: snapshot.tableNames, tableCounts: snapshot.metadata.counts, tableFingerprints: snapshot.metadata.fingerprints,
   encryptedFile: path.basename(out), encryptedSha256: backup.sha256(fs.readFileSync(out)), payloadSha256,
   recovery: { ...recovery, dpapiUsedForRecovery: true, independentOfWindows: false },
-  scope: 'Nine application tables and migration ledger, including schema/indexes/constraints/RLS/ACL/sequences; excludes Auth, object bytes and provider internal schemas' };
+  scope: 'Applied application tables and migration ledger, including schema/indexes/constraints/RLS/ACL/sequences; excludes Auth, object bytes and provider internal schemas' };
  fs.writeFileSync(out + '.manifest.json', JSON.stringify(manifest, null, 2), { flag: 'wx', mode: 0o600 });
  const safe = { project: PROJECT, encryptedBackupCreated: true, counts: manifest.tableCounts, integrityVerified: true,
   recovery: manifest.recovery, encryptedSha256: manifest.encryptedSha256, plaintextFilesWritten: false };
- fs.writeFileSync(path.join(repo, 'deployment/integrated-backup-verification-2026-11-08.json'), JSON.stringify(safe, null, 2));
+ if(args.includes('--report'))fs.writeFileSync(path.resolve(option('--report')),JSON.stringify(safe,null,2),{flag:'wx'});
  console.log(JSON.stringify(safe));
 }
 main().catch(e => { console.error(JSON.stringify({ event: 'integrated_backup_failed', code: e.code || 'VALIDATION_FAILED' })); process.exitCode = 1; });

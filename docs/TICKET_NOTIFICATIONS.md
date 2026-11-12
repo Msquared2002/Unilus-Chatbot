@@ -1,5 +1,7 @@
 # Ticket notification foundation
 
+For the prepared local extension covering tickets and timetable changes together, see [UNIFIED_NOTIFICATIONS_VERIFICATION.md](UNIFIED_NOTIFICATIONS_VERIFICATION.md). This foundation was committed locally before that extension; the combined feature has not been pushed or deployed.
+
 The authenticated student portal polls `/api/notifications` immediately and every 30 seconds while visible. It displays the latest 50 updates and an unread count over all eligible events. Mark-read acknowledgements persist per authenticated username in `ticket_notification_reads`. Tickets belong to students through the existing `chat_sessions.owner` relation, never a client-supplied username or ticket reference.
 
 Successful student-visible reply/status events are already persistent notifications. Using their IDs directly avoids a second writer, notification duplication on polling, and notifications for failed ticket transactions. Repeating the same status does not create another event. Separate intentional replies remain separate updates. Existing events are included; no backfill writes are necessary. Guests, internal notes and staff-only events are excluded. Notification payloads contain generic text, ticket reference and date, never reply bodies, staff names, issue descriptions or status details. UI text uses `textContent`.

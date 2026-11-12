@@ -1,0 +1,23 @@
+-- Additive private support data only. No changes to applied001/002 or core ticket rows.
+CREATE TABLE public.support_contact_profiles(owner TEXT PRIMARY KEY,email TEXT,phone TEXT,updated_at TEXT NOT NULL);
+CREATE TABLE public.ticket_support_details(ticket_ref TEXT PRIMARY KEY REFERENCES public.tickets(ticket_ref),student_username TEXT,student_email TEXT,student_phone TEXT,contact_status TEXT NOT NULL,consented_at TEXT,routing_reason TEXT NOT NULL);
+CREATE TABLE public.ticket_attachments(id TEXT PRIMARY KEY,ticket_ref TEXT NOT NULL REFERENCES public.tickets(ticket_ref),owner TEXT NOT NULL,object_key TEXT NOT NULL UNIQUE,display_name TEXT NOT NULL,media_type TEXT NOT NULL,size_bytes INTEGER NOT NULL,checksum TEXT NOT NULL,stored_checksum TEXT NOT NULL,status TEXT NOT NULL,created_at TEXT NOT NULL,UNIQUE(ticket_ref,checksum));
+CREATE INDEX idx_ticket_attachment_ref ON public.ticket_attachments(ticket_ref,status);
+ALTER TABLE public.support_contact_profiles ENABLE ROW LEVEL SECURITY;
+REVOKE ALL ON public.support_contact_profiles FROM PUBLIC,anon,authenticated,unilus_backend;
+GRANT SELECT,INSERT,UPDATE,DELETE ON public.support_contact_profiles TO unilus_backend;
+CREATE POLICY support_select ON public.support_contact_profiles FOR SELECT TO unilus_backend USING(true);
+CREATE POLICY support_insert ON public.support_contact_profiles FOR INSERT TO unilus_backend WITH CHECK(true);
+CREATE POLICY support_update ON public.support_contact_profiles FOR UPDATE TO unilus_backend USING(true) WITH CHECK(true);
+CREATE POLICY support_delete ON public.support_contact_profiles FOR DELETE TO unilus_backend USING(true);
+ALTER TABLE public.ticket_support_details ENABLE ROW LEVEL SECURITY;
+REVOKE ALL ON public.ticket_support_details FROM PUBLIC,anon,authenticated,unilus_backend;
+GRANT SELECT,INSERT ON public.ticket_support_details TO unilus_backend;
+CREATE POLICY support_select ON public.ticket_support_details FOR SELECT TO unilus_backend USING(true);
+CREATE POLICY support_insert ON public.ticket_support_details FOR INSERT TO unilus_backend WITH CHECK(true);
+ALTER TABLE public.ticket_attachments ENABLE ROW LEVEL SECURITY;
+REVOKE ALL ON public.ticket_attachments FROM PUBLIC,anon,authenticated,unilus_backend;
+GRANT SELECT,INSERT,UPDATE ON public.ticket_attachments TO unilus_backend;
+CREATE POLICY support_select ON public.ticket_attachments FOR SELECT TO unilus_backend USING(true);
+CREATE POLICY support_insert ON public.ticket_attachments FOR INSERT TO unilus_backend WITH CHECK(true);
+CREATE POLICY support_update ON public.ticket_attachments FOR UPDATE TO unilus_backend USING(true) WITH CHECK(true);

@@ -54,7 +54,7 @@ const ownership=require('../services/sessionOwnershipService');
 
 const workflow=require('../services/ticketWorkflowService');
 
-function allowed(req,t){return !req.user||req.user.role==='admin'||(req.user.role==='staff'&&req.user.department===t.department);}
+function allowed(req,t){const dir=require('../../dummy-environment/js/support-departments'),d=dir.normalize(req.user?.department),target=dir.normalize(t.department);return !req.user||req.user.role==='admin'||(req.user.role==='staff'&&d&&target&&d.id===target.id);}
 
 const { requireStaff } = require("../middleware/requireStaff");
 
@@ -150,7 +150,9 @@ router.get("/admin/tickets", requireStaff, async (req, res) => {
 
     try {
 
+        if(req.user?.role==='staff'&&!require('../../dummy-environment/js/support-departments').normalize(req.user.department))return res.status(403).json({error:'Configured staff department required'});
         const rows=await support.listTickets({
+                department:req.user?.role==='staff'?require('../../dummy-environment/js/support-departments').normalize(req.user.department).name:null,
 
                 status: req.query.status || null,
 
@@ -192,7 +194,7 @@ router.get("/admin/tickets/:ref", requireStaff, async (req, res) => {
 
         if(!allowed(req,ticket))return res.status(403).json({error:"Ticket unavailable"});
 
-        res.json({...ticket,events:await workflow.list(req.params.ref,true)});
+        res.json({...ticket,events:await workflow.list(req.params.ref,true),attachments:await require('../services/ticketAttachmentService').list(req.params.ref)});
 
     } catch (error) {
 
@@ -282,5 +284,5 @@ router.post('/admin/tickets/:ref/events',requireStaff,async(req,res)=>{try{const
 
 router.post('/admin/tickets/:ref/assignment',requireStaff,async(req,res)=>{if(req.user&&req.user.role!=='admin')return res.status(403).json({error:'Administrator required to reroute'});try{const t=await support.getTicketForAdmin(req.params.ref);if(!t)return res.status(404).json({error:'Ticket not found'});await workflow.assign(req.params.ref,req.body.department,req.body.assignee,req.user?.username||'admin-key');res.json({ok:true});}catch{res.status(400).json({error:'Assignment could not be saved'});}});
 
-router.post('/tickets',async(req,res)=>{try{const question=typeof req.body.question==='string'?req.body.question.trim():'';if(!question||question.length>2000)return res.status(400).json({error:'A support enquiry of at most 2000 characters is required'});const sessionId=await ownership.resolveSession(req.body.sessionId,req.user);const result=await support.createTicket({sessionId,question,history:[]});res.status(result.created?201:200).json({ticket:result.ticket,sessionId,prototype:true});}catch(e){res.status(e.status||500).json({error:'Support enquiry could not be saved'});}});
+router.post('/tickets',async(req,res)=>{try{if(req.body.department||req.body.assignee||req.body.student_username)return res.status(400).json({error:'Assignment and identity are controlled by the server'});const question=typeof req.body.question==='string'?req.body.question.trim():'';if(!question||question.length>2000)return res.status(400).json({error:'A support enquiry of at most 2000 characters is required'});const sessionId=await ownership.resolveSession(req.body.sessionId,req.user);const result=await require('../services/ticketSubmissionService').submit({sessionId,user:req.user,question,consent:req.body.consent,studentContact:req.body.contact});res.status(result.created?201:200).json({ticket:result.ticket,sessionId,prototype:true});}catch(e){res.status(e.status||500).json({error:'Support enquiry could not be saved'});}});
 module.exports = router;

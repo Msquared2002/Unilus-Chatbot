@@ -40,10 +40,11 @@ const embeddingService = require("./embeddingService");
 const { runtimeMetadata, buildSearchText } = require("./searchTextService");
 const knowledgeService = require("./knowledgeService");
 
-const DOCUMENTS_DIR = path.join(__dirname, "../data/documents");
+const TEST_WORK_DIR=process.env.NODE_ENV==='test'?process.env.KNOWLEDGE_TEST_WORK_DIR:null;
+const DOCUMENTS_DIR = TEST_WORK_DIR?path.join(TEST_WORK_DIR,"documents"):path.join(__dirname, "../data/documents");
 const UPLOADS_DIR = path.join(DOCUMENTS_DIR, "uploads");
-const MANIFEST_PATH = path.join(__dirname, "../data/vectors/index_manifest.json");
-const UPDATES_LOG_PATH = path.join(__dirname, "../data/knowledge_updates.json");
+const MANIFEST_PATH = TEST_WORK_DIR?path.join(TEST_WORK_DIR,"index_manifest.json"):path.join(__dirname, "../data/vectors/index_manifest.json");
+const UPDATES_LOG_PATH = TEST_WORK_DIR?path.join(TEST_WORK_DIR,"knowledge_updates.json"):path.join(__dirname, "../data/knowledge_updates.json");
 
 const ALLOWED_EXTENSIONS = [".pdf", ".docx", ".txt", ".html", ".htm"];
 const MAX_LOG_EVENTS = 100;

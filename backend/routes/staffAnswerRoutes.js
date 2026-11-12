@@ -51,8 +51,8 @@ router.post("/admin/answers", requireStaff, async (req, res) => {
 
         // Optionally close every open ticket that asks the same thing
         let resolved = [];
-        if (req.body.resolveTicket) {
-            const refs = new Set(await faq.openTicketRefsMatching(saved.question));
+        if (req.body.resolveTicket === true) {
+            const refs = new Set();
             if (req.body.ticketRef) refs.add(String(req.body.ticketRef).trim().toUpperCase());
             for (const ref of refs) {
                 if (await support.updateTicketStatus(ref, "Resolved")) resolved.push(ref);

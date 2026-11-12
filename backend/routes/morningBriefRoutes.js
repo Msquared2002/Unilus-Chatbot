@@ -1,0 +1,13 @@
+const router=require('express').Router(),brief=require('../services/morningBriefService'),reminders=require('../services/reminderService');
+router.use((req,res,next)=>req.user?.role==='student'?next():res.status(403).json({error:'Student sign-in required'}));
+const run=fn=>async(req,res)=>{try{res.json(await fn(req));}catch(e){res.status(e.status||503).json({error:e.status?e.message:'Personal briefing temporarily unavailable'});}};
+router.get('/brief',run(r=>brief.compose(r.user,{dayOffset:r.query.day==='tomorrow'?1:0})));
+router.get('/brief/preferences',run(r=>brief.preferences(r.user)));
+router.put('/brief/preferences',run(r=>brief.savePreferences(r.user,r.body)));
+router.post('/brief/automatic',run(r=>brief.automatic(r.user)));
+router.get('/reminders',run(r=>reminders.list(r.user,r.query)));
+router.post('/reminders',run(r=>reminders.create(r.user,r.body)));
+router.delete('/reminders/draft',run(r=>reminders.discard(r.user,r.body.sessionId)));
+router.get('/reminders/:id',run(r=>reminders.get(r.user,r.params.id)));
+router.patch('/reminders/:id',run(r=>reminders.update(r.user,r.params.id,r.body)));
+module.exports=router;

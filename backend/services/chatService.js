@@ -608,11 +608,28 @@ function markAdvisorTopic(sessionId, active) {
     const profile = store.get(sessionId);
     if (profile) { profile.topicActive = active; store.set(sessionId, profile); }
 }
-async function answerQuestion(question, sessionId, audience='public', profile=null, { user = null, academicProfile = null } = {}) {
+async function answerQuestion(question, sessionId, audience='public', profile=null, { user = null, academicProfile = null, supportDraftId = null } = {}) {
     // Applicant grades remain in the bounded advisor store, never in persistent chat history or tone rewriting.
-    question = conversation.stripGreeting(question);
-    const feeReply = require('./tuitionFeeService').tryAnswer(question, sessionId ? await sessionService.getRecentHistory(sessionId) : []);
+    question = require('./supportContactService').redact(conversation.stripGreeting(question));
+    if(supportDraftId){const guarded=await supportConversation.tryHandle(question,sessionId,user,supportDraftId);if(guarded)return {...guarded,sessionId};}
+    const conversational=require('./companionConversationService');
+    if(!conversation.reply(question,profile)&&! /^(?:yes|no|cancel|confirm|submit|local|sadc|foreign|semester|year|\d)/i.test(question)&&conversational.route(question)&&conversational.route(question)!=='general'){
+        supportConversation.reset(sessionId);require('./personalAcademicService').clear(sessionId);markAdvisorTopic(sessionId,false);
+        const result=await conversational.chat(question,user,academicProfile,sessionId);
+        await sessionService.appendMessage(sessionId,'user','[Companion conversation omitted from persistent history]');
+        await sessionService.appendMessage(sessionId,'assistant','[Companion response omitted from model history]');
+        return result;
+    }
+    const reminderReply=await require('./reminderService').chat(question,user,sessionId,academicProfile);
+    const briefReply=reminderReply?null:await require('./morningBriefService').chat(question,user,academicProfile,sessionId);
+    if(reminderReply||briefReply){const result=reminderReply||briefReply;supportConversation.reset(sessionId);markAdvisorTopic(sessionId,false);await sessionService.appendMessage(sessionId,'user','[Private daily brief/reminder interaction omitted]');await sessionService.appendMessage(sessionId,'assistant','[Private daily brief/reminder response omitted]');return {...result,sessionId};}
+    if(supportConversation.isExplicitRequest(question)){
+        const supportReply=await supportConversation.tryHandle(question,sessionId,user);
+        if(supportReply){markAdvisorTopic(sessionId,false);await sessionService.appendMessage(sessionId,'user',question);await sessionService.appendMessage(sessionId,'assistant',supportReply.answer);return {...supportReply,sessionId};}
+    }
+    const feeReply = supportConversation.isExplicitRequest(question) ? null : require('./tuitionFeeService').tryAnswer(question, sessionId ? await sessionService.getRecentHistory(sessionId) : []);
     if (feeReply) {
+        require("./personalAcademicService").clear(sessionId);
         sessionId ||= sessionService.createSessionId();
         supportConversation.reset(sessionId);
         markAdvisorTopic(sessionId, false);
@@ -620,17 +637,31 @@ async function answerQuestion(question, sessionId, audience='public', profile=nu
         await sessionService.appendMessage(sessionId, 'assistant', feeReply.answer);
         return { ...feeReply, sessionId };
     }
+    const peerReply = await require('./peerTutorService').chat(question,user,academicProfile);
+    if(peerReply){supportConversation.reset(sessionId);markAdvisorTopic(sessionId,false);await sessionService.appendMessage(sessionId,'user','[Private peer tutoring interaction omitted]');await sessionService.appendMessage(sessionId,'assistant','[Private peer tutoring response omitted]');return {...peerReply,sessionId};}
+    const academicPublication=await require('./academicPublicationService').chat(question,user,academicProfile);
+    const facility=academicPublication?null:await require('./facilityInfoService').chat(question);
+    const study=academicPublication||facility?null:await require('./studySupportService').chat(question,user,academicProfile,sessionId);
+    if(academicPublication||facility||study){const result=academicPublication||facility||study;supportConversation.reset(sessionId);markAdvisorTopic(sessionId,false);await sessionService.appendMessage(sessionId,'user','[Structured academic/study interaction omitted]');await sessionService.appendMessage(sessionId,'assistant','[Structured academic/study response omitted]');return {...result,sessionId};}
+    const personalized = await require('./personalAcademicService').tryAnswer(question,{user,profile:academicProfile,sessionId});
+    if(personalized){
+        supportConversation.reset(sessionId);markAdvisorTopic(sessionId,false);
+        await sessionService.appendMessage(sessionId,'user',question);
+        await sessionService.appendMessage(sessionId,'assistant','[Private academic response omitted from model history]');
+        return {...personalized,sessionId};
+    }
     const academicService = require('./demoAcademicChatService');
-    let academic = academicService.tryAnswer(question, academicProfile);
+    let academic = /grade ?12|ecz|gce|school certificate|qualif\w*|eligib\w*|\b(?:support|ticket|portal|problem|issue|cannot|can't)\b/i.test(question)?null:academicService.tryAnswer(question, academicProfile);
     if (!academic && academicProfile && /^(?:yes|yes please|please do|show me)[.!]?$/i.test(question.trim())) {
         const last = (await sessionService.getRecentHistory(sessionId, 1))[0];
         if (last?.role === 'assistant' && last.content.endsWith('Would you like to see which assessments are pending?')) academic = academicService.tryAnswer('Which assessments are pending?', academicProfile);
     }
     if (academic) {
+        require("./personalAcademicService").rememberLegacy(user,academicProfile,sessionId,question,academic);
         supportConversation.reset(sessionId);
         markAdvisorTopic(sessionId, false);
         await sessionService.appendMessage(sessionId, 'user', question);
-        await sessionService.appendMessage(sessionId, 'assistant', academic.answer);
+        await sessionService.appendMessage(sessionId, 'assistant', '[Private academic response omitted from model history]'+(academic.answer.endsWith('Would you like to see which assessments are pending?')?' Would you like to see which assessments are pending?':''));
         return { ...academic, sessionId };
     }
     const supportReply = await supportConversation.tryHandle(question, sessionId, user);
@@ -646,6 +677,12 @@ async function answerQuestion(question, sessionId, audience='public', profile=nu
     if (!conversation.reply(question, profile)) markAdvisorTopic(sessionId, false);
     const parser=require('./applicantResultParser');
     const safeQuestion=parser.extract(question).length?parser.withoutResults(question).trim():question;
+    if(conversational.route(safeQuestion)==='general'&&!conversation.reply(safeQuestion,profile)&&!conversation.personalResults(safeQuestion)&&!navigationService.tryHandleNavigation(safeQuestion)&&!/\bUNI-\d{4}-\d{4}\b/i.test(safeQuestion)){
+        const reply=await conversational.chat(safeQuestion,user,academicProfile,sessionId);
+        await sessionService.appendMessage(sessionId,'user','[Companion conversation omitted from persistent history]');
+        await sessionService.appendMessage(sessionId,'assistant','[Companion response omitted from model history]');
+        return reply;
+    }
     const result=await answerQuestionCore(safeQuestion,sessionId,audience,profile,user);
     const records=result._actionRecords || [];delete result._actionRecords;
     try{result.suggestedActions=require('./suggestedActionService').selectActions(question,result,records);}catch{result.suggestedActions=[];}

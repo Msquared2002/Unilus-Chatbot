@@ -1127,8 +1127,59 @@
 
 .startup-notice { display:block; margin-top:8px; font-size:0.85em; line-height:1.4; }
 /* Academic two-column results should wrap course titles, unlike timetable columns. */
-.message-row.bot.academic-message .bubble table{width:100%!important;table-layout:fixed!important;min-width:100%!important}
-.message-row.bot.academic-message .bubble :is(th,td){white-space:normal!important;min-width:0!important;max-width:none!important;overflow-wrap:break-word!important}
-.message-row.bot.academic-message .bubble :is(th,td):first-child{width:67%}
-.message-row.bot.academic-message .bubble :is(th,td):nth-child(2){width:33%}
+.message-row.bot.academic-message .bubble table{width:100%!important;table-layout:auto!important;min-width:34rem!important}
+.message-row.bot.academic-message .bubble :is(th,td){width:auto!important;min-width:5rem!important;max-width:none!important;overflow-wrap:normal!important;word-break:normal!important;white-space:normal!important;vertical-align:top}
+.message-row.bot.academic-message .bubble th{white-space:nowrap!important}
+.message-row.bot.academic-message .bubble :is(th,td):first-child{min-width:9rem!important}
+.message-row.bot.academic-message .bubble :is(th,td):nth-child(2){min-width:16rem!important}
 .message-row.bot.academic-message .bubble table{font-size:13px;line-height:1.5}
+
+/* Unified notification view, shared on every widget host. */
+.notification-inbox{max-width:100%;margin-bottom:1rem;padding:1rem;background:var(--card-bg,#fff);color:var(--text-color,#163d30);border:1px solid #7fa897;border-radius:.6rem;overflow-wrap:anywhere}
+.notification-inbox summary{cursor:pointer;font-weight:700;min-height:2rem}
+.notification-inbox article{padding:.75rem;margin:.5rem 0;border-left:4px solid #1c7655;background:rgba(28,118,85,.06)}
+.notification-inbox .notification-read{border-left-color:#999;opacity:.8}
+.notification-inbox button,.notification-inbox select{margin:.3rem;max-width:100%;min-height:2.5rem;white-space:normal}
+.notification-inbox pre{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit}
+.notification-inbox :focus-visible{outline:3px solid #ad7100;outline-offset:2px}
+@media(max-width:600px){.notification-inbox{padding:.65rem}.notification-inbox button,.notification-inbox select{display:block;width:100%;margin:.4rem 0}}
+
+#view-notifications{padding:16px;overflow:auto;background:var(--panel-bg,#fff);color:var(--text,#17221e)}
+#view-notifications[hidden]{display:none}
+#view-notifications article{padding:12px;border-bottom:1px solid #84968b}
+#view-notifications button{margin:6px;padding:8px;border-radius:8px;cursor:pointer}
+#view-notifications pre{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit}
+.notification-bell{position:relative;min-width:32px;font-size:12px}
+[data-theme="dark"] #view-notifications,body.dark #view-notifications{background:#14231d;color:#ecf5ef}
+@media(max-width:600px){.panel-header-actions{gap:2px}.notification-bell{min-width:28px}}
+
+.dark-mode #view-notifications{background:#14231d;color:#ecf5ef}
+.dark-mode #view-notifications button{background:#254738;color:#ecf5ef;border:1px solid #84968b}
+#notification-bell:focus-visible{outline:3px solid #ad7100;outline-offset:2px}
+
+.notification-badge{position:absolute;top:-3px;right:-4px;min-width:16px;padding:1px 3px;border-radius:12px;background:#a51c30;color:#fff;font-size:10px;line-height:14px;font-weight:700}.notification-badge[hidden]{display:none}
+
+.support-form{margin-top:12px;padding:12px;border:1px solid #709682;border-radius:10px;overflow-wrap:anywhere}.support-form label{display:block;margin:8px 0}.support-form input:not([type=checkbox]){display:block;box-sizing:border-box;max-width:100%;width:100%;padding:7px}.support-form button{margin:5px 3px;padding:7px;white-space:normal;cursor:pointer}.support-form :focus-visible{outline:3px solid #ad7100;outline-offset:2px}.dark-mode .support-form{background:#152d22;color:#eff8f2}.dark-mode .support-form input{background:#213b2c;color:#eff8f2}@media(max-width:600px){.support-form button{display:block;width:100%;margin:6px 0}}
+
+.peer-tutor-panel{max-width:100%;overflow-wrap:anywhere}.peer-tutor-card{padding:.75rem;border:1px solid var(--border,#8494a3);border-radius:.5rem;margin:.5rem 0}.peer-tutor-panel button{white-space:normal;min-height:2.5rem}.peer-tutor-panel input:not([type=checkbox]),.peer-tutor-panel select{width:100%;box-sizing:border-box}.peer-tutor-panel button:focus-visible,.peer-tutor-panel input:focus-visible,.peer-tutor-panel select:focus-visible{outline:3px solid #14b8a6;outline-offset:2px}
+
+.morning-brief-controls{max-width:100%;overflow-wrap:anywhere}.morning-brief-controls input:not([type=checkbox]){width:100%;box-sizing:border-box}.morning-brief-controls button{min-height:2.5rem;white-space:normal}.morning-brief-controls :focus-visible{outline:3px solid #14b8a6;outline-offset:2px}
+
+.connectivity-status{position:fixed;inset:auto 1rem 1rem;z-index:10001;max-width:40rem;padding:.6rem;background:#173c31;color:#fff;border-radius:.5rem;overflow-wrap:anywhere}.message-row .bubble{overflow-wrap:anywhere}.message-row a:focus-visible,.notification-inbox button:focus-visible{outline:3px solid #14b8a6;outline-offset:3px}@media(prefers-reduced-motion:reduce){.chat-panel,.message-row,.uni-avatar-wrapper,.uni-avatar-wrapper *{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+
+.chat-table-scroll:focus-visible{outline:3px solid #14b8a6;outline-offset:3px}
+/* Consolidated student controls: one surface, restrained internal hierarchy. */
+#unilus-widget .support-form .support-form{border:0;border-radius:0;padding:8px 0;margin:8px 0;background:transparent}
+#unilus-widget .support-form .support-form .support-form{padding:4px 0;margin:4px 0}
+#unilus-widget :is(.support-form,.notification-inbox) button{font:inherit;min-height:40px;border:1px solid var(--border-input,#78998b);border-radius:8px;background:var(--bg,#fff);color:var(--text,#163d30);padding:8px 12px;line-height:1.3}
+#unilus-widget :is(.support-form,.notification-inbox) button:disabled{opacity:.55;cursor:wait}
+#unilus-widget :is(.support-form,.notification-inbox) button:focus-visible{outline:3px solid var(--brand,#137b58);outline-offset:3px}
+#unilus-widget .support-form input:focus{scroll-margin-block:24px}
+#unilus-widget .chat-box{min-height:0;overscroll-behavior:contain;scroll-padding-block:20px;padding-bottom:24px}
+#unilus-widget #view-notifications{margin:0;border:0;border-radius:0;gap:12px}
+#unilus-widget .chat-panel.expanded #view-notifications{width:100%;max-width:1040px;align-self:center}
+#unilus-widget #view-notifications>div{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:12px;align-items:start}
+#unilus-widget #view-notifications article{margin:0;border:1px solid var(--border,#78998b);border-left:4px solid var(--brand,#137b58);border-radius:8px;padding:12px}
+@media(max-width:640px){#unilus-widget .chat-panel{height:var(--uw-viewport-height,100dvh)!important;max-height:var(--uw-viewport-height,100dvh)!important}#unilus-widget .input-area{padding-bottom:max(12px,env(safe-area-inset-bottom))}#unilus-widget .message-row.bot.academic-message .bubble{max-width:calc(100% - 40px)!important}}
+#unilus-widget .support-form button[data-action-kind="primary"]{background:var(--brand,#0d5c3d);color:var(--bg,#fff);border-color:var(--brand,#0d5c3d)}
+#unilus-widget .support-form button[data-action-kind="danger"]{color:#a32937;border-color:#bc6670}

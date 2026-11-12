@@ -53,6 +53,7 @@ function createSessionId() {
 
 async function appendMessage(sessionId, role, content) {
     if(role==='user' && require('./applicantResultParser').extract(content).length)content=require('./applicantResultParser').withoutResults(content).trim() || '[Academic results omitted from persistent history]';
+    content=require("./supportContactService").redact(content);
     await db.run(
         `INSERT INTO conversations (session_id, role, content) VALUES (?, ?, ?)`,
         [sessionId, role, content]
@@ -75,7 +76,7 @@ async function getRecentHistory(sessionId, limit = 6) {
          LIMIT ?`,
         [sessionId, limit]
     );
-    return rows.reverse(); // oldest first, as the LLM expects
+    return rows.reverse().map(row=>({...row,content:require('./supportContactService').redact(row.content)})).map(row=>row.role==='assistant'&&(/\|\s*(?:Course|Period)\s*\|[^\n]*(?:CA|Grade|Final mark)|Student ID:|Simulated demonstration records/i.test(row.content))?{...row,content:'[Private academic response omitted from model history]'}:row); // Never send older stored academic tables/identity to the general LLM.
 }
 
 

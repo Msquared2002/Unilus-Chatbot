@@ -13,7 +13,9 @@
 <link rel="stylesheet" href="chatbot-widget/avatar.css?v=hair-refit-2">
 <link rel="stylesheet" href="chatbot-widget/integration.css">
 <script src="js/runtime-config.js"></script>
+<link rel="stylesheet" href="css/notifications.css">
 <script src="js/api-config.js"></script>
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0b5137"><script src="js/public-pwa.js" defer></script>
 </head>
   <body class="portal-page">
     <header class="portal-topbar">
@@ -375,7 +377,7 @@
         <div id="chat-box" class="chat-box"></div>
 
         <form id="input-area" class="input-area">
-          <input id="user-input" placeholder="Ask me anything about UNILUS..." autocomplete="off">
+          <input id="user-input" aria-label="Message the student companion" placeholder="Ask me anything about UNILUS..." autocomplete="off">
           <button type="submit" class="send-btn" aria-label="Send message">
             <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M3 20v-6l8-2-8-2V4l19 8Z"/></svg>
           </button>
@@ -448,6 +450,6 @@
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="chatbot-widget/dist/chatbot-widget.js?v=hair-refit-2"></script>
-<script src="js/ticket-notifications.js" defer></script>
+
 </body>
 </html>

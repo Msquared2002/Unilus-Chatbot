@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 
 router.use((req,res,next)=>req.user?next():res.status(401).json({error:'Sign in required'}));
+router.use(async(req,res,next)=>{try{await require('../services/timetableNotificationService').refreshAccepted(/^[a-f0-9]{64}$/.test(String(req.query.publication||'')));next();}catch{res.status(503).json({error:'The accepted timetable is temporarily unavailable'});}});
 const timetableService = require("../services/timetableService");
 
 

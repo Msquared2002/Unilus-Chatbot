@@ -18,7 +18,7 @@
     document.querySelectorAll('[data-demo-identity]').forEach(el=>el.textContent=data.studentNumber);
     document.querySelectorAll('[data-demo-name]').forEach(el=>el.textContent=data.name);
     document.querySelectorAll('[data-demo-programme]').forEach(el=>el.textContent=data.programmeName);
-    document.querySelector('[data-profile-controls]').hidden=false;
+    document.querySelector('[data-profile-controls]').hidden=!!data.fixed;
     message.textContent='Independent demonstration · fictional student data';
     window.dispatchEvent(new Event('unilus-student-context-changed'));render();
   }

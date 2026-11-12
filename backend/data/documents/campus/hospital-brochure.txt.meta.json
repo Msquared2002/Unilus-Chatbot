@@ -1,0 +1,53 @@
+{
+  "place_id": "unilus_hospital",
+  "reviewed_date": "2026-11-12",
+  "current_availability_verified": false,
+  "source_archive_sha256": "68a129406e274e15c524ff60c8cb9ae5add6cc58766924219a4d561c2b5af55b",
+  "source_images": [
+    {
+      "filename": "WhatsApp Image 2026-11-12 at 1.52.12 AM.jpeg",
+      "sha256": "6e911d93626716c4494f9409ccaf4bb176218c2faa09c35348c5e0d089354ad0"
+    },
+    {
+      "filename": "WhatsApp Image 2026-11-12 at 1.52.13 AM (1).jpeg",
+      "sha256": "1731bd3c747b1359e59381386b8a492d2c6d385b5b9f28c8a3cd73c7635f0576"
+    },
+    {
+      "filename": "WhatsApp Image 2026-11-12 at 1.52.13 AM (2).jpeg",
+      "sha256": "c3d350af75253f0250af84cedb88f8f3fd45d7b356ed41131f1bbd546d4a06a9"
+    },
+    {
+      "filename": "WhatsApp Image 2026-11-12 at 1.52.13 AM.jpeg",
+      "sha256": "5ed3b2e5aec727cef027bffe2cee93e82ce117ddc55c6d9dc4ba947c8307ec53"
+    },
+    {
+      "filename": "WhatsApp Image 2026-11-12 at 1.52.14 AM (1).jpeg",
+      "sha256": "5346e4c211a12a1a9abc274fd668f2339ac8afcf8bee65f634849ddbc19025aa"
+    },
+    {
+      "filename": "WhatsApp Image 2026-11-12 at 1.52.14 AM (2).jpeg",
+      "sha256": "da38ac6b647f26ea8f14edd4a34bfd814b3872d0642874c8ded270e4978e13e9"
+    },
+    {
+      "filename": "WhatsApp Image 2026-11-12 at 1.52.14 AM.jpeg",
+      "sha256": "adf86965aa68d6811a97e371f11bd7937f3f8618aa34d84939811f2abe138eeb"
+    }
+  ],
+  "source_type": "printed_brochure",
+  "title": "UNILUS Hospital undated brochure",
+  "publication_date": null,
+  "place_ids": [
+    "unilus_hospital"
+  ],
+  "access": "public",
+  "source_image_filenames": [
+    "WhatsApp Image 2026-11-12 at 1.52.12 AM.jpeg",
+    "WhatsApp Image 2026-11-12 at 1.52.13 AM (1).jpeg",
+    "WhatsApp Image 2026-11-12 at 1.52.13 AM (2).jpeg",
+    "WhatsApp Image 2026-11-12 at 1.52.13 AM.jpeg",
+    "WhatsApp Image 2026-11-12 at 1.52.14 AM (1).jpeg",
+    "WhatsApp Image 2026-11-12 at 1.52.14 AM (2).jpeg",
+    "WhatsApp Image 2026-11-12 at 1.52.14 AM.jpeg"
+  ],
+  "operational_information_may_change": true
+}

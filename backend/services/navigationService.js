@@ -61,6 +61,12 @@ function buildProximityAnswer(place, nearby) {
  *                   recommendedResources: Array, timetableMatches: number}}
  */
 function tryHandleNavigation(question) {
+  if(/\b(?:my (?:academic|student) profile|programme am i|year am i)\b/i.test(question))return null;
+  if(/\bshow (?:the )?academic buildings\b/i.test(question)){
+    const buildings=campusRepository.getAllPlaces().filter(p=>p.category==='academic');
+    if(buildings.length)return {answer:'Academic buildings in the campus record: '+buildings.map(p=>p.name).join(', ')+'. Open the map to view these destinations.',queryType:{isNavigation:true,intentType:'locate'},navigation:mapResponseBuilder.buildLocateResponse(buildings[0]),sources:[],resources:[],recommendedResources:[],timetableMatches:0};
+  }
+  if(/\bacademic building\s+[a-z]\b/i.test(question)&&!campusRepository.getAllPlaces().some(p=>question.toLowerCase().includes(p.name.toLowerCase())))return {answer:'That academic building label is not in the current verified campus catalogue. Please choose a named destination such as Knowledge Field 1 or Knowledge Field 2.',queryType:{isNavigation:true,intentType:'clarify_place'},navigation:null,sources:[],resources:[],recommendedResources:[],timetableMatches:0};
   const intent = navigationIntentDetector.classify(question);
   const fromTo = (question || "").match(/\bfrom\s+(.+?)\s+to\s+(.+?)(?:[?.!]|$)/i);
   const originChoices = fromTo ? locationSearchService.hostelChoices(fromTo[1]) : [];

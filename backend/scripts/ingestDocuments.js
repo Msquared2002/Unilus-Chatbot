@@ -95,7 +95,9 @@ async function ingestFile(filePath) {
     .filter((c) => c.text && c.text.length > 20) // drop near-empty noise chunks
     .map((chunk) => ({
       id: stableChunkId(filename, chunk.chunk_index, chunk.section),
-      text: chunk.text,
+      text: sourceMeta.source_type === 'printed_brochure' && sourceMeta.publication_date == null
+        ? 'Undated printed brochure; current service, hours, contact and insurance availability are not independently verified.\n' + chunk.text
+        : chunk.text,
       metadata: {
         ...documentMeta,
         ...sourceMeta,

@@ -11,34 +11,8 @@ const KEY = "unilusAdminKey";
 const NOT_YET = "The backend does not save this yet. Status changes and saved answers are saved.";
 
 /* ---------------- Department catalogue and keyword routing (unchanged) ---------------- */
-const departments = [
-  { id: "registry", name: "Registry", category: "General", keywords: [] },
-  { id: "academic-office", name: "Academic Office", category: "Academic", keywords: ["timetable", "exam", "examination", "results", "registration", "course", "semester", "module", "transcript", "academic"] },
-  { id: "finance", name: "Finance Office", category: "Finance", keywords: ["fees", "fee", "payment", "receipt", "invoice", "balance", "tuition", "clearance", "account"] },
-  { id: "ict", name: "ICT Support", category: "ICT", keywords: ["password", "login", "portal", "lms", "website", "error", "technical", "account access"] },
-  { id: "admissions", name: "Admissions Office", category: "Admissions", keywords: ["application", "admission", "acceptance", "requirements", "intake", "offer letter"] },
-  { id: "student-affairs", name: "Student Affairs", category: "Student Affairs", keywords: ["accommodation", "hostel", "welfare", "clubs", "student life"] },
-  { id: "library", name: "Library", category: "Library", keywords: ["book", "borrowing", "library", "journal", "resource"] },
-];
-
-function classifyDepartment(text) {
-  const normalizedText = String(text || "").toLowerCase();
-  const keywordPattern = (keyword) => {
-    if (keyword === "registration") return /\b(registration|register(?:ed|ing|s)?)\b/i;
-    const expression = keyword.replaceAll(" ", "\\s+");
-    const plural = ["course", "fee", "exam", "book"].includes(keyword) ? "s?" : "";
-    return new RegExp(`\\b${expression}${plural}\\b`, "i");
-  };
-  const matches = departments.map((department) => ({
-    department,
-    matchedKeywords: department.keywords.filter((keyword) => keywordPattern(keyword).test(normalizedText)),
-  })).filter((item) => item.matchedKeywords.length > 0).sort((a, b) => b.matchedKeywords.length - a.matchedKeywords.length);
-  const best = matches[0];
-  if (!best) return { departmentId: null, department: null, departmentName: null, category: null, confidence: "unclassified", matchedKeywords: [] };
-  const confidence = best.matchedKeywords.length > 1 ? "high" : "medium";
-  return { departmentId: best.department.id, department: best.department.id, departmentName: best.department.name, category: best.department.category, confidence, matchedKeywords: best.matchedKeywords };
-}
-
+import './support-departments.js';
+const {departments,classifyDepartment}=globalThis.UnilusSupportDirectory;
 function suggestDepartment(ticket) {
   const classification = classifyDepartment(`${ticket.subject} ${ticket.description}`);
   if (!classification.departmentId) return { ...classification, departmentName: null, reason: "No routing rule matched. Please choose a department." };
@@ -47,23 +21,16 @@ function suggestDepartment(ticket) {
 
 /* ---------------- Backend <-> panel mapping ---------------- */
 // The backend tracks four statuses; the panel shows them with these labels.
-const FROM_API = { Open: "New", "In Progress": "In Progress", Resolved: "Resolved", Closed: "Closed" };
-const TO_API = { New: "Open", "In Progress": "In Progress", Resolved: "Resolved", Closed: "Closed" };
+const FROM_API = { Open: "Open", "In Progress": "In Progress", Resolved: "Resolved", Closed: "Closed" };
+const TO_API = { Open: "Open", "In Progress": "In Progress", Resolved: "Resolved", Closed: "Closed" };
 const transitions = {
-  New: ["In Progress", "Resolved"],
+  Open: ["In Progress", "Resolved"],
   "In Progress": ["Resolved"],
   Resolved: ["In Progress", "Closed"],
   Closed: ["In Progress"],
 };
-const PRIORITY = { Critical: "Urgent", High: "High", Medium: "Normal", Low: "Low" };
-const DEPARTMENT_IDS = {
-  "academic office": "academic-office", registry: "registry",
-  "finance office": "finance", finance: "finance",
-  "ict support": "ict", ict: "ict",
-  "admissions office": "admissions", admissions: "admissions",
-  "student affairs": "student-affairs", library: "library",
-};
-const toDepartmentId = (name) => DEPARTMENT_IDS[String(name || "").toLowerCase()] || null;
+const PRIORITY = { Critical: "Urgent", High: "High", Medium: "Medium", Low: "Low" };
+const toDepartmentId = name=>globalThis.UnilusSupportDirectory.normalize(name)?.id||null;
 const short = (text) => (String(text).length > 90 ? `${String(text).slice(0, 89)}…` : String(text));
 
 function shape(row) {
@@ -77,16 +44,16 @@ function shape(row) {
     subject: short(row.question),
     description: row.question,
     source: "ai_escalation",
-    priority: PRIORITY[row.priority] || "Normal",
+    priority: PRIORITY[row.priority] || "Medium",
     status,
     departmentId: toDepartmentId(row.department),
     assignedTo: row.assignedTo || null,
-    student: { name: "Chat student", email: "Not captured by the chatbot", programme: "Not provided" },
+    student: { name: row.student_username || "Guest / legacy ticket", email: row.student_email || "Not provided", phone:row.student_phone || "Not provided", programme: "Not provided" },
     createdAt: row.created_at,
     updatedAt: row.updated_at || row.created_at,
     conversation: (row.history || []).map(m=>({role:m.role,author:m.role,body:m.content,createdAt:row.created_at})).concat((row.events||[]).filter(e=>e.kind==="reply").map(e=>({role:"staff",author:e.actor,body:e.body,createdAt:e.created_at}))),
     internalNotes: (row.events||[]).filter(e=>e.kind==="note").map(e=>({author:e.actor,body:e.body,createdAt:e.created_at})),
-    attachments: [],
+    attachments: row.attachments || [],
     aiEscalationContext: {
       classification: row.category,
       confidence: "Not scored",
@@ -135,6 +102,7 @@ async function fetchTicket(id) {
 }
 
 export const ticketService = {
+  identity: async () => (await api("/auth/me")).user,
   isSignedIn() { return Boolean(sessionStorage.getItem('unilusStaffToken')); },
   async signIn(username,password) {
     const response=await fetch(API+'/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password})});
@@ -174,6 +142,7 @@ export const ticketService = {
     return { items: rows.slice((page - 1) * pageSize, page * pageSize), total: rows.length, page, pageSize, pages: Math.max(1, Math.ceil(rows.length / pageSize)) };
   },
 
+  async downloadAttachment(ref,id){const r=await fetch(API+'/admin/tickets/'+encodeURIComponent(ref)+'/attachments/'+encodeURIComponent(id),{headers:{Authorization:'Bearer '+(sessionStorage.getItem('unilusStaffToken')||'')}});if(!r.ok)throw Error('Attachment unavailable');return r.blob();},
   async getTicket(id) { return fetchTicket(id); },
   async getAllowedTransitions(id) { const ticket = await fetchTicket(id); return ticket ? [...(transitions[ticket.status] || [])] : []; },
   async suggestDepartment(id) { const ticket = await fetchTicket(id); return ticket ? suggestDepartment(ticket) : null; },

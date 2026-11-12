@@ -601,7 +601,8 @@ window.CampusMap = (function () {
       }).addTo(leafletMap);
       markerLayer = L.layerGroup().addTo(leafletMap);
     }
-    if (!getCampus(currentCampus)) {
+    // init() normally preloads data before the user opens the map. Rendering
+    // is still required in that case to establish bounds, tiles and markers.
       loadData().then(() => {
         // If the default active campus (from the host HTML) turns out to
         // have no map data, land on the first available one instead of
@@ -613,7 +614,6 @@ window.CampusMap = (function () {
         }
         renderCampus(currentCampus);
       });
-    }
 
     leafletMap.invalidateSize();
   }

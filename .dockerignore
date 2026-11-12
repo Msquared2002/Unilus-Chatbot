@@ -19,3 +19,5 @@ integration-preservation
 **/data/demo_users.json
 **/data/knowledge_updates.json
 **/data/unanswered-questions-log.jsonl
+
+backend/tests

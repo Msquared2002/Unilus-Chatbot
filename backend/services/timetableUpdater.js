@@ -309,7 +309,9 @@ function recordImport(event) {
  * @param {boolean} [options.dryRun]     check and report only, change nothing
  * @param {string}  [options.importedBy]
  */
-function importTimetable({ buffer, force = false, dryRun = false, importedBy = "unknown" }) {
+function importTimetable({ buffer, force = false, dryRun = false, importedBy = "unknown", manifest = null }) {
+    if(manifest&&!dryRun)return require("./timetableIngestionService").ingest(buffer,manifest);
+    if(!dryRun)throw new TimetableError(409,'Authoritative complete-import manifest required. Use timetableIngestionService; raw file imports cannot replace the accepted timetable.');
     return enqueue(async () => {
         if (!Buffer.isBuffer(buffer) || buffer.length === 0) {
             throw new TimetableError(400, "No file received. Send the contents of timetable.json as the request body.");

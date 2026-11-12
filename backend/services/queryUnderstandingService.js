@@ -274,8 +274,8 @@ Rules:
 
     return parsePlannerResponse(content, query);
   } catch (err) {
-    console.warn(`[query-planner] falling back to original query: ${err.message}`);
-    return fallbackPlan(query, err.message);
+    console.warn(JSON.stringify({event:'planner_fallback',category:err.status||err.code||'unavailable'}));
+    return fallbackPlan(query, 'planner unavailable');
   }
 }
 

@@ -3,6 +3,11 @@ const fs = require('node:fs');
 const { Client } = require('pg');
 const CORE = ['conversations', 'feedback', 'staff_answers', 'tickets'];
 const APPLICATION = [...CORE, 'chat_sessions', 'ticket_events', 'ticket_assignments', 'knowledge_records', 'managed_documents'];
+const NOTIFICATION_TABLES=["ticket_notification_reads","timetable_publications","timetable_changes","timetable_subscriptions","timetable_notification_reads","timetable_demo_overrides"];
+const SUPPORT_TABLES=['support_contact_profiles','ticket_support_details','ticket_attachments'];
+const PEER_TABLES=['peer_tutor_profiles','peer_tutor_courses','peer_tutor_requests','peer_tutor_events'];
+const MORNING_TABLES=['brief_preferences','brief_deliveries','personal_reminders','reminder_events'];
+const ACADEMIC_TABLES=['academic_publications','academic_notice_reads'];
 const PROJECT = 'qhnspcstqvazxkqshuir';
 const ident = value => '"' + String(value).replace(/"/g, '""') + '"';
 const literal = value => value == null ? 'NULL' : typeof value === 'number' ? String(value) : "'" + String(value).replace(/'/g, "''") + "'";
@@ -27,7 +32,7 @@ async function readOnly(file, fn) {
   } finally { await client.end().catch(() => {}); }
 }
 async function inspect(client) {
-  const names = APPLICATION.concat('schema_migrations');
+  const names = APPLICATION.concat('schema_migrations',NOTIFICATION_TABLES,SUPPORT_TABLES,PEER_TABLES,MORNING_TABLES,ACADEMIC_TABLES);
   const q = async (sql, params = []) => (await client.query(sql, params)).rows;
   const identity = (await q("SELECT current_database() AS database,current_user AS role,current_setting('server_version') AS version,current_setting('transaction_read_only') AS read_only"))[0];
   const tables = await q("SELECT c.relname AS name,pg_get_userbyid(c.relowner) AS owner,c.relrowsecurity AS rls,c.relforcerowsecurity AS force_rls FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname='public' AND c.relkind='r' ORDER BY c.relname");
@@ -52,4 +57,4 @@ async function inspect(client) {
   const triggers = await q("SELECT c.relname AS table_name,t.tgname AS name,pg_get_triggerdef(t.oid) AS definition FROM pg_trigger t JOIN pg_class c ON c.oid=t.tgrelid JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname='public' AND NOT t.tgisinternal");
   return { project: PROJECT, capturedAt: new Date().toISOString(), identity, tables, columns, indexes, constraints, policies, grants, defaults, roles, memberships, counts, fingerprints, duplicateActiveTicketGroups: duplicates, buckets, sequences, sequenceGrants, schemaGrants, triggers };
 }
-module.exports = { CORE, APPLICATION, PROJECT, ident, literal, configuration, readOnly, inspect };
+module.exports = { CORE, APPLICATION, NOTIFICATION_TABLES, SUPPORT_TABLES, PEER_TABLES, MORNING_TABLES, ACADEMIC_TABLES, PROJECT, ident, literal, configuration, readOnly, inspect };

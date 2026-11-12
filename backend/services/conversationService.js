@@ -3,7 +3,7 @@ const greeting = /^(?:hi|hello|hey|hiya|yo|good (?:morning|afternoon|evening))(?
 function stripGreeting(text) {
     const clean = String(text || '').trim();
     const rest = clean.replace(greeting, '').trim();
-    return rest || clean;
+    return /[a-z0-9]/i.test(rest) ? rest : clean;
 }
 function reply(text, profile) {
     const value = String(text || '').trim();

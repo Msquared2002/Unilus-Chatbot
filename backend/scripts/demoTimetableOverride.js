@@ -1,0 +1,2 @@
+// Explicit server-only fictional demo operation; no student write route.
+const [operationId,venue]=process.argv.slice(2);require('../services/timetableOverrideService').create({operationId,venue,user:{username:'demo',role:'student'}}).then(o=>console.log(JSON.stringify({id:o.id,expiresAt:o.expires_at,simulated:true}))).catch(()=>{console.error('Demonstration refused');process.exitCode=1;}).finally(()=>require('../services/db').close());

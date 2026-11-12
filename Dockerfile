@@ -7,6 +7,7 @@ COPY backend/services/embeddingService.js ./services/embeddingService.js
 RUN node -e "require('./services/embeddingService').createEmbedding('Build-time model verification').then(v=>{if(v.length!==384)process.exit(1)})"
 COPY backend/ ./
 COPY dummy-environment/js/demo-programmes.js /app/dummy-environment/js/demo-programmes.js
+COPY dummy-environment/js/support-departments.js /app/dummy-environment/js/support-departments.js
 RUN mkdir -p data/documents/uploads && chown -R node:node /app/backend/data
 ENV NODE_ENV=production VECTOR_BACKEND=database WARM_MODEL_ON_START=yes
 USER node

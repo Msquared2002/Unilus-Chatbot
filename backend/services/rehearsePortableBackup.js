@@ -1,7 +1,7 @@
 const { PGlite } = require('@electric-sql/pglite');
 const { CORE, ident, inspect } = require('./postgresOperations');
 const { open } = require('./portableBackup');
-const { tablesFor } = require('./logicalBackup');
+const { tablesFor,orderColumns } = require('./logicalBackup');
 const canonical = rows => JSON.stringify(rows.map(row => JSON.stringify(Object.fromEntries(Object.entries(row).sort()))).sort());
 async function rehearse(envelope, key) {
   const { snapshot } = open(envelope, key);
@@ -18,13 +18,18 @@ async function rehearseSnapshot(snapshot) {
     const client = { query: (sql, params) => db.query(sql, params) }, actual = await inspect(client);
     for (const t of names) {
       if (!actual.fingerprints[t]) {
-        const key = t === 'schema_migrations' ? 'version' : t === 'ticket_assignments' ? 'ticket_ref' : 'id';
-        actual.fingerprints[t] = (await db.query("SELECT md5(COALESCE(jsonb_agg(to_jsonb(t) ORDER BY t." + ident(key) + ")::text,'[]')) AS digest FROM public." + ident(t) + ' t')).rows[0].digest;
+        const key = orderColumns(t).map(k=>'t.'+ident(k)).join(',');
+        actual.fingerprints[t] = (await db.query("SELECT md5(COALESCE(jsonb_agg(to_jsonb(t) ORDER BY " + key + ")::text,'[]')) AS digest FROM public." + ident(t) + ' t')).rows[0].digest;
       }
       if (actual.counts[t] !== snapshot.metadata.counts[t] || actual.fingerprints[t] !== snapshot.metadata.fingerprints[t]) throw Error('Recovery data mismatch');
     }
     for (const section of ['columns', 'constraints', 'indexes', 'tables', 'policies', 'grants', 'sequenceGrants']) {
       const normalize = rows => rows.filter(r => {
+        // inspect() also inventories unrelated shared-project tables. Only the
+        // explicitly captured application tables are part of this recovery.
+        if (section === 'sequenceGrants') {
+          if (!snapshot.sequences.some(s => s.sequencename === r.name)) return false;
+        } else if (!names.includes(section === 'tables' ? r.name : r.table_name)) return false;
         if (section === 'constraints' && r.type === 'n') return false; // PG18 adds NOT NULL metadata.
         // Implicit owner sequence ACL expands when first made explicit. Owner rights
         // are intrinsic; preserve/compare every non-owner ACL and sequence owner.

@@ -635,3 +635,6 @@
 .site-hero {
   background-image: url("../assets/hero-lecture.jpg");
 }
+/* Header crest and navigation occupy separate flow areas. */
+@media(min-width:1001px){.site-header{height:auto;min-height:132px;align-items:center;padding:16px 3.5vw;gap:24px}.site-header__brand{position:static;flex:0 0 96px;width:96px}.site-header__brand img{width:96px;height:112px}.site-nav{flex:1;flex-wrap:wrap;justify-content:center;gap:16px 22px;min-width:0;margin:0}}
+@media(min-width:901px){.site-header .global-brand-menu--site{position:relative;left:auto;bottom:auto;flex:0 0 96px;width:96px}.site-header .global-brand-menu--site .site-header__brand img{width:96px;height:112px}}

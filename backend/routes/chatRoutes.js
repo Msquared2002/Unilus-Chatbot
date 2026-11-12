@@ -58,7 +58,7 @@ async function handleChat(req, res) {
                 sessionId,
                 audience,
                 profile,
-                { user: req.user, academicProfile: req.demoAcademicProfile }
+                { user: req.user, academicProfile: req.demoAcademicProfile, supportDraftId:req.body.supportDraftId }
             );
 
 
@@ -81,6 +81,12 @@ async function handleChat(req, res) {
             advisor: result.advisor,
             support: result.support,
             academic: result.academic,
+            peer: result.peer,
+            brief: result.brief,
+            academicInfo: result.academicInfo,
+            study: result.study,
+            facility: result.facility,
+            reminder: result.reminder,
             demoProfileId: req.demoAcademicProfile?.id,
             suggestedActions: result.suggestedActions,
             route: result.route,

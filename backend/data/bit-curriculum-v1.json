@@ -1,0 +1,425 @@
+{
+  "version": "owner-checklist-2026-v1",
+  "source": "Owner-transcribed UNILUS programme checklist; not independent enrolment verification",
+  "programme": "BIT",
+  "programmeId": "bachelor-of-science-in-information-systems-and-technology",
+  "name": "Bachelor of Science in Information Systems and Technology",
+  "courses": [
+    {
+      "code": "BBA141",
+      "name": "Communication Skills",
+      "year": 1,
+      "semester": 1,
+      "sourceTitles": [
+        "Business Communication Skills Group D",
+        "D_ Business Communication Skills Group D",
+        "Business Communication Skills GROUP A",
+        "Business Communication Skills Group A TUTORIAL",
+        "B* Business Communication Skills GROUP B",
+        "COMMUNICATION SKILLS GROUP C",
+        "Business Communication Skills Group TUTORIAL",
+        "Business Communication Skills Group B TUTORIAL",
+        "BSPH COMMUNICATION SKILLS GROUP D",
+        "BSPHb COMMUNICATION SKILLS GROUP D",
+        "Business Communication Skills EDUCATION GROUP#Virtual",
+        "FT_ED Business Communication Skills EDUCATION GROUP#115"
+      ],
+      "aliasReviewRequired": true
+    },
+    {
+      "code": "BIT101",
+      "name": "Introduction to Business Information Systems",
+      "year": 1,
+      "semester": 1,
+      "sourceTitles": [
+        "Introduction to Business Information Systems",
+        "PT#5 Introduction to Business Information Systems"
+      ],
+      "aliasReviewRequired": false
+    },
+    {
+      "code": "BIT102",
+      "name": "Computer Mathematics",
+      "year": 1,
+      "semester": 1,
+      "sourceTitles": [
+        "BSC 111 Mathematics#70",
+        "TT#90 Computer Mathematics TUTORIAL Group A",
+        "TT# Computer Mathematics TUTORIAL Group C",
+        "TT## Computer Mathematics TUTORIAL Group B",
+        "Computer Mathematics PT#5",
+        "\\BSC111TT Computer Mathematics Tutorial Group A"
+      ],
+      "aliasReviewRequired": true
+    },
+    {
+      "code": "BIT110",
+      "name": "Computer Systems Architecture",
+      "year": 1,
+      "semester": 1,
+      "sourceTitles": [],
+      "aliasReviewRequired": true
+    },
+    {
+      "code": "BBA140",
+      "name": "Business Environment",
+      "year": 1,
+      "semester": 2,
+      "sourceTitles": [
+        "Business Environment GROUP C",
+        "\" Business Environment Tutorial Group-BSPH",
+        "Business Environment Tutorial Group C - LLB",
+        "B_LAW Business Environment Tutorial Group B - LLB",
+        "Business Environment Tutorial Group-AFIN",
+        "BUSINESS ENVIRONMENT GROUP A",
+        "Business Environment Tutorial Group-BFIN",
+        "' Business Environment Tutorial Group-ECF",
+        "Business Environment PT\\DL#25",
+        "TT_E_ Business Environment Tutorial Group E and F -LLB",
+        "TT_D Business Environment Tutorial Group D-LLB",
+        "*LAW#230 Business Environment LAW",
+        "TT_A Business Environment Tutorial Group A-LLB",
+        "*LAW#230b Business Environment LAW",
+        "Business Environment GROUP B",
+        "B_ Business Environment GROUP B",
+        "TT_A Business Environment Tutorial Group-BACT/BSM/BLTM",
+        "TT_B Business Environment Tutorial Group B-BBA",
+        "TT_H Business Environment Tutorial Group H-BBA",
+        "TT_G Business Environment Tutorial Group G-ECA/BIP/BPS",
+        "TT_E Business Environment Tutorial Group E-HRM",
+        "TT_C Business Environment Tutorial Group C-ED",
+        ",TT Business Environment Tutorial Group B-ED"
+      ],
+      "aliasReviewRequired": true
+    },
+    {
+      "code": "BIT107",
+      "name": "Operating System Operations and Services",
+      "year": 1,
+      "semester": 2,
+      "sourceTitles": [
+        "Operating Systems Operations and Services Group A#60",
+        "Operating Systems Operations and Services PT/DL#9"
+      ],
+      "aliasReviewRequired": true
+    },
+    {
+      "code": "BIT112",
+      "name": "Pseudocode and Programming Logic",
+      "year": 1,
+      "semester": 2,
+      "sourceTitles": [
+        "Pseudo Code and Programming Logic",
+        "Introduction to Programing/Programing Concepts Computer Lab Tutorial",
+        "FT Pseudo Code and Programming Logic",
+        "PT#10 Pseudo Code and Programming Logic PT#10"
+      ],
+      "aliasReviewRequired": false
+    },
+    {
+      "code": "BIT121",
+      "name": "Data and Information Management",
+      "year": 1,
+      "semester": 2,
+      "sourceTitles": [],
+      "aliasReviewRequired": true
+    },
+    {
+      "code": "AFIN102",
+      "name": "Financial Accounting",
+      "year": 2,
+      "semester": 1,
+      "sourceTitles": [
+        "Financial Accounting GROUP A",
+        "Financial Accounting GROUP B#350",
+        "E_TTd Financial Accounting Tutorial Group E#128",
+        "PT/DL Financial Accounting PT#128",
+        "B-#120 Financial Accounting Group B#128",
+        "B_TTb Financial Accounting Tutorial Group B#128"
+      ],
+      "aliasReviewRequired": true
+    },
+    {
+      "code": "BIT213",
+      "name": "Introduction to Programming - JAVA",
+      "year": 2,
+      "semester": 1,
+      "sourceTitles": [
+        "PT#5 Java Programming For Beginners#5"
+      ],
+      "aliasReviewRequired": true
+    },
+    {
+      "code": "BIT222",
+      "name": "Database Design and Management",
+      "year": 2,
+      "semester": 1,
+      "sourceTitles": [
+        "Database Design and Management"
+      ],
+      "aliasReviewRequired": false
+    },
+    {
+      "code": "BIT241",
+      "name": "Network and Telecom Systems",
+      "year": 2,
+      "semester": 1,
+      "sourceTitles": [],
+      "aliasReviewRequired": true
+    },
+    {
+      "code": "BBA240",
+      "name": "Quantitative Methods",
+      "year": 2,
+      "semester": 2,
+      "sourceTitles": [
+        "BUS#2_A Quantitave Methods Business Students GROUP A#250",
+        "C_TT#Z.CA Quantitave Methods Group C TUTORIAL#100",
+        "PT\\DL# Quantitave Methods PT\\DL",
+        "A_TT#1 Quantitave Methods TUTORIAL Group A#100",
+        "BUS#B. Quantitave Methods Business Students GROUP B#250",
+        "BUS#B Quantitave Methods Business Students GROUP B#250",
+        "B_TT#B Quantitave Methods Group B#100",
+        "ED#50 Quantitave Methods Education Students#50",
+        "ED_TT Quantitave Methods Education Students TUTORIAL"
+      ],
+      "aliasReviewRequired": true
+    },
+    {
+      "code": "BIT214",
+      "name": "Advanced Programming",
+      "year": 2,
+      "semester": 2,
+      "sourceTitles": [
+        "Advanced Java Programming TUTORIAL",
+        "\\BSC221 Advanced Java Programming",
+        "PT#2 Advanced Programming -Java PT"
+      ],
+      "aliasReviewRequired": true
+    },
+    {
+      "code": "BIT242",
+      "name": "Network Design and Management (Enterprise Network)",
+      "year": 2,
+      "semester": 2,
+      "sourceTitles": [
+        "Network Design and Management",
+        "Network Design and Management PT",
+        "FT#20. Network Design and Management#20"
+      ],
+      "aliasReviewRequired": true
+    },
+    {
+      "code": "BIT254",
+      "name": "Multimedia Systems and Applications",
+      "year": 2,
+      "semester": 2,
+      "sourceTitles": [],
+      "aliasReviewRequired": true
+    },
+    {
+      "code": "BIT256",
+      "name": "Data Structures and Algorithms",
+      "year": 2,
+      "semester": 2,
+      "sourceTitles": [
+        "Data Structures and Algorithms#15",
+        "Data Structures and Algorithms_PT"
+      ],
+      "aliasReviewRequired": true
+    },
+    {
+      "code": "BBA361",
+      "name": "Research Methods in Business and Social Science",
+      "year": 3,
+      "semester": 1,
+      "sourceTitles": [],
+      "aliasReviewRequired": true
+    },
+    {
+      "code": "BIT315",
+      "name": "Business Web Application Development - Client Side",
+      "year": 3,
+      "semester": 1,
+      "sourceTitles": [
+        "PT\\DL Business Web ApplicationDevelopment- Client Side"
+      ],
+      "aliasReviewRequired": true
+    },
+    {
+      "code": "BIT316",
+      "name": "Project Management",
+      "year": 3,
+      "semester": 1,
+      "sourceTitles": [
+        "Project Management",
+        "Project Management TUTORIAL",
+        "PT\\DL Project Management PT\\DL"
+      ],
+      "aliasReviewRequired": false
+    },
+    {
+      "code": "BIT325",
+      "name": "Systems Analysis and Design",
+      "year": 3,
+      "semester": 1,
+      "sourceTitles": [],
+      "aliasReviewRequired": true
+    },
+    {
+      "code": "BIT353",
+      "name": "Big Data and Data Warehousing",
+      "year": 3,
+      "semester": 1,
+      "sourceTitles": [],
+      "aliasReviewRequired": true
+    },
+    {
+      "code": "BBA360",
+      "name": "Entrepreneurship and Innovation",
+      "year": 3,
+      "semester": 2,
+      "sourceTitles": [
+        "Entrepreneurship & Innovation",
+        "PT_ Entrepreneurship & Innovation PT",
+        "PNRb Entrepreneurship & Innovation",
+        "PNR Entrepreneurship & Innovation",
+        "Entrepreneurship & Innovation TUTORIAL GROUP E",
+        "Entrepreneurship & Innovation TUTORIAL GROUP F",
+        "Entrepreneurship & Innovation TUTORIAL GROUP B"
+      ],
+      "aliasReviewRequired": true
+    },
+    {
+      "code": "BIT301",
+      "name": "E-Business and Enterprise Information System",
+      "year": 3,
+      "semester": 2,
+      "sourceTitles": [
+        "E-Business and Enterprise Information Sysystems",
+        "PT/DL_VT Decision Support Systems PT VIRTUAL CLASS"
+      ],
+      "aliasReviewRequired": true
+    },
+    {
+      "code": "BIT320",
+      "name": "Group Studio ICT Projects",
+      "year": 3,
+      "semester": 2,
+      "sourceTitles": [
+        "Group Studio ICT Projects",
+        "TT Group Studio ICT Projects",
+        "PT\\DL Group Studio ICT Projects"
+      ],
+      "aliasReviewRequired": false
+    },
+    {
+      "code": "BIT326",
+      "name": "Systems Development and Implementation",
+      "year": 3,
+      "semester": 2,
+      "sourceTitles": [
+        "Systems Development and Implementation",
+        "PT\\DL Systems Development and Implementation"
+      ],
+      "aliasReviewRequired": false
+    },
+    {
+      "code": "BIT346",
+      "name": "Business Web Development - Server Side",
+      "year": 3,
+      "semester": 2,
+      "sourceTitles": [
+        "Business Web Development -Server Side with Visual Studio and C#",
+        "Business Web Development -Server Side with Visual Studio and C TUTORIAL",
+        "PT\\DL Business Web Development -Server Side with Visual Studio and C#"
+      ],
+      "aliasReviewRequired": true
+    },
+    {
+      "code": "BIT402",
+      "name": "ICT Project/Research",
+      "year": 4,
+      "semester": 1,
+      "sourceTitles": [
+        "IS Project /Research"
+      ],
+      "aliasReviewRequired": true
+    },
+    {
+      "code": "BIT405",
+      "name": "Information Technology Law",
+      "year": 4,
+      "semester": 1,
+      "sourceTitles": [
+        "Information Technology Law For IT TUTORIAL",
+        "Information Technology Law For IT",
+        "PT\\DL Information Technology Law For IT"
+      ],
+      "aliasReviewRequired": true
+    },
+    {
+      "code": "BIT442",
+      "name": "Information Systems and Society",
+      "year": 4,
+      "semester": 1,
+      "sourceTitles": [
+        "Information Sytems and Society#5",
+        "PT\\DL Information Systems Project Management#10"
+      ],
+      "aliasReviewRequired": true
+    },
+    {
+      "code": "BIT446",
+      "name": "Strategic Information Systems and Business Policy",
+      "year": 4,
+      "semester": 1,
+      "sourceTitles": [
+        "Strategic Information Systems and Business Policies#12",
+        "Strategic Information Systems and Business Policy"
+      ],
+      "aliasReviewRequired": false
+    },
+    {
+      "code": "BIT416",
+      "name": "Current Trends in ICT",
+      "year": 4,
+      "semester": 2,
+      "sourceTitles": [
+        "Current Trends in ICT",
+        "PT\\DL Current Trends in ICT"
+      ],
+      "aliasReviewRequired": false
+    },
+    {
+      "code": "BIT423",
+      "name": "ICT Project/Research",
+      "year": 4,
+      "semester": 2,
+      "sourceTitles": [],
+      "aliasReviewRequired": true
+    },
+    {
+      "code": "BIT434",
+      "name": "Information Technology Security",
+      "year": 4,
+      "semester": 2,
+      "sourceTitles": [
+        "PT\\DL Information Technology Security"
+      ],
+      "aliasReviewRequired": true
+    },
+    {
+      "code": "BIT443",
+      "name": "System Administration (Linux)",
+      "year": 4,
+      "semester": 2,
+      "sourceTitles": [
+        "System Administration(Linux)",
+        "TT System Administration(Linux) TUTORIAL",
+        "PT\\DL System Administration(Linux)"
+      ],
+      "aliasReviewRequired": false
+    }
+  ]
+}

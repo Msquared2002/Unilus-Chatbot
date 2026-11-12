@@ -441,3 +441,7 @@
     width: 58px;
   }
 }
+/* Permit the content track to shrink without pushing a tablet page sideways. */
+.portal-main{min-width:0}
+@media(min-width:761px) and (max-width:1000px){.portal-layout{grid-template-columns:200px minmax(0,1fr)}}
+.portal-main>.portal-panel{max-width:100%;overflow-x:auto}

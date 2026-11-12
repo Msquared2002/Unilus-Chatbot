@@ -24,6 +24,8 @@
 const crypto = require("crypto");
 const db = require("./db");
 const workflow=require("./ticketWorkflowService");
+const routing=require("../../dummy-environment/js/support-departments");
+const personalContacts=require("./supportContactService");
 
 const STATUSES = ["Open", "In Progress", "Resolved", "Closed"];
 const DEFAULT_DEPARTMENT = "Registry";
@@ -156,6 +158,7 @@ function adminView(row) {
     return {
         ...publicView(row),
         assignedTo: row.assignee || null,
+        student_email:row.student_email||null,student_phone:row.student_phone||null,student_username:row.student_username||null,contact_status:row.contact_status||'not-provided',routing_reason:row.routing_reason||null,
         question: row.question,
         summary: row.summary,
         history,
@@ -197,7 +200,10 @@ const cleanRef = (ref) => String(ref || "").trim().toUpperCase();
  *
  * @returns {Promise<{ ticket: object, created: boolean }>}
  */
-async function createTicket({ sessionId, question, history = [], contact = null }) {
+async function createTicket({ sessionId, question, history = [], contact = null, studentContact = null, user = null, consent = false }) {
+ const route=routing.resolve(question,contact?.department);
+ const personal=personalContacts.validate(studentContact||{});
+ if((personal.email||personal.phone)&&consent!==true)throw Object.assign(Error("Contact consent required"),{status:400});
  return db.transaction(async()=>{
     if(db.dialect==="postgres")await db.get("SELECT pg_advisory_xact_lock(hashtext(?))",[sessionId+":"+question.toLowerCase().trim()]);
     const duplicate = await db.get(
@@ -233,13 +239,15 @@ async function createTicket({ sessionId, question, history = [], contact = null 
             JSON.stringify(cleanHistory),
             category,
             priority,
-            (contact && contact.department) || DEFAULT_DEPARTMENT,
+            route.name,
             contact ? contact.contact_id || null : null,
         ]
     );
     const ref = `UNI-${new Date().getFullYear()}-${String(id).padStart(4, "0")}`;
     await db.run(`UPDATE tickets SET ticket_ref = ? WHERE id = ?`, [ref, id]);
 
+    await db.run('INSERT INTO ticket_assignments(ticket_ref,department,assignee) VALUES (?,?,?)',[ref,route.name,null]);
+    await db.run('INSERT INTO ticket_support_details(ticket_ref,student_username,student_email,student_phone,contact_status,consented_at,routing_reason) VALUES (?,?,?,?,?,?,?)',[ref,user?.role==='student'?user.username:null,personal.email,personal.phone,personal.email||personal.phone?'provided':'omitted',personal.email||personal.phone?new Date().toISOString():null,route.reason]);
     return { ticket: publicView(await db.get(`SELECT * FROM tickets WHERE ticket_ref = ?`, [ref])), created: true };
  });
 }
@@ -252,7 +260,8 @@ async function getTicketForAdmin(ref) {
     const row=await db.get(`SELECT * FROM tickets WHERE ticket_ref = ?`, [cleanRef(ref)]);
     if(!row)return null;
     const assignment=await db.get("SELECT assignee FROM ticket_assignments WHERE ticket_ref = ?",[row.ticket_ref]);
-    return adminView({...row,assignee:assignment?.assignee});
+    const details=await db.get('SELECT * FROM ticket_support_details WHERE ticket_ref=?',[row.ticket_ref]);
+    return adminView({...row,...details,assignee:assignment?.assignee});
 }
 
 async function getLatestTicketForSession(sessionId) {
@@ -265,15 +274,13 @@ function normalizeStatus(value) {
     return STATUSES.find((s) => s.toLowerCase() === wanted) || null;
 }
 
-async function listTickets({ status = null, limit = 50 } = {}) {
+async function listTickets({ status = null, limit = 50, department = null } = {}) {
     const cappedLimit = Math.min(Math.max(parseInt(limit, 10) || 50, 1), 200);
     const normalized = status ? normalizeStatus(status) : null;
 
-    const rows = normalized
-        ? await db.all(`SELECT * FROM tickets WHERE status = ? ORDER BY id DESC LIMIT ?`, [normalized, cappedLimit])
-        : await db.all(`SELECT * FROM tickets ORDER BY id DESC LIMIT ?`, [cappedLimit]);
-
-    return Promise.all(rows.map(async row=>{const assignment=await db.get("SELECT assignee FROM ticket_assignments WHERE ticket_ref = ?",[row.ticket_ref]);return adminView({...row,assignee:assignment?.assignee});}));
+    const filters=[],params=[];if(normalized){filters.push('status = ?');params.push(normalized);}if(department){filters.push('department = ?');params.push(department);}params.push(cappedLimit);
+    const rows=await db.all('SELECT * FROM tickets'+(filters.length?' WHERE '+filters.join(' AND '):'')+' ORDER BY id DESC LIMIT ?',params);
+    return Promise.all(rows.map(async row=>{const assignment=await db.get("SELECT assignee FROM ticket_assignments WHERE ticket_ref = ?",[row.ticket_ref]);const details=await db.get('SELECT * FROM ticket_support_details WHERE ticket_ref=?',[row.ticket_ref]);return adminView({...row,...details,assignee:assignment?.assignee});}));
 }
 
 /**

@@ -404,6 +404,7 @@ async function retrieveAnswer(query, history = [], audience = "public", profile 
     }
   }
 
+  if(isStudent)await require('./timetableNotificationService').refreshAccepted();
   const queryType = applyProfileDefaults(classifyQuery(effectiveQuery), effectiveQuery, isStudent ? profile : null);
 
   const result = {

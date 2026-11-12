@@ -18,6 +18,7 @@
 <link rel="stylesheet" href="chatbot-widget/integration.css">
 <script src="js/runtime-config.js"></script>
 <script src="js/api-config.js"></script>
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0b5137"><script src="js/public-pwa.js" defer></script>
 </head>
   <body class="website-page">
     <aside role="note" aria-label="Demonstration notice" style="padding:0.6rem 1rem;background:#fff3cd;color:#3d2f00;text-align:center;font-size:0.9rem">Independent UNILUS AI demonstration. Use fictional demo accounts only; never enter real university passwords. This is not an official university portal.</aside>
@@ -442,7 +443,7 @@
         <div id="chat-box" class="chat-box"></div>
 
         <form id="input-area" class="input-area">
-          <input id="user-input" placeholder="Ask me anything about UNILUS..." autocomplete="off">
+          <input id="user-input" aria-label="Message the student companion" placeholder="Ask me anything about UNILUS..." autocomplete="off">
           <button type="submit" class="send-btn" aria-label="Send message">
             <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M3 20v-6l8-2-8-2V4l19 8Z"/></svg>
           </button>

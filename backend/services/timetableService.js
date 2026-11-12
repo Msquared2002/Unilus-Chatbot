@@ -65,6 +65,13 @@ let searchIndex = EMPTY_INDEX;
 let programmeStageDescriptors = [];
 let knownProgrammeFamilies = new Set();
 let knownLecturerNameTokens = new Set();
+let acceptedSnapshot=false;
+function acceptSnapshot(records){
+ const nextIndex=require('./timetableUpdater').buildSearchIndex(records);
+ const descriptors=buildProgrammeStageDescriptors(nextIndex),tokens=buildLecturerNameTokens(records);
+ timetable=records;searchIndex=nextIndex;programmeStageDescriptors=descriptors;knownProgrammeFamilies=new Set(descriptors.map(d=>d.family));knownLecturerNameTokens=tokens;acceptedSnapshot=true;
+ return records.length;
+}
 
 // Programme codes such as BIT32 encode programme family + year + semester.
 // Build this dynamically from the generated index so routing never depends on
@@ -256,7 +263,8 @@ function getByCourse(courseCode) {
 
 function getByProgramme(programmeCode) {
     const code = normalize(programmeCode).toUpperCase();
-    return idsToRecords(searchIndex.by_programme_code[code]);
+    const ids=Object.entries(searchIndex.by_programme_code).filter(([key])=>compactProgrammeCode(key)===compactProgrammeCode(code)).flatMap(([,values])=>values);
+    return idsToRecords([...new Set(ids)]);
 }
 
 function getByVenue(venueCode) {
@@ -361,6 +369,8 @@ function search(query) {
 }
 
 module.exports = {
+    acceptSnapshot,
+    hasAcceptedSnapshot:()=>acceptedSnapshot,
     reload,
     TIMETABLE_PATH,
     SEARCH_INDEX_PATH,
@@ -377,3 +387,6 @@ module.exports = {
     search,
     isKnownLecturerNameToken,
 };
+
+// Overlay is evaluated at read time; cached expired overrides never prolong the change.
+for(const name of ["getAll","getByCourse","getByProgramme","getByVenue","getByLecturerCode","getByLecturer","getByDay","getByProgrammeStage","search"]){const base=module.exports[name];module.exports[name]=(...args)=>require("./timetableOverrideService").effective(base(...args));}

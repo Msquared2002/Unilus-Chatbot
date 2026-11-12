@@ -23,6 +23,7 @@
  */
 
 const LOCATE_TRIGGERS = [
+  /\bshow (?:the )?academic buildings\b/i,
   /\bwhere\s+(?:is|are|'s)\b/i,
   /\btake me to\b/i,
   /\bnavigate to\b/i,

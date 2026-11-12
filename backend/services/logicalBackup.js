@@ -1,12 +1,13 @@
 const fs = require('node:fs'), crypto = require('node:crypto'), path = require('node:path');
 const { execFileSync } = require('node:child_process');
-const { CORE, APPLICATION, ident, literal, inspect } = require('./postgresOperations');
+const { CORE, APPLICATION, NOTIFICATION_TABLES, SUPPORT_TABLES, PEER_TABLES, MORNING_TABLES, ACADEMIC_TABLES, ident, literal, inspect } = require('./postgresOperations');
+const orderColumns=name=>name==='schema_migrations'?['version']:['ticket_assignments','ticket_support_details'].includes(name)?['ticket_ref']:name==='support_contact_profiles'?['owner']:name==='timetable_subscriptions'?['owner']:name==='ticket_notification_reads'?['owner','event_id']:name==='timetable_notification_reads'?['owner','change_id']:['id'];
 const sha256 = data => crypto.createHash('sha256').update(data).digest('hex');
 function tablesFor(snapshot) {
   if (!snapshot.tableNames) return CORE;
   const expected = APPLICATION.concat('schema_migrations');
-  if (JSON.stringify(snapshot.tableNames) !== JSON.stringify(expected)) throw Error('Unsupported backup scope');
-  return expected;
+  if (!Array.isArray(snapshot.tableNames)||new Set(snapshot.tableNames).size!==snapshot.tableNames.length||JSON.stringify(snapshot.tableNames.slice(0,expected.length))!==JSON.stringify(expected)||snapshot.tableNames.slice(expected.length).some(t=>!NOTIFICATION_TABLES.concat(SUPPORT_TABLES,PEER_TABLES,MORNING_TABLES,ACADEMIC_TABLES).includes(t))) throw Error('Unsupported backup scope');
+  return snapshot.tableNames;
 }
 const policyRoles = roles => Array.isArray(roles) ? roles : require('pg').types.getTypeParser(1009)(roles);
 function validateSnapshot(snapshot) {
@@ -19,7 +20,7 @@ function validateSnapshot(snapshot) {
     if (snapshot.data[name].some(row => Object.keys(row).sort().join() !== columns.map(c => c.name).sort().join())) throw Error('Backup column mismatch');
   }
   if (snapshot.metadata.triggers.some(t => names.includes(t.table_name)) ||
-      snapshot.metadata.constraints.some(c => names.includes(c.table_name) && !['p', 'u', 'n'].includes(c.type))) throw Error('Schema dependencies require native pg_dump');
+      snapshot.metadata.constraints.some(c => names.includes(c.table_name) && !['p', 'u', 'n'].includes(c.type) && !(c.table_name==='personal_reminders'&&c.type==='c'&&c.definition==="CHECK ((status = ANY (ARRAY['active'::text, 'completed'::text, 'cancelled'::text])))") && !(c.table_name==='peer_tutor_requests'&&c.type==='c'&&c.definition==="CHECK ((status = ANY (ARRAY['pending'::text, 'accepted'::text, 'declined'::text, 'cancelled'::text, 'expired'::text])))") && !(c.type==='f'&&names.includes((c.definition.match(/REFERENCES (?:public\.)?"?([a-z_]+)"?\(/i)||[])[1])))) throw Error('Schema dependencies require native pg_dump');
 }
 function restoreSql(snapshot) {
   validateSnapshot(snapshot); const m = snapshot.metadata;
@@ -32,7 +33,7 @@ function restoreSql(snapshot) {
     sql.push(`CREATE TABLE public.${ident(name)} (${columns.map(c => ident(c.name) + ' ' + c.type + (c.default_expression ? ' DEFAULT ' + c.default_expression : '') + (c.not_null ? ' NOT NULL' : '')).join(',')});`);
     for (const row of snapshot.data[name]) sql.push(`INSERT INTO public.${ident(name)} (${columns.map(c => ident(c.name)).join(',')}) VALUES (${columns.map(c => literal(row[c.name])).join(',')});`);
     // PG18 exposes NOT NULL constraints separately; column NOT NULL already restores them.
-    for (const c of m.constraints.filter(c => c.table_name === name && c.type !== 'n')) sql.push(`ALTER TABLE public.${ident(name)} ADD CONSTRAINT ${ident(c.name)} ${c.definition};`);
+    for (const c of m.constraints.filter(c => c.table_name === name && c.type !== 'n' && c.type !== 'f')) sql.push(`ALTER TABLE public.${ident(name)} ADD CONSTRAINT ${ident(c.name)} ${c.definition};`);
     const constraintIndexes = new Set(m.constraints.filter(c => c.table_name === name).map(c => c.index_name));
     for (const i of m.indexes.filter(i => i.table_name === name && !constraintIndexes.has(i.name))) sql.push(i.definition + ';');
     sql.push(`ALTER TABLE public.${ident(name)} OWNER TO ${ident(m.tables.find(t => t.name === name).owner)};`);
@@ -43,6 +44,7 @@ function restoreSql(snapshot) {
     if (table.rls) sql.push(`ALTER TABLE public.${ident(name)} ENABLE ROW LEVEL SECURITY;`);
     if (table.force_rls) sql.push(`ALTER TABLE public.${ident(name)} FORCE ROW LEVEL SECURITY;`);
   }
+  for(const c of m.constraints.filter(c=>tablesFor(snapshot).includes(c.table_name)&&c.type==='f'))sql.push(`ALTER TABLE public.${ident(c.table_name)} ADD CONSTRAINT ${ident(c.name)} ${c.definition};`);
   for (const s of snapshot.sequences) {
     sql.push(`ALTER SEQUENCE public.${ident(s.sequencename)} OWNED BY public.${ident(s.table_name)}.${ident(s.column_name)};`);
     sql.push(`ALTER SEQUENCE public.${ident(s.sequencename)} OWNER TO ${ident(s.sequenceowner)};`);
@@ -54,12 +56,12 @@ function restoreSql(snapshot) {
 }
 async function capture(client, { integrated = false } = {}) {
   const metadata = await inspect(client), data = {}, sequences = [];
-  const names = integrated ? APPLICATION.concat('schema_migrations') : CORE;
+  const names = integrated ? APPLICATION.concat('schema_migrations',NOTIFICATION_TABLES.concat(SUPPORT_TABLES,PEER_TABLES,MORNING_TABLES,ACADEMIC_TABLES).filter(t=>metadata.tables.some(x=>x.name===t))) : CORE;
   for (const name of names) {
     if (!metadata.tables.some(t => t.name === name)) throw Error('Missing original core table');
-    const key = name === 'schema_migrations' ? 'version' : name === 'ticket_assignments' ? 'ticket_ref' : 'id';
-    data[name] = (await client.query('SELECT * FROM public.' + ident(name) + ' ORDER BY ' + ident(key))).rows;
-    if (integrated) metadata.fingerprints[name] = (await client.query("SELECT md5(COALESCE(jsonb_agg(to_jsonb(t) ORDER BY t." + ident(key) + ")::text,'[]')) AS digest FROM public." + ident(name) + ' t')).rows[0].digest;
+    const key = orderColumns(name);
+    data[name] = (await client.query('SELECT * FROM public.' + ident(name) + ' ORDER BY ' + key.map(ident).join(','))).rows;
+    if (integrated) metadata.fingerprints[name] = (await client.query("SELECT md5(COALESCE(jsonb_agg(to_jsonb(t) ORDER BY " + key.map(k=>'t.'+ident(k)).join(',') + ")::text,'[]')) AS digest FROM public." + ident(name) + ' t')).rows[0].digest;
     for (const c of metadata.columns.filter(c => c.table_name === name && /nextval/.test(c.default_expression || ''))) {
       const qualified = (await client.query('SELECT pg_get_serial_sequence($1,$2) AS name', ['public.' + name, c.name])).rows[0].name;
       const sequence = metadata.sequences.find(s => qualified === 'public.' + s.sequencename || qualified === 'public.' + ident(s.sequencename));
@@ -95,4 +97,4 @@ function open(envelope, unprotect = bytes => dpapi('unprotect', bytes)) {
     return { snapshot, payloadSha256: sha256(bytes) };
   } finally { key.fill(0); }
 }
-module.exports = { capture, restoreSql, validateSnapshot, seal, open, sha256, tablesFor };
+module.exports = { capture, restoreSql, validateSnapshot, seal, open, sha256, tablesFor, orderColumns };

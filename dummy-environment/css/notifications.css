@@ -1,0 +1,23 @@
+.notification-inbox{max-width:100%;margin-bottom:1rem;padding:1rem;background:var(--card-bg,#fff);color:var(--text-color,#163d30);border:1px solid #7fa897;border-radius:.6rem;overflow-wrap:anywhere}
+.notification-inbox summary{cursor:pointer;font-weight:700;min-height:2rem}
+.notification-inbox article{padding:.75rem;margin:.5rem 0;border-left:4px solid #1c7655;background:rgba(28,118,85,.06)}
+.notification-inbox .notification-read{border-left-color:#999;opacity:.8}
+.notification-inbox button,.notification-inbox select{margin:.3rem;max-width:100%;min-height:2.5rem;white-space:normal}
+.notification-inbox pre{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit}
+.notification-inbox :focus-visible{outline:3px solid #ad7100;outline-offset:2px}
+@media(max-width:600px){.notification-inbox{padding:.65rem}.notification-inbox button,.notification-inbox select{display:block;width:100%;margin:.4rem 0}}
+
+#view-notifications{padding:16px;overflow:auto;background:var(--panel-bg,#fff);color:var(--text,#17221e)}
+#view-notifications[hidden]{display:none}
+#view-notifications article{padding:12px;border-bottom:1px solid #84968b}
+#view-notifications button{margin:6px;padding:8px;border-radius:8px;cursor:pointer}
+#view-notifications pre{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit}
+.notification-bell{position:relative;min-width:32px;font-size:12px}
+[data-theme="dark"] #view-notifications,body.dark #view-notifications{background:#14231d;color:#ecf5ef}
+@media(max-width:600px){.panel-header-actions{gap:2px}.notification-bell{min-width:28px}}
+
+.dark-mode #view-notifications{background:#14231d;color:#ecf5ef}
+.dark-mode #view-notifications button{background:#254738;color:#ecf5ef;border:1px solid #84968b}
+#notification-bell:focus-visible{outline:3px solid #ad7100;outline-offset:2px}
+
+.notification-badge{position:absolute;top:-3px;right:-4px;min-width:16px;padding:1px 3px;border-radius:12px;background:#a51c30;color:#fff;font-size:10px;line-height:14px;font-weight:700}.notification-badge[hidden]{display:none}

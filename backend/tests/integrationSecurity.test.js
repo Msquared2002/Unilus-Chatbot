@@ -66,7 +66,7 @@ test('feedback and support requests reject foreign sessions and invalid events',
  const sid=(await request('/api/chat',{question:'hello'},tokens.a)).data.sessionId;
  assert.equal((await request('/api/feedback',{sessionId:sid,rating:'up'},tokens.b)).status,403);
  assert.equal((await request('/api/tickets',{sessionId:sid,question:'Synthetic support'},tokens.b)).status,403);
- const t=await request('/api/tickets',{sessionId:sid,question:'Synthetic support'},tokens.a);assert.equal(t.status,201);
+ const t=await request('/api/tickets',{sessionId:sid,question:'Synthetic support',consent:true},tokens.a);assert.equal(t.status,201);
  const ref=t.data.ticket.ref;
  assert.equal((await request('/api/admin/tickets/'+ref+'/events',{kind:'unknown',body:'bad'},tokens.admin)).status,400);
  assert.equal((await request('/api/admin/tickets/'+ref,{status:'Closed'},tokens.admin,'PATCH')).status,400);

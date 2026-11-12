@@ -50,3 +50,16 @@ deployment/*.md
 docs/presentation-preparation/
 deployment/runtime.env.example
 supabase/.temp/
+
+# Local acceptance evidence and release helpers; retain on disk, never publish.
+docs/roadmap-audit/*.json
+docs/roadmap-audit/*.txt
+docs/roadmap-audit/*.png
+deployment/hospital-source-evidence/
+deployment/final-*.cjs
+deployment/phase1-preview.cjs
+deployment/remediation-*.cjs
+deployment/stage-a-api.cjs
+deployment/stage-a-browser.cjs
+deployment/stage-a-gates.cjs
+deployment/stage-a-metadata.cjs

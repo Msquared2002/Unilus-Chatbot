@@ -1,3 +1,6 @@
+import './academic-info.js';
+import './morning-brief.js';
+import './peer-tutors.js';
 import { marked } from "marked";
 import DOMPurify from "dompurify";
 window.DOMPurify=DOMPurify;
@@ -16,3 +19,8 @@ import "./campus-map.js";
 import "./widget.js";
 import "./suggested-action-registry.js";
 import "./app.js";
+
+import "../js/ticket-notifications.js";
+
+
+import "./front-desk.js";

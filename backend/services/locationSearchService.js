@@ -42,7 +42,7 @@ function aliasMatches(alias, queryTokens) {
 }
 
 function aliasesFor(place) {
-  return [...(place.search_aliases || []), place.name, ...(place.category === 'hostel' ? ['hostel'] : [])];
+  return [...(place.search_aliases || []), place.name, ...(place.category === 'hostel' ? ['hostel'] : [])].filter(alias=>! /^(?:academic|student)$/i.test(alias.trim()));
 }
 
 function hostelChoices(query) {
@@ -89,7 +89,7 @@ function findAllMatches(query, { limit = 3 } = {}) {
     // of the query's tokens in the flat search_index map — breaks
     // ties in favour of the "primary" keyword for that place.
     const isPrimaryKeyword = queryTokens.some((t) => searchIndex.search_index?.[t] === place.osm_ref);
-    if (isPrimaryKeyword) bestScore += 0.5;
+    if (isPrimaryKeyword && bestAlias) bestScore += 0.5;
 
     return { place, score: bestScore, matchedAlias: bestAlias };
   });

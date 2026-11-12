@@ -33,6 +33,7 @@ window.UnilusWidget = (function () {
   ];
 
   const VIEW_TITLES = {
+    notifications: {title:"Notifications",subtitle:null},
     chat: { title: "Unilus companion", subtitle: "Online now" },
     "settings-menu": { title: "Customise avatar", subtitle: null },
     outfits: { title: "Outfits", subtitle: null },
@@ -47,6 +48,7 @@ window.UnilusWidget = (function () {
   let chatOpen = false;
   let expanded = false;
   let hasBotReplied = false;
+  let notificationScroll=0;
   let view = "chat"; // chat | settings-menu | outfits | glasses | map
   let entitlements = UnilusAvatarEntitlements.resolveEntitlements(null);
   let currentStudent = null;
@@ -385,7 +387,10 @@ window.UnilusWidget = (function () {
   function goToView(name) {
     if (["outfits", "glasses", "accessories", "hairstyles"].includes(name) && !currentStudent) name = "settings-menu";
     if (name === "accessories" && !entitlements.accessories.includes("laptop")) name = "settings-menu";
+    if(name==="notifications"&&view==="chat")notificationScroll=document.getElementById("chat-box")?.scrollTop||0;
+    if(view==="notifications"&&name==="chat")requestAnimationFrame(()=>{const box=document.getElementById("chat-box");if(box)box.scrollTop=notificationScroll;});
     view = name;
+    const inbox=document.getElementById("view-notifications");if(inbox)inbox.hidden=name!=="notifications";
     els.viewChat.hidden = name !== "chat";
     els.viewSettingsMenu.hidden = name !== "settings-menu";
     els.viewOutfits.hidden = name !== "outfits";
@@ -419,6 +424,7 @@ window.UnilusWidget = (function () {
   }
 
   function goBack() {
+    if(view==="notifications"){goToView("chat");document.getElementById("notification-bell")?.focus();return;}
     if (view === "outfits" || view === "glasses" || view === "accessories" || view === "hairstyles") {
       goToView("settings-menu");
     } else {
@@ -521,6 +527,7 @@ window.UnilusWidget = (function () {
   function openChat() {
     if (chatOpen) return;
     chatOpen = true;
+    window.dispatchEvent(new Event("unilus-chat-opened"));
     els.launcher.classList.add("is-hidden");
     morphFromLauncher(() => {
       placeAvatar();
@@ -567,6 +574,7 @@ window.UnilusWidget = (function () {
   return {
   init,
   onBotMessage,
+  showNotifications: () => goToView("notifications"),
   openMap,
   showBuildingOnMap
 };

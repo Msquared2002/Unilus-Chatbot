@@ -1,0 +1,12 @@
+const router=require('express').Router(),service=require('../services/peerTutorService');
+router.use((req,res,next)=>req.user?.role==='student'?next():res.status(403).json({error:'Student sign-in required'}));
+const handle=fn=>async(req,res)=>{try{res.json(await fn(req));}catch(e){res.status(e.status||503).json({error:e.status&&e.status!==500?e.message:'Tutoring temporarily unavailable'});}};
+router.get('/profile',handle(r=>service.own(r.user)));
+router.put('/profile',handle(r=>service.save(r.user,r.body)));
+router.delete('/profile',handle(async r=>{const own=await service.own(r.user);if(!own.profile)return {ok:true};return service.save(r.user,{consent:true,courses:[],introduction:'',visible:false,available:false});}));
+router.get('/discover',handle(r=>service.discover(r.user,r.query.course,r.query.offset||0)));
+router.get('/requests',handle(r=>service.list(r.user)));
+router.post('/requests',handle(r=>service.create(r.user,r.body)));
+router.get('/requests/:id',handle(async r=>{await service.expire();return service.detail(r.user,r.params.id);}));
+router.post('/requests/:id',handle(r=>service.transition(r.user,r.params.id,r.body)));
+module.exports=router;

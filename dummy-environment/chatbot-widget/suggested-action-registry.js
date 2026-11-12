@@ -1,4 +1,5 @@
 const definitions = Object.freeze({
+  'context.followup': 'quick_reply',
   'advisor.reset': 'quick_reply', 'advisor.qualify':'quick_reply', 'advisor.followup':'quick_reply',
   'programme.requirements': 'quick_reply', 'programme.details': 'quick_reply',
   'timetable.day': 'quick_reply', 'timetable.stage': 'quick_reply',
