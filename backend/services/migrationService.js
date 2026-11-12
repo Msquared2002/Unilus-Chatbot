@@ -2,9 +2,14 @@ const fs=require('node:fs'),path=require('node:path');
 const {CORE,APPLICATION,PROJECT,ident,inspect}=require('./postgresOperations');
 const {sha256,open}=require('./logicalBackup');
 const CORE_COLUMNS={conversations:'id session_id role content created_at',feedback:'id session_id rating comment created_at',staff_answers:'id question answer visibility active times_used source_ticket created_at updated_at',tickets:'id ticket_ref session_id question summary history_json category priority department contact_id status created_at updated_at'};
+// Existing developer-owned production extensions, verified 2026-11-12. They are
+// retained untouched; new private support data continues in ticket_support_details.
+const LEGACY_COLUMNS={feedback:{question:'text',answer:'text',reason:'text',audience:'text',reviewed:'integer'},tickets:{student_email:'text',student_phone:'text',contact_status:'text',student_username:'text',resolved_notified_at:'text'}};
 function checkCore(report){
  for(const t of CORE){
-  const columns=report.columns.filter(c=>c.table_name===t);
+  const all=report.columns.filter(c=>c.table_name===t),legacy=all.filter(c=>Object.hasOwn(LEGACY_COLUMNS[t]||{},c.name));
+  if(legacy.length&&(legacy.length!==Object.keys(LEGACY_COLUMNS[t]).length||report.tables.find(r=>r.name===t)?.owner!=='postgres'||legacy.some(c=>c.type!==LEGACY_COLUMNS[t][c.name]||c.not_null||c.default_expression!==null||c.identity||c.generated)))throw Error('LEGACY_EXTENSION_SCHEMA_DRIFT');
+  const columns=all.filter(c=>!legacy.includes(c));
   if(columns.map(c=>c.name).sort().join()!==CORE_COLUMNS[t].split(' ').sort().join())throw Error('CORE_SCHEMA_DRIFT');
   for(const c of columns){const integer=['id','active','times_used'].includes(c.name);const nullable=['ticket_ref','contact_id','source_ticket','comment'].includes(c.name)||t==='feedback'&&c.name==='session_id';if(c.type!==(integer?'integer':'text')||c.not_null===nullable||c.identity||c.generated)throw Error('CORE_SCHEMA_DRIFT');
    const d=c.default_expression;
@@ -13,6 +18,7 @@ function checkCore(report){
   if(!report.constraints.some(c=>c.table_name===t&&c.type==='p'&&c.definition==='PRIMARY KEY (id)'))throw Error('CORE_KEY_DRIFT');
   if(report.constraints.some(c=>c.table_name===t&&!['p','u','n'].includes(c.type)))throw Error('UNREVIEWED_CORE_CONSTRAINT');
  }
+ if(report.triggers?.some(t=>CORE.includes(t.table_name)))throw Error('UNREVIEWED_CORE_TRIGGER');
  if(!report.constraints.some(c=>c.table_name==='tickets'&&c.type==='u'&&c.definition==='UNIQUE (ticket_ref)'))throw Error('TICKET_KEY_DRIFT');
  if(report.duplicateActiveTicketGroups)throw Error('DUPLICATE_ACTIVE_TICKETS');
  if(report.policies.some(p=>APPLICATION.concat('schema_migrations').includes(p.table_name)&&p.name!=='unilus_backend_access'))throw Error('UNREVIEWED_POLICY');
@@ -61,6 +67,10 @@ async function migrate(client,{files,backupCounts,backupFingerprints,inspectFn=i
   await client.query("SELECT pg_advisory_xact_lock(hashtext('unilus-schema-migration'))");
   await client.query('LOCK TABLE '+CORE.map(t=>'public.'+ident(t)).join(',')+' IN SHARE ROW EXCLUSIVE MODE');
   const before=await inspectFn(client);checkCore(before);
+  for(const [table,extensions]of Object.entries(LEGACY_COLUMNS))if(before.columns.some(c=>c.table_name===table&&Object.hasOwn(extensions,c.name))){
+   const deps=await client.query("SELECT 1 FROM pg_attribute a JOIN pg_depend d ON d.refclassid='pg_class'::regclass AND d.refobjid=a.attrelid AND d.refobjsubid=a.attnum WHERE a.attrelid=$1::regclass AND a.attname=ANY($2)",['public.'+table,Object.keys(extensions)]);
+   if(deps.rows.length)throw Error('UNREVIEWED_LEGACY_DEPENDENCY');
+  }
   if(backupCounts&&CORE.some(t=>before.counts[t]!==backupCounts[t]))throw Error('DATA_CHANGED_SINCE_BACKUP');
   if(backupFingerprints&&CORE.some(t=>before.fingerprints[t]!==backupFingerprints[t]))throw Error('DATA_CHANGED_SINCE_BACKUP');
   await client.query("SET LOCAL unilus.migration_context='approved-v2'");
@@ -83,4 +93,4 @@ async function migrate(client,{files,backupCounts,backupFingerprints,inspectFn=i
  }catch(e){await client.query('ROLLBACK');throw e;}
 }
 const bundleHash=files=>sha256(files.map(f=>f.name+'\0'+f.sql).join('\0'));
-module.exports={CORE_COLUMNS,checkCore,verifyBackup,checkSecurity,migrate,bundleHash};
+module.exports={CORE_COLUMNS,LEGACY_COLUMNS,checkCore,verifyBackup,checkSecurity,migrate,bundleHash};
