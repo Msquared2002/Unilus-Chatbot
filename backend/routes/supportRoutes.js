@@ -6,7 +6,10 @@
  *   Public:
  *     GET   /api/tickets/:ref        ticket status only (no question text, no history)
  *     POST  /api/tickets/:ref/contact  { sessionId, email?, phone? }  (own ticket only)
- *     POST  /api/feedback            { sessionId, rating: "up"|"down", comment? }
+ *     POST  /api/feedback            { sessionId, rating: "up"|"down", reason?, comment?, question?, answer? } -> { id }
+ *     PATCH /api/feedback/:id        { sessionId, rating?, reason?, comment? }   (same chat session only)
+ *     GET   /api/admin/feedback      ?rating=down|up&reviewed=0|1&limit=       (staff)
+ *     PATCH /api/admin/feedback/:id  { reviewed }                              (staff)
  *
  *   Staff (signed in as role "staff" or "admin", OR header x-admin-key):
  *     GET   /api/admin/tickets       ?status=Open&limit=50
@@ -74,26 +77,87 @@ router.post("/tickets/:ref/contact", async (req, res) => {
 });
 
 
+// Changes: Feedback is optional and richer: the widget sends the thumbs straight away, then (only if
+//          the student wants) a reason and comment to the same row via PATCH.
+// Affects: feedback table, GET /api/admin/stats and the staff Feedback page.
+// Purpose: Staff can see which answers failed and why, for future improvements.
+//          Only "signed in or visitor" is stored, never a name or username.
 router.post("/feedback", async (req, res) => {
     try {
-        await support.recordFeedback({
-            sessionId: req.body.sessionId || null,
+        const id = await support.recordFeedback({
+            sessionId: typeof req.body.sessionId === "string" ? req.body.sessionId : null,
             rating: req.body.rating,
-            comment: typeof req.body.comment === "string" ? req.body.comment : null
+            comment: typeof req.body.comment === "string" ? req.body.comment : null,
+            reason: typeof req.body.reason === "string" ? req.body.reason : null,
+            question: typeof req.body.question === "string" ? req.body.question : null,
+            answer: typeof req.body.answer === "string" ? req.body.answer : null,
+            audience: req.user ? "student" : "visitor"
         });
 
-        res.json({ ok: true });
+        res.json({ ok: true, id });
     } catch (error) {
         if (/rating must be/.test(error.message)) {
             return res.status(400).json({ error: error.message });
+        }
+        if (/too many feedback/.test(error.message)) {
+            return res.status(429).json({ error: error.message });
         }
         console.error("Feedback error:", error);
         res.status(500).json({ error: "Failed to save feedback" });
     }
 });
 
+// Adds a reason / comment (or changes the thumb) on feedback from the SAME chat session.
+router.patch("/feedback/:id", async (req, res) => {
+    try {
+        const ok = await support.updateFeedback(
+            req.params.id,
+            typeof req.body.sessionId === "string" ? req.body.sessionId : "",
+            {
+                rating: typeof req.body.rating === "string" ? req.body.rating : null,
+                reason: typeof req.body.reason === "string" ? req.body.reason : null,
+                comment: typeof req.body.comment === "string" ? req.body.comment : null
+            }
+        );
+        if (!ok) return res.status(404).json({ error: "Feedback not found" });
+        res.json({ ok: true });
+    } catch (error) {
+        if (/rating must be/.test(error.message)) {
+            return res.status(400).json({ error: error.message });
+        }
+        console.error("Feedback update error:", error);
+        res.status(500).json({ error: "Failed to update feedback" });
+    }
+});
+
 
 /* ------------------------------ Staff ----------------------------- */
+
+router.get("/admin/feedback", requireStaff, async (req, res) => {
+    try {
+        res.json(
+            await support.listFeedback({
+                rating: req.query.rating || null,
+                reviewed: req.query.reviewed === "1" ? true : req.query.reviewed === "0" ? false : null,
+                limit: req.query.limit
+            })
+        );
+    } catch (error) {
+        console.error("Admin feedback list error:", error);
+        res.status(500).json({ error: "Failed to list feedback" });
+    }
+});
+
+router.patch("/admin/feedback/:id", requireStaff, async (req, res) => {
+    try {
+        const found = await support.markFeedbackReviewed(req.params.id, req.body.reviewed !== false);
+        if (!found) return res.status(404).json({ error: "Feedback not found" });
+        res.json({ ok: true });
+    } catch (error) {
+        console.error("Admin feedback review error:", error);
+        res.status(500).json({ error: "Failed to update feedback" });
+    }
+});
 
 router.get("/admin/tickets", requireStaff, async (req, res) => {
     try {

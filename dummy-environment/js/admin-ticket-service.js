@@ -209,6 +209,17 @@ export const ticketService = {
   async addInternalNote() { throw new Error(`Internal notes are not available yet. ${NOT_YET}`); },
   async addStaffReply() { throw new Error(`Replies to students are not available yet. ${NOT_YET}`); },
 
+  /* Student feedback (thumbs up / down) on the chatbot's answers */
+  feedback: {
+    list: ({ rating = null, reviewed = null } = {}) => {
+      const params = new URLSearchParams({ limit: "500" });
+      if (rating) params.set("rating", rating);
+      if (reviewed !== null) params.set("reviewed", reviewed ? "1" : "0");
+      return api(`/admin/feedback?${params}`);
+    },
+    setReviewed: (id, reviewed) => api(`/admin/feedback/${encodeURIComponent(id)}`, { method: "PATCH", body: JSON.stringify({ reviewed }) }),
+  },
+
   /* "Teach the chatbot": recurring questions and staff-approved answers */
   faq: {
     recurring: () => api("/admin/recurring"),

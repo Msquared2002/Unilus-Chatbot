@@ -14,3 +14,5 @@ import "./campus-map.js";
 import "./widget.js";
 import "./app.js";
 import "./voice.js";
+import "./upload.js";
+import "./feedback.js";

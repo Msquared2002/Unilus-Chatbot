@@ -38,6 +38,7 @@ const supportService = require("./supportService");
 const faqService = require("./faqService");
 const { logUnansweredQuestion } = require("./unansweredLogger");
 const { toDisplayTimetableEntry, harmonizeDisplayCourseNames } = require("./timetablePresentationService");
+const uploadService = require("./uploadService");
 
 /*
 Changes: Coordinates navigation, retrieval evidence, and final answer composition.
@@ -62,6 +63,131 @@ function formatTicketStatus(ticket) {
         text += " This ticket has been marked as finished by the staff handling it.";
     }
     return text;
+}
+
+// Changes: A ticket is only opened when the student agrees to it.
+// Affects: buildFallback (now OFFERS a ticket instead of opening one) and answerQuestion
+//          (reads the student's yes / no before anything else).
+// Purpose: Questions the bot can't answer are often not staff matters (study advice, small
+//          talk). Asking first keeps the staff queue to requests people actually want followed up.
+//          The offer is kept in memory for OFFER_TTL_MS and is lost on a server restart, which
+//          only means the student is asked again.
+const OFFER_TTL_MS = 15 * 60 * 1000;
+const pendingTicketOffers = new Map(); // sessionId -> { question, contact, expires }
+
+const YES_REPLY = /^\s*(yes|yeah|yep|yup|y|ok|okay|sure|please|go ahead|do it|forward it|pass it on)\b/i;
+const EXPLICIT_TICKET_REQUEST = /\b(open|raise|create|log|submit|make)\b[^.?!]{0,20}\bticket\b|\b(talk|speak) to (a |the )?(staff|human|person|someone|registry)\b/i;
+
+// A bare "yes", "no", "ok" or "thanks" is not something staff can act on, so no ticket is offered for it.
+function isOfferWorthy(question) {
+    const text = String(question || "").trim();
+    if (text.length > 20) return true;
+    return !(YES_REPLY.test(text) || supportService.isContactDecline(text) || /^\s*(thanks?|thank you|cool|great|nice|bye|goodbye)\b/i.test(text));
+}
+
+function rememberTicketOffer(sessionId, question, contact) {
+    for (const [id, offer] of pendingTicketOffers) {
+        if (offer.expires < Date.now()) pendingTicketOffers.delete(id); // tidy old ones
+    }
+    pendingTicketOffers.set(sessionId, { question, contact, expires: Date.now() + OFFER_TTL_MS });
+}
+
+function takeTicketOffer(sessionId) {
+    const offer = pendingTicketOffers.get(sessionId);
+    pendingTicketOffers.delete(sessionId);
+    return offer && offer.expires >= Date.now() ? offer : null;
+}
+
+function plainReply(answer, sessionId, extra = {}) {
+    return {
+        answer,
+        queryType: { isTimetable: false, isKnowledge: false, isMixed: false, entities: {} },
+        sources: [],
+        resources: [],
+        recommendedResources: [],
+        timetableMatches: 0,
+        usedFallback: false,
+        sessionId,
+        ...extra,
+    };
+}
+
+// The student's most recent real question before this message, for "open a ticket" with no offer pending.
+async function previousQuestion(sessionId, current) {
+    const history = await sessionService.getRecentHistory(sessionId, 10);
+    for (let i = history.length - 1; i >= 0; i--) {
+        const m = history[i];
+        if (m.role !== "user" || m.content === current) continue;
+        const text = String(m.content || "").trim();
+        if (EXPLICIT_TICKET_REQUEST.test(text) || (text.length <= 40 && (YES_REPLY.test(text) || supportService.isContactDecline(text)))) continue;
+        return text;
+    }
+    return null;
+}
+
+// Opens the ticket the student agreed to. Visitors are then asked for an email;
+// signed-in students are not, their details come from the account.
+async function openAgreedTicket(question, sessionId, profile) {
+    try {
+        const fallback = await contactService.findFallbackContact(question);
+        const contact = fallback ? fallback.contact : null;
+        const username = profile && profile.username ? profile.username : null;
+
+        const result = await supportService.createTicket({
+            sessionId,
+            question,
+            history: await sessionService.getRecentHistory(sessionId, 12),
+            contact,
+            studentUsername: username,
+            studentContact: username ? require("./authService").getUserContact(username) : null,
+        });
+        const ticket = result.ticket;
+
+        let answer = result.created
+            ? `Done. I've opened ticket ${ticket.ref} and passed it to the ${ticket.department}. Ask me for the "status of ${ticket.ref}" any time to check progress.`
+            : `You already have an open ticket for this (${ticket.ref}), currently ${ticket.status}.`;
+        if (result.created && !username) {
+            answer += "\n\nSo we can let you know when it's resolved, please reply with your email address (you can add a phone number too, or say \"skip\").";
+        }
+        await sessionService.appendMessage(sessionId, "assistant", answer);
+        return plainReply(answer, sessionId, { ticket });
+    } catch (err) {
+        console.log("Failed to create ticket:", err.message);
+        const answer = "Sorry, I couldn't open a ticket just now. Please try again in a moment, or contact the university directly.";
+        await sessionService.appendMessage(sessionId, "assistant", answer);
+        return plainReply(answer, sessionId);
+    }
+}
+
+// Reads the student's answer to "Would you like me to pass this to staff?".
+// Returns a reply when the message was a yes / no / explicit ticket request, otherwise
+// null (and forgets the offer: the student has moved on to something else).
+async function handleTicketOffer(question, sessionId, profile) {
+    const text = String(question || "").trim();
+    const short = text.length <= 40;
+    const explicit = text.length <= 80 && EXPLICIT_TICKET_REQUEST.test(text);
+    const offer = takeTicketOffer(sessionId);
+
+    if (offer) {
+        if (short && supportService.isContactDecline(text)) {
+            const answer = "No problem, I won't open a ticket. If you change your mind, just say \"open a ticket\".";
+            await sessionService.appendMessage(sessionId, "assistant", answer);
+            return plainReply(answer, sessionId);
+        }
+        if ((short && YES_REPLY.test(text)) || explicit) {
+            return openAgreedTicket(offer.question, sessionId, profile);
+        }
+        return null;
+    }
+
+    if (explicit) {
+        const previous = await previousQuestion(sessionId, text);
+        if (previous) return openAgreedTicket(previous, sessionId, profile);
+        const answer = "Tell me what you need help with, and if I can't answer it I'll offer to pass it to the staff.";
+        await sessionService.appendMessage(sessionId, "assistant", answer);
+        return plainReply(answer, sessionId);
+    }
+    return null;
 }
 
 // Changes: Picks up the student's email / phone after a ticket is opened.
@@ -383,42 +509,32 @@ async function buildFallback(question, queryType, timetableMatches = 0, sessionI
         matchedContact: contact ? contact.contact_id : null,
     });
 
-    // Escalate: open a ticket carrying the question, a summary and the
-    // recent conversation, so the student never has to repeat themselves.
-    // If ticketing fails for any reason, the plain contact answer above
-    // is still returned.
+    // Offer to pass it to staff, but do NOT open a ticket yet: the student has to agree
+    // (handleTicketOffer reads their reply). If they already have an open ticket for this
+    // exact question, point to it instead of offering another.
     let ticket = null;
-    let askForContact = false;
+    let offered = false;
     if (sessionId) {
         try {
-            // Signed-in portal student: their email / phone come from the account and the
-            // ticket is linked to it, so nobody is asked and the resolved notice reaches
-            // them on the portal. Visitors are asked for an email after the ticket opens.
-            const username = profile && profile.username ? profile.username : null;
-            const result = await supportService.createTicket({
-                sessionId,
-                question,
-                history: await sessionService.getRecentHistory(sessionId, 12),
-                contact,
-                studentUsername: username,
-                studentContact: username ? require("./authService").getUserContact(username) : null,
-            });
-            ticket = result.ticket;
-            answer += result.created
-                ? ` I've logged this as ticket ${ticket.ref} and passed it to the ${ticket.department}. Ask me for the "status of ${ticket.ref}" any time to check progress.`
-                : ` You already have an open ticket for this (${ticket.ref}), currently ${ticket.status}.`;
-            askForContact = result.created && !username;
+            const existing = await supportService.findOpenDuplicate(sessionId, question);
+            if (existing) {
+                ticket = existing;
+                answer += ` You already have an open ticket for this (${existing.ref}), currently ${existing.status}.`;
+            } else if (isOfferWorthy(question)) {
+                rememberTicketOffer(sessionId, question, contact);
+                offered = true;
+            }
         } catch (err) {
-            console.log("Failed to create ticket:", err.message);
+            console.log("Failed to check for an existing ticket:", err.message);
         }
     }
 
     answer = await toneService.rephrase(question, answer, { kind: "fallback" });
 
-    // Added after the tone rewrite so the request can never be reworded away.
-    // Only on a brand-new ticket; the next short reply is read by handleContactReply.
-    if (askForContact) {
-        answer += "\n\nSo we can let you know when it's resolved, please reply with your email address (you can add a phone number too, or say \"skip\").";
+    // Added after the tone rewrite so the question can never be reworded away.
+    if (offered) {
+        const who = contact && contact.department ? `the ${contact.department}` : "the university staff";
+        answer += `\n\nWould you like me to pass this to ${who} so someone can follow up with you? Reply "yes" to open a ticket, or "no" to leave it.`;
     }
 
     return {
@@ -430,15 +546,87 @@ async function buildFallback(question, queryType, timetableMatches = 0, sessionI
         timetableMatches,
         usedFallback: true,
         ticket,
+        ticketOffer: offered,
     };
 }
 
-async function answerQuestion(question, sessionId, audience = "public", profile = null) {
+/*
+Changes: Answers a question while the student has a file attached to the chat.
+Affects: answerQuestion (called first when a file is attached), aiService.askAI (`document` option).
+Purpose: The file is read next to the normal UNILUS retrieval (same audience gating as any other question), so the answer
+         can say what the file says AND what the UNILUS records say. The file never enters the knowledge base, and these
+         turns skip the unanswered-question log and ticket escalation so file contents are not copied elsewhere.
+*/
+async function answerWithDocument(question, sessionId, audience, profile, document) {
+    const priorHistory = (await sessionService.getRecentHistory(sessionId)).slice(0, -1);
+
+    let retrieved = { timetable: [], knowledge: [], resources: [], queryType: { isTimetable: false, isKnowledge: false, isMixed: false, entities: {} } };
+    try {
+        const hint = uploadService.retrievalHint(document);
+        retrieved = await retrievalService.retrieveAnswer(`${question} ${hint}`.trim(), priorHistory, audience, profile);
+    } catch (error) {
+        // Reading the file still works without UNILUS records; the answer will say no records were found.
+        console.log("[upload] UNILUS record search failed, continuing with the file only:", error.message);
+    }
+    const { timetable = [], knowledge = [], resources = [], queryType } = retrieved;
+
+    const hasEvidence = timetable.length > 0 || knowledge.length > 0 || resources.length > 0;
+    const context = hasEvidence
+        ? formatContext({ timetable, knowledge, resources })
+        : "(No UNILUS records matching this request were found.)";
+
+    const excerpt = uploadService.excerptFor(document, question);
+
+    const answer = await aiService.askAI(question, context, {
+        allowedUrls: collectAllowedUrls({ knowledge, resources }),
+        // Figures that appear in the student's own file may be repeated back to them; UNILUS figures still have to
+        // match the UNILUS evidence.
+        groundingText: `${buildPrimaryGroundingText(knowledge) || context}\n${excerpt.text}`,
+        history: priorHistory,
+        document: { name: document.filename, pages: document.pages, partial: excerpt.partial, text: excerpt.text },
+    });
+
+    await sessionService.appendMessage(sessionId, "assistant", answer);
+
+    return {
+        answer,
+        queryType,
+        sources: knowledge.map((k) => ({
+            source_file: k.source_file,
+            title: k.retrieval_title || k.title,
+            page_number: k.page_number,
+            section: k.section,
+            source_type: k.source_type,
+            observed_date: k.observed_date,
+            source_image_filenames: k.source_image_filenames,
+            place_id: k.place_id,
+        })),
+        resources: resources.map((r) => ({ title: r.title, url: r.url, topic: r.topic })),
+        recommendedResources: buildRecommendedResources(resources),
+        timetableMatches: timetable.length,
+        usedFallback: false,
+        // Lets the widget label the answer "from your file + UNILUS records".
+        document: { filename: document.filename, partial: excerpt.partial, unilusRecordsUsed: hasEvidence },
+        sessionId,
+    };
+}
+
+async function answerQuestion(question, sessionId, audience = "public", profile = null, options = {}) {
     if (!sessionId) {
         sessionId = sessionService.createSessionId();
     }
 
     await sessionService.appendMessage(sessionId, "user", question);
+
+    // "yes" / "no" to a ticket offer, or an explicit "open a ticket". Checked first so it
+    // also works while a file is attached; any other message just cancels the offer.
+    const offerReply = await handleTicketOffer(question, sessionId, profile);
+    if (offerReply) return offerReply;
+
+    // A file is attached to this chat: read it alongside the UNILUS records.
+    if (options && options.document) {
+        return answerWithDocument(question, sessionId, audience, profile, options.document);
+    }
 
     // Bare greetings get a friendly canned intro. No retrieval, no LLM call,
     // so it works even if the AI service is unreachable.

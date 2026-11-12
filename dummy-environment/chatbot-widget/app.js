@@ -71,7 +71,12 @@ async function sendMessage() {
     const response = await fetch("http://localhost:5000/api/chat", {
       method: "POST",
       headers,
-      body: JSON.stringify(chatSession ? { question: text, sessionId: chatSession } : { question: text })
+      body: JSON.stringify({
+        question: text,
+        ...(chatSession ? { sessionId: chatSession } : {}),
+        // Set by upload.js while a file is attached to the chat; undefined otherwise (so it is left out).
+        documentId: window.UnilusUpload ? window.UnilusUpload.activeId() : undefined
+      })
     });
 
     if (!response.ok) throw new Error(`Chat request failed: ${response.status}`);
@@ -94,6 +99,11 @@ async function sendMessage() {
 
     if (request === latestAvatarRequest) reactAvatar(responseEmotion(data, data.answer), 2200);
 
+
+    if (window.UnilusUpload) window.UnilusUpload.afterReply(botRow, data);
+
+    // Optional thumbs up / down under the answer (feedback.js).
+    if (window.UnilusFeedback) window.UnilusFeedback.afterReply(botRow, data, text);
 
     // Chatbot found a place - offer to show it, don't force the map open.
     if (data.navigation) {
@@ -506,3 +516,11 @@ Purpose: Students hear about changes without asking. The id of the newest notice
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);
   else start();
 })();
+
+
+/* ---------------- Helpers shared with upload.js ----------------
+Changes: Exposes the chat helpers that upload.js needs.
+Affects: window.UnilusChat (read by upload.js only).
+Purpose: app.js is bundled by Vite, so its functions are not global; upload.js adds messages through this object
+         instead of copying the chat rendering code. */
+window.UnilusChat = { addMessage, addTypingIndicator, removeTypingIndicator, reactAvatar };

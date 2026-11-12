@@ -109,6 +109,35 @@ const columnsReady = (async () => {
     }
 })();
 
+// Changes: Feedback now keeps the question and answer it was about, a reason, who gave it
+//          (signed in or visitor, never a name) and whether staff have reviewed it.
+// Affects: feedback table (existing databases are altered in place).
+// Purpose: Staff can see WHAT went wrong, not just a thumbs-down count, and use it to improve
+//          the knowledge base later.
+const NEW_FEEDBACK_COLUMNS = [
+    ["question", "TEXT"],
+    ["answer", "TEXT"],
+    ["reason", "TEXT"],
+    ["audience", "TEXT"],
+    ["reviewed", "INTEGER"], // 1 once staff have looked at it
+];
+
+const feedbackColumnsReady = (async () => {
+    for (const [name, type] of NEW_FEEDBACK_COLUMNS) {
+        try {
+            const ifNotExists = db.dialect === "postgres" ? "IF NOT EXISTS " : "";
+            await db.run(`ALTER TABLE feedback ADD COLUMN ${ifNotExists}${name} ${type}`);
+        } catch (err) {
+            if (!/duplicate column|already exists/i.test(err.message)) {
+                console.log(`[support] could not add feedback.${name}:`, err.message);
+            }
+        }
+    }
+})();
+
+const FEEDBACK_REASONS = ["wrong", "outdated", "not_answered", "unclear", "other"];
+const FEEDBACK_PER_SESSION_PER_HOUR = 40;
+
 // How long after a ticket is opened the chatbot keeps listening for contact details.
 const CONTACT_WINDOW_MINUTES = 30;
 
@@ -319,6 +348,21 @@ async function createTicket({ sessionId, question, history = [], contact = null,
     return { ticket: publicView(await db.get(`SELECT * FROM tickets WHERE ticket_ref = ?`, [ref])), created: true };
 }
 
+/**
+ * The student's own open ticket for this exact question, or null. Lets the chatbot
+ * point to it instead of offering to open another one.
+ */
+async function findOpenDuplicate(sessionId, question) {
+    const row = await db.get(
+        `SELECT * FROM tickets
+         WHERE session_id = ? AND lower(question) = lower(?)
+           AND status IN ('Open', 'In Progress')
+         ORDER BY id DESC LIMIT 1`,
+        [sessionId, question]
+    );
+    return row ? publicView(row) : null;
+}
+
 async function getTicketByRef(ref) {
     return publicView(await db.get(`SELECT * FROM tickets WHERE ticket_ref = ?`, [cleanRef(ref)]));
 }
@@ -462,15 +506,100 @@ async function ticketBelongsToSession(ref, sessionId) {
 /* Feedback                                                            */
 /* ------------------------------------------------------------------ */
 
-async function recordFeedback({ sessionId = null, rating, comment = null }) {
+/**
+ * Stores a thumbs up / down. Everything except the rating is optional.
+ * Returns the new feedback id so the widget can add a reason / comment afterwards.
+ * Throws "rating must be ..." (400) or "too many feedback..." (429).
+ */
+async function recordFeedback({ sessionId = null, rating, comment = null, reason = null, question = null, answer = null, audience = null }) {
+    await feedbackColumnsReady;
     const normalized = String(rating || "").trim().toLowerCase();
     if (normalized !== "up" && normalized !== "down") {
         throw new Error('rating must be "up" or "down"');
     }
-    await db.run(
-        `INSERT INTO feedback (session_id, rating, comment) VALUES (?, ?, ?)`,
-        [sessionId, normalized, comment ? truncate(comment, 1000) : null]
+
+    if (sessionId) {
+        const since = new Date(Date.now() - 3600 * 1000).toISOString().slice(0, 19).replace("T", " ");
+        const recent = await db.get(
+            `SELECT COUNT(*) AS c FROM feedback WHERE session_id = ? AND created_at >= ?`,
+            [sessionId, since]
+        );
+        if (Number(recent.c) >= FEEDBACK_PER_SESSION_PER_HOUR) {
+            throw new Error("too many feedback submissions, please try again later");
+        }
+    }
+
+    const cleanReason = FEEDBACK_REASONS.includes(reason) ? reason : null;
+    return db.insert(
+        `INSERT INTO feedback (session_id, rating, comment, reason, question, answer, audience, reviewed)
+         VALUES (?, ?, ?, ?, ?, ?, ?, 0)`,
+        [
+            sessionId,
+            normalized,
+            comment ? truncate(String(comment).trim(), 1000) : null,
+            cleanReason,
+            question ? truncate(String(question).trim(), 500) : null,
+            answer ? truncate(String(answer).trim(), 2000) : null,
+            audience === "student" || audience === "visitor" ? audience : null,
+        ]
     );
+}
+
+/**
+ * Adds a reason / comment (or changes the rating) on feedback the same chat session gave.
+ * Returns false when the id doesn't exist or belongs to another session.
+ */
+async function updateFeedback(id, sessionId, { rating = null, reason = null, comment = null } = {}) {
+    await feedbackColumnsReady;
+    const row = await db.get(`SELECT * FROM feedback WHERE id = ?`, [Number(id) || 0]);
+    if (!row || !sessionId || row.session_id !== sessionId) return false;
+
+    const normalized = rating ? String(rating).trim().toLowerCase() : row.rating;
+    if (normalized !== "up" && normalized !== "down") throw new Error('rating must be "up" or "down"');
+
+    await db.run(
+        `UPDATE feedback SET rating = ?, reason = ?, comment = ?, reviewed = 0 WHERE id = ?`,
+        [
+            normalized,
+            FEEDBACK_REASONS.includes(reason) ? reason : row.reason,
+            comment ? truncate(String(comment).trim(), 1000) : row.comment,
+            row.id,
+        ]
+    );
+    return true;
+}
+
+/** Staff view of feedback, newest first. */
+async function listFeedback({ rating = null, reviewed = null, limit = 200 } = {}) {
+    await feedbackColumnsReady;
+    const where = [];
+    const params = [];
+    if (rating === "up" || rating === "down") { where.push("rating = ?"); params.push(rating); }
+    if (reviewed === true) where.push("reviewed = 1");
+    if (reviewed === false) where.push("(reviewed IS NULL OR reviewed = 0)");
+
+    const rows = await db.all(
+        `SELECT * FROM feedback ${where.length ? `WHERE ${where.join(" AND ")}` : ""}
+         ORDER BY id DESC LIMIT ?`,
+        [...params, Math.min(Math.max(parseInt(limit, 10) || 200, 1), 1000)]
+    );
+    return rows.map((row) => ({
+        id: Number(row.id),
+        rating: row.rating,
+        reason: row.reason || null,
+        comment: row.comment || null,
+        question: row.question || null,
+        answer: row.answer || null,
+        audience: row.audience || null,
+        reviewed: Boolean(row.reviewed),
+        created_at: toIso(row.created_at),
+    }));
+}
+
+async function markFeedbackReviewed(id, reviewed = true) {
+    await feedbackColumnsReady;
+    const info = await db.run(`UPDATE feedback SET reviewed = ? WHERE id = ?`, [reviewed ? 1 : 0, Number(id) || 0]);
+    return info.changes > 0;
 }
 
 
@@ -487,6 +616,7 @@ async function groupCounts(sql) {
 }
 
 async function getStats() {
+    await feedbackColumnsReady;
     let totalQuestions = 0;
     try {
         totalQuestions = Number((await db.get(`SELECT COUNT(*) AS c FROM conversations WHERE role = 'user'`)).c);
@@ -513,6 +643,8 @@ async function getStats() {
         feedback: {
             up: feedback.up || 0,
             down: feedback.down || 0,
+            toReview: Number((await db.get(`SELECT COUNT(*) AS c FROM feedback WHERE rating = 'down' AND (reviewed IS NULL OR reviewed = 0)`)).c),
+            byReason: await groupCounts(`SELECT reason AS k, COUNT(*) AS n FROM feedback WHERE rating = 'down' AND reason IS NOT NULL GROUP BY reason`),
         },
     };
 }
@@ -521,6 +653,7 @@ async function getStats() {
 module.exports = {
     STATUSES,
     createTicket,
+    findOpenDuplicate,
     getTicketByRef,
     getTicketForAdmin,
     getLatestTicketForSession,
@@ -536,5 +669,8 @@ module.exports = {
     claimResolutionEmail,
     releaseResolutionEmail,
     recordFeedback,
+    updateFeedback,
+    listFeedback,
+    markFeedbackReviewed,
     getStats,
 };
