@@ -9,6 +9,9 @@ const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
 const escape = s => String(s ?? 'Not listed').replace(/\|/g, '\\|').replace(/[\r\n]/g, ' ');
 const table = (columns, rows) => '| ' + columns.join(' | ') + ' |\n| ' + columns.map(() => '---').join(' | ') + ' |\n' + rows.map(r => '| ' + r.map(escape).join(' | ') + ' |').join('\n');
 const mean = rows => require('./demoAcademicChatService').mean(rows.map(r=>r.finalMark));
+function semesterStats(profile,keys=null){let previous=null;return profile.periods.filter(p=>p.completed&&p.courses.length&&p.courses.every(c=>Number.isInteger(c.finalMark)&&c.finalMark>=0&&c.finalMark<=100)&&(!keys||keys.includes(p.key))).sort((a,b)=>a.year-b.year||a.semester-b.semester).map(p=>{const average=p.courses.reduce((n,c)=>n+c.finalMark,0)/p.courses.length,change=previous===null?null:average-previous;previous=average;return {periodKey:p.key,year:p.year,semester:p.semester,count:p.courses.length,average,change};});}
+function trendOf(stats){const changes=stats.slice(1).map(s=>s.change);return stats.length<2?'insufficient data':changes.every(n=>Math.abs(n)<1e-9)?'consistent':changes.every(n=>n>=0)?'improving':changes.every(n=>n<=0)?'declining':'fluctuating';}
+const rounded=n=>Math.round(n*100)/100;
 
 function localTime(now = new Date()) {
     const parts = Object.fromEntries(new Intl.DateTimeFormat('en-GB', { timeZone: 'Africa/Lusaka', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' }).formatToParts(now).map(p => [p.type, p.value]));
@@ -89,7 +92,11 @@ async function tryAnswer(question, { user, profile, sessionId, now = new Date() 
     const self = /\b(?:my|i)\b|am i|me my/.test(q);
     const profileIntent=/\b(?:my (?:academic|student) profile|what programme am i studying|what year am i in)\b/.test(q);
     const academicTerms = /\b(?:results?|performance|marks?|courses?|subjects?|curriculum|degree|programme|semester|lecture|classes|class|timetable|notifications?|ticket)\b/.test(q);
-    const follow = previous && (/\b(?:which semester|better|highest|lowest|worst|best|average|where is it|who teaches|who(?:'s| is)? teaching|what time|and (?:monday|tuesday|wednesday|thursday|friday|saturday|sunday)|that course|its exam|exam mark|examination mark)\b/.test(q)||previous.awaitingCourse&&/^[a-z]{2,6}\d{3}[.!]?$/.test(q));
+    const allSemesters=/\b(?:all|every|each)\s+(?:completed\s+)?semesters?\b/.test(q);
+    const trendIntent=allSemesters||/\b(?:improv\w*|regress\w*|declin\w*|consistent|trend)\b/.test(q)&&(self||/academic|semester/.test(q));
+    const semesterRank=/\bsemester\b.*\b(?:strongest|weakest|best|worst|highest|lowest)\b|\b(?:strongest|weakest|best|worst|highest|lowest)\b.*\bsemester\b/.test(q)&&!/\b(?:strongest|weakest|best|worst|highest|lowest)\s+(?:course|subject|mark|grade)\b/.test(q);
+    const pasted=require('./conversationService').pastedUniversityMarks(question)||['results','ca'].includes(previous?.kind)&&!/^Advisor:|grade ?12|ecz|gce|o[ -]?level|admission|school certificate/i.test(question)&&require('./applicantResultParser').extract(question).length>0;
+    const follow = previous && (allSemesters||semesterRank||/individual.*(?:marks|courses)|semester\s*[12]\s*(?:marks|results)|\b(?:which semester|better|highest|lowest|worst|best|average|where is it|who teaches|who(?:'s| is)? teaching|what time|and (?:monday|tuesday|wednesday|thursday|friday|saturday|sunday)|that course|its exam|exam mark|examination mark)\b/.test(q)||previous.awaitingCourse&&/^[a-z]{2,6}\d{3}[.!]?$/.test(q));
     if (otherOwner(q, profile)) return reply('I can only retrieve the signed-in student’s own academic records. I cannot inspect another student’s private records.', null, 'refusal');
     // Preserve public tuition/advisor/support/map/general knowledge routing.
     if (/\b(?:choos\w*|recommend|interests?|career|grade ?12|ecz|gce|school certificate|qualif\w*|eligib\w*|fees?|tuition|scholarships?|apply|admission|requirements|recommend|choose a programme|create a ticket|report an issue|campus map)\b/.test(q)) { state.clear(key); return null; }
@@ -101,7 +108,7 @@ async function tryAnswer(question, { user, profile, sessionId, now = new Date() 
     const coursesIntent = academicTerms && /\b(?:courses?|subjects?|studying|study|take|taking|attending|curriculum)\b/.test(q) && (self || /show me|show .*year|fourth year/.test(question.toLowerCase()));
     const progressIntent = self && /how far|how many.*complet|what remains|which semester|current.*semester/.test(q);
     const legacyCA = /\bca\b|assessment|pending|clear.*semester|subjects require attention|final results/.test(q) && !/final exam/.test(q);
-    const resultsIntent = !legacyCA && ((self && /results?|performance|perform|average mark|best course|worst|highest mark|lowest mark|final exam|exam(?:ination)? (?:mark|score)|pass.*previous|grades/.test(q)) || ['results','ca'].includes(previous?.kind) && follow);
+    const resultsIntent = trendIntent||semesterRank||pasted||!legacyCA && ((self && /results?|performance|perform|transcript|academic (?:history|records)|average mark|best course|worst|highest mark|lowest mark|final exam|exam(?:ination)? (?:mark|score)|pass.*previous|grades/.test(q)) || ['results','ca'].includes(previous?.kind) && follow);
     if(!previous&&/^which semester.*better|^which course.*(?:highest|lowest|worst|best)/.test(q))return reply('Which academic year or semesters would you like to use? Please specify the period; there is no current academic follow-up context.',user?.role==='student'?profile:null,'clarification');
     if (!profileIntent && !notificationIntent && !timetableIntent && !coursesIntent && !progressIntent && !resultsIntent) { state.clear(key); return null; }
     if (!profile || user?.role !== 'student') return { ...reply('Sign in with an enabled student account to view your own simulated academic information.', null, 'sign-in'), signInRequired: true };
@@ -111,6 +118,14 @@ async function tryAnswer(question, { user, profile, sessionId, now = new Date() 
     const context = contextService.fromProfile(profile, user);
     if(profileIntent)return reply(profile.name+' — '+profile.programmeName+'. Year '+profile.year+', Semester '+profile.semester+'. Student number: '+profile.studentNumber+'.',profile,'profile');
     const save = (kind, extra = {}) => state.set(key, { owner: user.username, profileId: profile.id, modelVersion: profile.modelVersion, kind, ...extra });
+    if(pasted){save('results',{periodKeys:semesterStats(profile).map(p=>p.periodKey)});return reply('These appear to be university course results, not Grade 12 admissions results. Pasted marks do not change your stored simulated transcript. I can show your completed semesters, compare their means, or analyse your academic trend. Which would you like?',profile,'provided-results');}
+    if(trendIntent||semesterRank){
+        const stats=semesterStats(profile,semesterRank&&previous?.periodKeys?previous.periodKeys:null),keys=stats.map(s=>s.periodKey);save('results',{periodKeys:keys,selection:null});
+        if(semesterRank){const low=/lowest|worst|weakest/.test(q),value=stats.length?(low?Math.min(...stats.map(s=>s.average)):Math.max(...stats.map(s=>s.average))):null,winners=stats.filter(s=>s.average===value),courses=profile.periods.filter(p=>winners.some(s=>s.periodKey===p.key)).flatMap(p=>p.courses.map(c=>({...c,periodKey:p.key})));return reply(winners.length?(low?'Lowest':'Strongest')+' completed semester mean'+(winners.length>1?' (tie)':'')+': '+winners.map(s=>'Year '+s.year+', Semester '+s.semester+' — '+rounded(s.average)).join('; ')+'.\n\n'+table(['Period','Course','Final mark'],courses.map(c=>[c.periodKey,c.code+' — '+c.name,c.finalMark]))+'\nAll listed courses contributed equally to each arithmetic mean; this is not official GPA.':'No fully graded completed semester is available.',profile,'semester-ranking',{semesters:winners,courses,periodKeys:winners.map(s=>s.periodKey)});}
+        const trend=trendOf(stats),explanation={improving:'Chronological semester means never fell and at least one rose.',declining:'Chronological semester means never rose and at least one fell.',fluctuating:'Chronological semester means rose in some transitions and fell in others.',consistent:'All available semester means are equal.','insufficient data':'At least two fully graded completed semesters are needed to assess a trend.'}[trend];
+        const answer='Completed simulated semester trend:\n\n'+(stats.length?table(['Period','Courses','Unweighted mean final mark','Change from previous'],stats.map(s=>['Year '+s.year+', Semester '+s.semester,s.count,rounded(s.average),s.change===null?'—':rounded(s.change)])):'No fully graded completed semesters are available.')+'\n\nClassification: '+trend+'. '+explanation+(stats.length>1?' Net change from first to last: '+rounded(stats.at(-1).average-stats[0].average)+' marks.':'')+'\nIncomplete or ungraded semesters are excluded. These are unweighted arithmetic means of stored final marks, not official GPA.';
+        return reply(answer,profile,'trend',{semesters:stats,trend,periodKeys:keys});
+    }
     if (notificationIntent) {
         // Read existing events only. Chat does not settle/create override lifecycle events.
         const [tickets, changes] = await Promise.all([require('./ticketNotificationService').inbox(user), publications.inbox(user, context)]);
@@ -174,7 +189,7 @@ async function tryAnswer(question, { user, profile, sessionId, now = new Date() 
     }
     if (resultsIntent) {
         if(/\b[a-z]{2,6}\d{3}\b/.test(q)&&!/year|semester|\b[1-4]\.[12]\b/.test(q))chosen=null;
-        if (!chosen && !/previous courses|compare|all|best|worst|average|highest|lowest|exam/.test(q)) {
+        if (!chosen && !/previous courses|compare|all|best|worst|average|highest|lowest|exam|transcript|academic (?:history|records)/.test(q)) {
             const last = profile.periods.filter(p => p.completed).at(-1);
             if (last) chosen = { year: last.year, semester: last.semester };
         }

@@ -22,6 +22,7 @@ function recommend(input) {
 }
 const {store}=require('./programmeAdvisorState');
 function tryAnswer(question, sessionId) {
+ if(require('./conversationService').universityAcademic(question))return null;
  const previous=store.get(sessionId);
  const contextActive=previous && previous.topicActive!==false;
  const resolved=preference.resolve(question);

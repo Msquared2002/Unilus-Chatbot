@@ -646,7 +646,7 @@ async function answerQuestion(question, sessionId, audience='public', profile=nu
     const personalized = await require('./personalAcademicService').tryAnswer(question,{user,profile:academicProfile,sessionId});
     if(personalized){
         supportConversation.reset(sessionId);markAdvisorTopic(sessionId,false);
-        await sessionService.appendMessage(sessionId,'user',question);
+          await sessionService.appendMessage(sessionId,'user',personalized.academic?.kind==='provided-results'?'[University course results omitted from persistent history]':question);
         await sessionService.appendMessage(sessionId,'assistant','[Private academic response omitted from model history]');
         return {...personalized,sessionId};
     }
