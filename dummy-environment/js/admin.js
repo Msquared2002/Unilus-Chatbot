@@ -303,7 +303,7 @@ async function answersPage() {
 
 async function route() {
   const route = location.hash.slice(1) || "dashboard";
-  if (!route.startsWith("ticket/") && !["dashboard", "tickets", "recurring", "answers", "knowledge", "departments", "staff", "reports"].includes(route)) {
+  if (!route.startsWith("ticket/") && !["dashboard", "tickets", "recurring", "answers", "knowledge", "departments", "staff", "reports", "feedback"].includes(route)) {
     location.hash = "dashboard";
     return;
   }
@@ -312,7 +312,7 @@ async function route() {
   document.querySelectorAll(".admin-sidebar nav a").forEach(a=>a.classList.toggle("active",a.dataset.page===(route.startsWith("ticket/")?"tickets":route)));
   document.querySelector("#admin-sidebar").classList.remove("is-open");
   app.innerHTML = `<section class="panel loading-state" role="status">Opening ${escapeHtml(section.toLowerCase())}…</section>`;
-  try { if(!ticketService.isSignedIn()) { signInPage(); return; } if(route.startsWith("ticket/")) await detail(decodeURIComponent(route.slice(7))); else if(route==="tickets") await ticketsPage(); else if(route==="dashboard") await dashboard(); else if(route==="recurring") await recurringPage(); else if(route==="answers") await answersPage(); else if(route==="departments") await departmentsPage(); else if(route==="reports") await reportsPage(); else if(route==="knowledge") await knowledgePage(); else app.innerHTML=heading(section,section+" workspace")+'<section class="panel placeholder-panel">This section is reserved for a future Support Centre phase.</section>'; }
+  try { if(!ticketService.isSignedIn()) { signInPage(); return; } if(route.startsWith("ticket/")) await detail(decodeURIComponent(route.slice(7))); else if(route==="tickets") await ticketsPage(); else if(route==="dashboard") await dashboard(); else if(route==="recurring") await recurringPage(); else if(route==="answers") await answersPage(); else if(route==="departments") await departmentsPage(); else if(route==="reports") await reportsPage(); else if(route==="feedback") await feedbackPage(); else if(route==="knowledge") await knowledgePage(); else app.innerHTML=heading(section,section+" workspace")+'<section class="panel placeholder-panel">This section is reserved for a future Support Centre phase.</section>'; }
   catch(error) { if(error.code==="SIGN_IN"){ signInPage(); return; } app.innerHTML=heading("Support Centre","Student support dashboard")+`<section class="panel error-state" role="alert"><strong>We could not load this view.</strong><p>${escapeHtml(error.message)}</p><button class="button-secondary" type="button" data-retry>Try again</button></section>`; app.querySelector("[data-retry]")?.addEventListener("click",route); }
 }
 
@@ -422,6 +422,71 @@ async function reportsPage() {
   </div>
   <div class="report-grid">${barList("Tickets by status", s.ticketsByStatus, { Open: "New" })}${barList("Tickets by department", s.ticketsByDepartment)}${barList("Tickets by category", s.ticketsByCategory)}${barList("Tickets by priority", s.ticketsByPriority, { Critical: "Urgent", Medium: "Normal" })}</div>
   <p class="report-note">Question totals include greetings and any testing done during development, so treat the escalation rate as an estimate until real students are using the chatbot.</p>`;
+}
+
+/* ---------------- Feedback page ---------------- */
+// Changes: New staff page listing the thumbs up / down students gave the chatbot's answers.
+// Affects: GET /api/admin/feedback, PATCH /api/admin/feedback/:id, stats.feedback.
+// Purpose: Find answers that were wrong, out of date or unclear and use them to improve the knowledge base.
+//          Only whether the student was signed in is recorded, never who they are.
+const FEEDBACK_REASONS = { wrong: "Wrong information", outdated: "Out of date", not_answered: "Didn't answer the question", unclear: "Hard to understand", other: "Something else" };
+let feedbackRating = "down";   // down | up | all
+let feedbackOnlyNew = true;
+
+// Spreadsheet programs run cells that start with = + - @ as formulas, so those get a leading apostrophe.
+function csvCell(value) {
+  let text = String(value ?? "").replace(/\r?\n/g, " ");
+  if (/^[=+\-@\t]/.test(text)) text = "'" + text;
+  return `"${text.replace(/"/g, '""')}"`;
+}
+
+function downloadFeedbackCsv(rows) {
+  const head = ["Date", "Rating", "Reason", "Signed in", "Question", "Answer given", "Comment", "Reviewed"];
+  const lines = rows.map(f => [new Date(f.created_at).toISOString(), f.rating === "up" ? "Helpful" : "Not helpful", FEEDBACK_REASONS[f.reason] || "", f.audience === "student" ? "Signed in" : f.audience === "visitor" ? "Visitor" : "", f.question, f.answer, f.comment, f.reviewed ? "Yes" : "No"].map(csvCell).join(","));
+  const blob = new Blob(["\ufeff" + [head.map(csvCell).join(","), ...lines].join("\r\n")], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob), link = document.createElement("a");
+  link.href = url; link.download = `unilus-feedback-${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.appendChild(link); link.click(); link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 10000);
+}
+
+async function feedbackPage() {
+  const title = "Feedback";
+  const subtitle = "What students said about the chatbot's answers. Not-helpful answers are the best place to improve the knowledge base.";
+  if (scopedDepartmentId()) {
+    app.innerHTML = heading(title, subtitle) + '<section class="panel placeholder-panel">Feedback covers every department. Switch the role to Super Admin to view it.</section>';
+    return;
+  }
+  const [s, rows] = await Promise.all([
+    ticketService.stats(),
+    ticketService.feedback.list({ rating: feedbackRating === "all" ? null : feedbackRating, reviewed: feedbackOnlyNew ? false : null }),
+  ]);
+  const up = s.feedback.up, down = s.feedback.down, total = up + down;
+  const filterButton = (key, label) => `<button class="${feedbackRating === key ? "button-primary" : "button-secondary"}" type="button" data-rating="${key}">${label}</button>`;
+  const reasons = Object.entries(s.feedback.byReason || {}).sort((a, b) => b[1] - a[1]);
+
+  app.innerHTML = heading(title, subtitle, rows.length ? '<button class="button-secondary" type="button" data-csv>Download CSV</button>' : "") +
+  `<div class="metric-grid">
+    <div class="metric-card"><span class="metric-label">Helpful</span><strong class="metric-value">${up}</strong><small class="metric-foot">Thumbs up</small></div>
+    <div class="metric-card"><span class="metric-label">Not helpful</span><strong class="metric-value">${down}</strong><small class="metric-foot">Thumbs down</small></div>
+    <div class="metric-card"><span class="metric-label">Rated helpful</span><strong class="metric-value">${total ? Math.round((up / total) * 100) + "%" : "–"}</strong><small class="metric-foot">${total} ${total === 1 ? "rating" : "ratings"} in total</small></div>
+    <div class="metric-card"><span class="metric-label">To review</span><strong class="metric-value">${s.feedback.toReview}</strong><small class="metric-foot">Not helpful, not yet reviewed</small></div>
+  </div>` +
+  (reasons.length ? `<p class="report-note">Most common reasons: ${reasons.map(([k, n]) => `${escapeHtml(FEEDBACK_REASONS[k] || k)} (${n})`).join(" · ")}</p>` : "") +
+  `<div class="queue-controls" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:16px 0">${filterButton("down", "Not helpful")}${filterButton("up", "Helpful")}${filterButton("all", "All")}<label style="display:inline-flex;align-items:center;gap:7px;margin-left:8px;font-size:12px;color:#526778"><input type="checkbox" data-only-new style="width:15px;height:15px;margin:0" ${feedbackOnlyNew ? "checked" : ""}> Only show ones I haven't reviewed</label></div>` +
+  (rows.length ? rows.map(f => `<section class="panel recurring-card" data-feedback="${f.id}"><div class="panel-heading"><div><h2>${escapeHtml(f.question || "Question not recorded")}</h2><p class="panel-subtitle">${f.rating === "up" ? "Helpful" : "Not helpful"}${f.reason ? ` · ${escapeHtml(FEEDBACK_REASONS[f.reason] || f.reason)}` : ""} · ${f.audience === "student" ? "Signed-in student" : f.audience === "visitor" ? "Visitor" : "Unknown"} · ${dateTime(f.created_at)}</p></div><button class="button-secondary" type="button" data-review="${f.reviewed ? "0" : "1"}">${f.reviewed ? "Reviewed ✓ (undo)" : "Mark reviewed"}</button></div>${f.comment ? `<p style="font-size:12px;margin:0 0 8px"><strong>Student said:</strong> ${escapeHtml(f.comment)}</p>` : ""}${f.answer ? `<details style="font-size:12px;color:#526778"><summary>The chatbot's answer</summary><p style="white-space:pre-wrap">${escapeHtml(f.answer)}</p></details>` : ""}</section>`).join("")
+  : empty(feedbackOnlyNew ? "Nothing to review here. Untick the box above to see everything." : "No feedback yet."));
+
+  app.querySelectorAll("[data-rating]").forEach(b => b.addEventListener("click", () => { feedbackRating = b.dataset.rating; feedbackPage(); }));
+  app.querySelector("[data-only-new]").addEventListener("change", e => { feedbackOnlyNew = e.target.checked; feedbackPage(); });
+  app.querySelector("[data-csv]")?.addEventListener("click", () => downloadFeedbackCsv(rows));
+  app.querySelectorAll("[data-feedback]").forEach(card => {
+    card.querySelector("[data-review]").addEventListener("click", async e => {
+      e.currentTarget.disabled = true;
+      try { await ticketService.feedback.setReviewed(card.dataset.feedback, e.currentTarget.dataset.review === "1"); feedbackPage(); }
+      catch (error) { toast(error.message); e.currentTarget.disabled = false; }
+    });
+  });
 }
 
 /* ---------------- Knowledge base page ---------------- */

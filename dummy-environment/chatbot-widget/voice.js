@@ -145,7 +145,7 @@ Purpose: Quick voice support. Buttons are injected from here so the five HTML pa
   // Text to read for a bubble: skips tables (they read badly aloud) and any buttons.
   function speakableText(bubble) {
     const clone = bubble.cloneNode(true);
-    clone.querySelectorAll("table, button, .chat-table-scroll, .typing-dots").forEach((el) => el.remove());
+    clone.querySelectorAll("table, button, .chat-table-scroll, .typing-dots, .uw-sources, .uw-answer-tag, .uw-pdf-err").forEach((el) => el.remove());
     return (clone.textContent || "").replace(/\s+/g, " ").trim();
   }
 
