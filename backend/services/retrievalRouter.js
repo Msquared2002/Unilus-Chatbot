@@ -44,6 +44,7 @@
  */
 
 const timetableService = require("./timetableService");
+const accessPolicy = require("./accessPolicy");
 const knowledgeService = require("./knowledgeService");
 const resourceService = require("./resourceService");
 const queryUnderstandingService = require("./queryUnderstandingService");
@@ -82,11 +83,10 @@ function isStudentAudience(audience) {
   return audience === "student";
 }
 
+// The rules themselves live in accessPolicy.js (uploaded documents marked restricted, plus website pages and links
+// marked student-only in the resource registry).
 function filterKnowledgeByAudience(knowledge, audience) {
-  if (isStudentAudience(audience)) return knowledge;
-  return knowledge.filter(
-    (chunk) => !AUDIENCE_RESTRICTED_KNOWLEDGE_SOURCES.has(chunk.source_file)
-  );
+  return accessPolicy.filterKnowledge(knowledge, audience, AUDIENCE_RESTRICTED_KNOWLEDGE_SOURCES);
 }
 
 function extractCourseCode(text) {
@@ -374,6 +374,14 @@ async function retrieveAnswer(query, history = [], audience = "public", profile 
     queryPlan: historyPlan || queryUnderstandingService.fallbackPlan(query, "not needed"),
   };
 
+  // ROLE GATE (runs before any search): a class or exam timetable request from someone who is not a signed-in
+  // student gets nothing from the timetable, the documents, the website pages or the links, so no timetable
+  // content can reach the answer. chatService turns `accessDenied` into the sign-in reply.
+  if (!isStudent && accessPolicy.isRestrictedTimetableRequest(`${query} ${effectiveQuery}`, queryType.entities)) {
+    result.accessDenied = "timetable";
+    return result;
+  }
+
   // AUDIENCE GATE: timetable/exam lookups are student-only. A public
   // (not logged in) visitor never triggers a timetable search at all,
   // regardless of how the question classified -- "when is my BIT320
@@ -447,7 +455,10 @@ async function retrieveAnswer(query, history = [], audience = "public", profile 
     (queryType.entities.programmeFamily && queryType.entities.year && queryType.entities.semester)
   );
 
-  result.resources = hasSpecificTimetableEntity ? [] : resourceService.findResources(effectiveQuery);
+  result.resources = accessPolicy.filterResources(
+    hasSpecificTimetableEntity ? [] : resourceService.findResources(effectiveQuery),
+    audience
+  );
 
   return result;
 }

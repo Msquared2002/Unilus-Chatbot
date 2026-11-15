@@ -8,8 +8,10 @@ Purpose: Students can ask about their own PDF, Word or text file next to the UNI
          Elements are injected from here (like voice.js) so the HTML pages that copy the widget markup need no edits.
          All text from files or the server is inserted with textContent, never as HTML.
 */
+import { API_BASE } from "./config.js";
+
 (function () {
-  const API = "http://localhost:5000/api/chat"; // same host app.js talks to
+  const API = `${API_BASE}/chat`; // same host app.js talks to
   const MAX_MB = 6;                             // keep in step with UPLOAD_MAX_MB on the server
   const EXTENSIONS = [".pdf", ".docx", ".txt"];
 

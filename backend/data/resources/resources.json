@@ -390,6 +390,7 @@
   },
   {
     "topic": "calendar_timetables",
+    "content_access": "student",
     "title": "Calendars and Time Tables",
     "description": "Academic calendar and general timetable information page.",
     "category": "Timetables",
@@ -722,6 +723,7 @@
   },
   {
     "topic": "timetable_portal",
+    "access": "student",
     "title": "Timetable Portal",
     "description": "Online timetable portal (see also the chatbot's own timetable search).",
     "category": "Timetables",

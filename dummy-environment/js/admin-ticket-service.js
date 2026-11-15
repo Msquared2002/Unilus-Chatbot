@@ -4,9 +4,11 @@ Affects: js/admin.js. The exported ticketService keeps the same method names and
 Purpose: Shows the real tickets the chatbot creates, and adds the "teach the chatbot" tools (ticketService.faq).
 */
 
-// Backend address. Same origin when the page is served by the backend (port 5000); otherwise localhost:5000.
+// Backend address. Same origin when the page is served by the backend (port 5000); localhost:5000 when the page is
+// opened on your own computer; otherwise /api on the same site (Netlify forwards /api/* to the backend, see netlify.toml).
 // Override by setting window.UNILUS_API_BASE before this module loads.
-const API = window.UNILUS_API_BASE || (location.port === "5000" ? `${location.origin}/api` : "http://localhost:5000/api");
+const ON_THIS_COMPUTER = location.protocol === "file:" || location.hostname === "localhost" || location.hostname === "127.0.0.1";
+const API = window.UNILUS_API_BASE || (location.port === "5000" ? `${location.origin}/api` : ON_THIS_COMPUTER ? "http://localhost:5000/api" : "/api");
 const KEY = "unilusAdminKey";
 const NOT_YET = "The backend does not save this yet. Status changes and saved answers are saved.";
 

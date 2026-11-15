@@ -1,6 +1,8 @@
 (function () {
   const session = window.UnilusDemoSession;
-  const API = window.UNILUS_API_BASE || "http://localhost:5000/api";
+  // localhost when opened on your own computer; otherwise /api on the same site (forwarded to the backend by netlify.toml).
+  const ON_THIS_COMPUTER = location.protocol === "file:" || location.hostname === "localhost" || location.hostname === "127.0.0.1";
+  const API = window.UNILUS_API_BASE || (ON_THIS_COMPUTER ? "http://localhost:5000/api" : "/api");
   const form = document.querySelector("[data-portal-login]");
   const usernameInput = document.querySelector("#portal-username");
   const passwordInput = document.querySelector("#portal-password");

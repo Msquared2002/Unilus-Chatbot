@@ -1,3 +1,5 @@
+import { API_BASE } from "./config.js";
+
 let avatarReactionTimer = null;
 let latestAvatarRequest = 0;
 
@@ -68,7 +70,7 @@ async function sendMessage() {
     } catch { /* storage unavailable: carry on as a visitor */ }
     if (token) headers.Authorization = `Bearer ${token}`;
 
-    const response = await fetch("http://localhost:5000/api/chat", {
+    const response = await fetch(`${API_BASE}/chat`, {
       method: "POST",
       headers,
       body: JSON.stringify({
@@ -381,7 +383,7 @@ Purpose: Students hear about changes without asking. The id of the newest notice
 (function () {
   const POLL_MS = 60000;
   const SEEN_KEY = "unilusNotifSeen"; // per person: see seenKey()
-  const API_BASE = "http://localhost:5000/api/notifications";
+  const NOTIFICATIONS_URL = `${API_BASE}/notifications`;
   let lastSeen = null;      // newest notice id already shown (null = never seen any)
   let pending = [];         // notices fetched while the chat was closed
   let badge = null;
@@ -483,7 +485,7 @@ Purpose: Students hear about changes without asking. The id of the newest notice
       if (lastSeen === null) params.set("limit", "3"); // first visit: only the latest few
       if (chatSession) params.set("sessionId", chatSession);
 
-      const response = await fetch(`${API_BASE}?${params}`, { headers });
+      const response = await fetch(`${NOTIFICATIONS_URL}?${params}`, { headers });
       if (!response.ok) return;
       const data = await response.json();
       const items = Array.isArray(data.items) ? data.items : [];
