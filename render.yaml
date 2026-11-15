@@ -1,0 +1,43 @@
+# Render "Blueprint": describes how to run the chatbot backend (the Express app in /backend).
+# Use: Render dashboard -> New -> Blueprint -> pick this repository. See backend/DEPLOY-BACKEND.md.
+# Check plan names and prices on Render's website before you confirm; they change.
+
+services:
+  - type: web
+    name: unilus-chatbot-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm ci
+    startCommand: npm run start:host
+    healthCheckPath: /
+    # The embedding model needs roughly 1 GB of memory or more. If the service restarts with "out of memory",
+    # choose a bigger plan. A persistent disk (below) needs a paid plan.
+    plan: standard
+    disk:
+      name: unilus-data
+      mountPath: /var/data
+      sizeGB: 5
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      # Everything that changes while the server runs (database, uploaded documents, search index) lives here.
+      - key: DATA_PERSIST_DIR
+        value: /var/data
+      - key: TRANSFORMERS_CACHE_DIR
+        value: /var/data/model-cache
+      - key: WARM_UP_MODEL
+        value: "true"
+      # Secrets: Render asks for these when you create the service. Never put them in this file.
+      - key: GROQ_API_KEY
+        sync: false
+      # Random values created by Render. Read ADMIN_API_KEY in the dashboard (Environment tab): it is the key staff use to sign in
+      # to the dashboard's admin features.
+      - key: AUTH_JWT_SECRET
+        generateValue: true
+      - key: ADMIN_API_KEY
+        generateValue: true
+      # Optional: email for resolved tickets. See EMAIL-SETUP.md.
+      # - key: RESEND_API_KEY
+      #   sync: false
+      # - key: EMAIL_FROM
+      #   value: "UNILUS Support <support@your-verified-domain>"

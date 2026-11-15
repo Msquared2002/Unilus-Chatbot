@@ -5,6 +5,7 @@
 #   expected_contains : facts that must ALL appear in the answer, separated by |
 #   session           : rows with the same label share one conversation (follow-ups); blank = independent
 #   should_escalate   : yes = the bot should NOT answer, it should hand over to staff (ticket)
+#                       signin = a visitor must be told to sign in (student-only answer)
 # Rows 001-009 are starter examples based on answers the bot gave during testing.
 # CHECK them against the real timetable files before reporting results.
 id,category,audience,session,question,expected_contains,should_escalate
@@ -13,10 +14,13 @@ id,category,audience,session,question,expected_contains,should_escalate
 003,class lookup,student,,when is my BIT320 class,Monday|08:00|Tuesday|10:00|Saturday|08:00,no
 004,follow-up,student,fu1,when is my BIT101 class,Monday|12:00,no
 005,follow-up,student,fu1,what about the exam?,09:00|12:00,no
-006,access control,public,,when is my BIT101 exam,,yes
+006,access control,public,,when is my BIT101 exam,,signin
 007,no data,student,,when is my BIT999 class,,yes
 008,greeting,student,,hey,how can i help,no
-009,access control,spoofed,,when is my BIT101 exam,,yes
+009,access control,spoofed,,when is my BIT101 exam,,signin
+010,access control,public,,show me the BIT320 timetable,,signin
+011,access control,public,,what is the class timetable,,signin
+012,access control,spoofed,,who teaches BIT101,,signin
 # Add your own below, for example:
 # 010,exam lookup,student,,when is my BIT2xx exam,<date>|<time>|<venue>,no
 # 011,lecturer lookup,student,,who teaches BIT101,<lecturer name>,no

@@ -99,19 +99,27 @@ test("retrieveAnswer suppresses resource recommendations for a venue-code timeta
   assert.deepEqual(result.resources, []);
 });
 
-test("retrieveAnswer still returns resources for a generic timetable question with no specific entity", async (t) => {
+test("retrieveAnswer still returns the timetable portal link for a signed-in student's generic timetable question", async (t) => {
   const { retrieveAnswer } = require("../services/retrievalService");
   // A generic timetable question with no specific entity found also
   // triggers the knowledge-search fallback (real embedding model) —
   // same documented network dependency as above.
   let result;
   try {
-    result = await retrieveAnswer("Where can I see my timetable online?");
+    result = await retrieveAnswer("Where can I see my timetable online?", [], "student");
   } catch (err) {
     t.skip(`Needs the embedding model (network access to huggingface.co): ${err.message}`);
     return;
   }
   assert.ok(result.resources.some((r) => r.topic === "timetable_portal"));
+});
+
+test("a visitor asking the same question is not given the timetable link or any timetable content (timetables are a student capability)", async () => {
+  const { retrieveAnswer } = require("../services/retrievalService");
+  const result = await retrieveAnswer("Where can I see my timetable online?");
+  assert.equal(result.accessDenied, "timetable");
+  assert.deepEqual(result.resources, []);
+  assert.deepEqual(result.knowledge, []);
 });
 
 

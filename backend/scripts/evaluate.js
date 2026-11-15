@@ -32,6 +32,8 @@
  *                      normalised, so "09:00-12:00" matches "09:00 – 12:00")
  *   should_escalate    "yes" if the bot should NOT answer and should hand the
  *                      question to staff instead (usedFallback = true)
+ *                      "signin" if a visitor should be told to sign in because the
+ *                      answer is for signed-in students only (signInRequired = true)
  *   session            rows with the same label share one conversation, for
  *                      follow-up tests; leave blank for independent questions
  *
@@ -154,6 +156,7 @@ function loadQuestions(file) {
                 .map((p) => p.trim())
                 .filter(Boolean),
             shouldEscalate: /^(yes|y|true|1)$/i.test(get("should_escalate")),
+            shouldSignIn: /^signin$/i.test(get("should_escalate")),
         };
     });
 }
@@ -184,6 +187,12 @@ function judge(test, response) {
 
     const answer = String(response.data.answer || "");
     const escalated = response.data.usedFallback === true;
+
+    if (test.shouldSignIn) {
+        return response.data.signInRequired === true
+            ? { pass: true, escalated, missing: [], reason: "" }
+            : { pass: false, escalated, missing: [], reason: "expected a sign-in prompt but the bot answered" };
+    }
 
     if (test.shouldEscalate) {
         return escalated

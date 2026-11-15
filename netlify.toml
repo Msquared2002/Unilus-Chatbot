@@ -1,3 +1,32 @@
+# Netlify settings for https://uniluschatbot.netlify.app
+#
+# 1) The chatbot widget (chatbot-widget/dist/chatbot-widget.js) is NOT stored in the repository: it is built here,
+#    from chatbot-widget/main.js, on every deploy. Without this build step the file returns 404 and the chat bubble
+#    never appears.
+# 2) The chatbot BACKEND (the Express app in /backend) is not hosted by Netlify. Host it on a Node server (Render,
+#    Railway, Fly.io, a university server...) and forward /api/* to it with the redirect below.
+
 [build]
   publish = "dummy-environment"
-  command = ""
+  command = "cd dummy-environment/chatbot-widget && npm ci && npm run build"
+
+[build.environment]
+  # The widget is built with Vite 8, which needs Node 20.19+ or 22.12+.
+  NODE_VERSION = "22"
+
+# ---------------------------------------------------------------------------
+# TURN THIS ON once the backend has a public https address (replace the address, remove the leading # signs).
+# The website, widget, sign-in and staff dashboard all call /api on THIS site, and Netlify forwards the request,
+# so no browser CORS or mixed-content problem can happen.
+#
+# [[redirects]]
+#   from = "/api/*"
+#   to = "https://YOUR-BACKEND-ADDRESS/api/:splat"
+#   status = 200
+#   force = true
+#
+# Note: Netlify gives forwarded requests about 26 seconds. That is enough for normal chat answers. If long
+# requests (very large file uploads) time out, build the widget with the backend address instead:
+# set the Netlify environment variable VITE_API_BASE=https://YOUR-BACKEND-ADDRESS/api and the backend must then
+# allow this site in its CORS settings.
+# ---------------------------------------------------------------------------

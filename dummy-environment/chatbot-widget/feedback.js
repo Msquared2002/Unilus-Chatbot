@@ -9,8 +9,10 @@ Purpose: Staff learn which answers were wrong, out of date or unclear, and can u
          the thumb, the reason and the comment, and only whether the person was signed in. It never stores a name.
          All text is inserted with textContent, never as HTML.
 */
+import { API_BASE } from "./config.js";
+
 (function () {
-  const API = "http://localhost:5000/api/feedback"; // same host app.js talks to
+  const API = `${API_BASE}/feedback`; // same host app.js talks to
 
   const REASONS = [
     ["wrong", "Wrong information"],

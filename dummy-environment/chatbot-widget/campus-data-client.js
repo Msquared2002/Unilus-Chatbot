@@ -1,7 +1,9 @@
+import { API_BASE as CONFIG_API_BASE } from "./config.js";
+
 // The campus API owns names, IDs, coordinates and geometry. This file only
 // adapts its records to the existing Leaflet widget's [lat, lng] convention.
 window.CampusDataClient = (function () {
-  const API_BASE = "http://localhost:5000/api/campus";
+  const API_BASE = `${CONFIG_API_BASE}/campus`;
   const PRESENTATION_URL = "chatbot-widget/campus-data/presentation.json";
 
   async function getJson(url) {

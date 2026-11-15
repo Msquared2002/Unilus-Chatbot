@@ -119,5 +119,14 @@ app.listen(
             `Server running on port ${PORT}`
         );
 
+        // Hosted servers: load the embedding model now so the first student question is not slow
+        // (or cut off by a proxy time limit). Off by default; set WARM_UP_MODEL=true to enable.
+        if (process.env.WARM_UP_MODEL === "true") {
+            require("./services/embeddingService")
+                .createEmbedding("warm up")
+                .then(() => console.log("Embedding model warmed up"))
+                .catch((err) => console.log("Model warm-up failed:", err.message));
+        }
+
     }
 );
