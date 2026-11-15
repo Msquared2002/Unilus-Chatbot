@@ -21,7 +21,9 @@ async function loadModel() {
     // Lazily required: this pulls in @xenova/transformers, which is
     // only actually needed once real embeddings are generated. Code
     // paths that inject a fake embedFn (tests) never hit this.
-    const { pipeline } = require("@xenova/transformers");
+    const { pipeline, env } = require("@xenova/transformers");
+    // Hosted servers: keep the downloaded model on the persistent disk so it is fetched once, not on every restart.
+    if (process.env.TRANSFORMERS_CACHE_DIR) env.cacheDir = process.env.TRANSFORMERS_CACHE_DIR;
     loadingPromise = pipeline("feature-extraction", MODEL_NAME).then((model) => {
       extractor = model;
       console.log(`Embedding model loaded: ${MODEL_NAME}`);

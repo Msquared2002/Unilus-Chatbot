@@ -10,6 +10,8 @@
     "campus:survey:process": "node scripts/processCampusSurvey.js",
     "campus:survey:promote": "node scripts/promoteCampusSurvey.js",
     "start": "node server.js",
+    "start:host": "node scripts/prepare-data-dir.js && node server.js",
+    "export:index": "node scripts/export-deploy-index.js",
     "dev": "nodemon server.js",
     "ingest": "node scripts/ingestDocuments.js",
     "ingest:website": "node scripts/ingestWebsite.js",
@@ -34,7 +36,6 @@
     "groq-sdk": "^1.6.0",
     "mammoth": "^1.8.0",
     "pdf-parse": "^2.4.5",
-    "pdfkit": "^0.20.2",
     "pg": "^8.23.1",
     "sharp": "^0.35.5"
   },
