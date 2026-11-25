@@ -10,6 +10,7 @@ function clearPrivateChat(){
   if(activeChatRequest?.typingRow)removeTypingIndicator(activeChatRequest.typingRow);
   activeChatRequest=null;chatPending=false;chatSessionId=undefined;
   sessionStorage.removeItem('unilusChatSession');
+  if (typeof UnilusWidget !== "undefined") UnilusWidget.resetConversation?.();
   document.getElementById('chat-box')?.replaceChildren?.();
   clearTimeout(avatarReactionTimer);UniAvatar.idle();
   chatIdentity=currentContext();

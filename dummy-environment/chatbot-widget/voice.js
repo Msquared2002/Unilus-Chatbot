@@ -3,8 +3,7 @@ Changes: Adds a microphone button (speech to text) and a "read aloud" button on 
 Affects: The chat input form (#input-area) and bot bubbles inside #chat-box. Uses only browser APIs;
          no backend call, no new package. app.js and the chat API contract are untouched.
 Purpose: Quick voice support. Buttons are injected from here so the five HTML pages that copy the widget
-         markup do not each need editing. Unsupported browsers (e.g. Firefox has no speech recognition)
-         simply do not get the button.
+         markup do not each need editing. Unsupported browsers receive an inline message and can continue typing.
 */
 (function () {
   // Set to true to send the question as soon as speech ends. Off by default because recognition can
@@ -60,7 +59,15 @@ Purpose: Quick voice support. Buttons are injected from here so the five HTML pa
   function initMic() {
     const form = document.getElementById("input-area");
     const input = document.getElementById("user-input");
-    if (!form || !input || !SpeechRecognitionCtor) return;
+    if (!form || !input) return;
+    const status = document.createElement("div");
+    status.className = "voice-hint";
+    status.setAttribute("role", "status");
+    form.after(status);
+    if (!SpeechRecognitionCtor) {
+      status.textContent = "Voice input is unavailable in this browser. You can type your question.";
+      return;
+    }
 
     const btn = document.createElement("button");
     btn.type = "button";
@@ -71,10 +78,18 @@ Purpose: Quick voice support. Buttons are injected from here so the five HTML pa
 
     let recognition = null;
     let listening = false;
-    let baseText = ""; let generation=0;
+    let baseText = "";
+    let generation = 0;
+    function cancel() {
+      generation++;
+      const running = recognition;
+      recognition = null;
+      setListening(false);
+      try { running?.abort(); } catch { /* Already closed. */ }
+    }
 
     function stop() {
-      if (recognition) recognition.stop();
+      if (recognition) { status.textContent = "Processing speech…"; recognition.stop(); }
     }
 
     function setListening(on) {
@@ -87,7 +102,14 @@ Purpose: Quick voice support. Buttons are injected from here so the five HTML pa
       if (synth) synth.cancel(); // don't transcribe the bot's own voice
       const turn=++generation;
       baseText = input.value.trim();
-      recognition = new SpeechRecognitionCtor();
+      status.textContent = "Waiting for microphone…";
+      try { recognition = new SpeechRecognitionCtor(); }
+      catch { status.textContent = "Could not start voice input. Try again."; return; }
+      recognition.onstart = () => {
+        if (turn !== generation) return;
+        setListening(true);
+        status.textContent = "Listening…";
+      };
       recognition.lang = RECOGNITION_LANG;
       recognition.interimResults = true;
       recognition.continuous = false;
@@ -107,36 +129,38 @@ Purpose: Quick voice support. Buttons are injected from here so the five HTML pa
       };
       recognition.onerror = (event) => {
         if(turn!==generation)return;
-        if (event.error === "not-allowed" || event.error === "service-not-allowed") {
-          btn.title = "Microphone blocked. Allow microphone access for this site in your browser settings.";
-          alert("The microphone is blocked. Please allow microphone access for this site in your browser settings and try again.");
-        } else if (event.error === "no-speech") {
-          btn.title = "I didn't hear anything. Tap the microphone and try again.";
-        } else if (event.error === "network") {
-          alert("Voice input needs an internet connection.");
-        }
+        const errors = {
+          "not-allowed": "Microphone access was blocked. Check your browser permissions.",
+          "service-not-allowed": "Voice recognition is unavailable in this browser.",
+          "audio-capture": "No microphone was available.",
+          "no-speech": "No speech detected. Try again.",
+          network: "Voice recognition could not connect. You can type your question."
+        };
+        cancel();
+        status.textContent = errors[event.error] || "Voice input stopped. Try again or type your question.";
       };
       recognition.onend = () => {
         if(turn!==generation)return;
         setListening(false);
         recognition = null;
+        status.textContent = finalText ? "Review your question before sending." : "Voice input ended.";
         input.focus();
         if (AUTO_SEND && input.value.trim()) form.requestSubmit();
       };
 
       try {
         recognition.start();
-        setListening(true);
       } catch {
-        setListening(false); // start() throws if a session is already running
+        cancel();
+        status.textContent = "Could not start voice input. Try again.";
       }
     }
 
-    for(const event of ["unilus-student-context-changed","unilus-demo-profile-changing","pagehide"])window.addEventListener(event,()=>{generation++;recognition?.abort();recognition=null;setListening(false);});
-    btn.addEventListener("click", () => (listening ? stop() : start()));
+    for(const event of ["unilus-student-context-changed","unilus-demo-profile-changing","pagehide"])window.addEventListener(event,()=>{cancel();status.textContent="";});
+    btn.addEventListener("click", () => { if (!recognition) start(); else if (listening) stop(); else { cancel(); status.textContent = "Voice input cancelled."; } });
 
     // Stop listening if the question is sent by hand.
-    form.addEventListener("submit", () => { if (listening) stop(); });
+    form.addEventListener("submit", () => { cancel(); status.textContent = ""; });
   }
 
   function setMicLabel(btn, on) {
@@ -150,11 +174,22 @@ Purpose: Quick voice support. Buttons are injected from here so the five HTML pa
   // Text to read for a bubble: skips tables (they read badly aloud) and any buttons.
   function speakableText(bubble) {
     const clone = bubble.cloneNode(true);
-    clone.querySelectorAll("table, button, .answer-tools, .chat-table-scroll, .typing-dots, .uw-sources, .uw-answer-tag, .uw-pdf-err").forEach((el) => el.remove());
-    return (clone.textContent || "").replace(/\s+/g, " ").trim();
+    clone.querySelectorAll("button, .answer-tools, [hidden], .typing-dots, .uw-sources, .uw-answer-tag, .uw-pdf-err, .voice-playback-status").forEach((el) => el.remove());
+    clone.querySelectorAll("table").forEach(table => {
+      const headings = Array.from(table.querySelectorAll("th"), cell => cell.textContent.trim());
+      const rows = Array.from(table.querySelectorAll("tr"), row =>
+        Array.from(row.querySelectorAll("td"), (cell, index) =>
+          [headings[index], cell.textContent.trim()].filter(Boolean).join(": ")
+        ).join(", ")
+      ).filter(Boolean);
+      table.replaceWith(document.createTextNode(" " + rows.join(". ") + ". "));
+    });
+    clone.querySelectorAll("li,p,br").forEach(node => node.after(document.createTextNode(" ")));
+    return (clone.textContent || "").replace(/https?:\/\/[^\s<>]+/g, "").replace(/\s+/g, " ").trim();
   }
 
   let activeButton = null;
+  let playback = 0;
 
   function resetSpeakButton(btn) {
     btn.classList.remove("is-speaking");
@@ -165,8 +200,11 @@ Purpose: Quick voice support. Buttons are injected from here so the five HTML pa
   function speak(bubble, btn) {
     if (activeButton) {
       const wasSame = activeButton === btn;
+      playback++;
+      const previous = activeButton;
+      activeButton = null;
       synth.cancel();
-      resetSpeakButton(activeButton);
+      resetSpeakButton(previous);
       activeButton = null;
       if (wasSame) return; // second tap on the same button just stops it
     }
@@ -176,43 +214,52 @@ Purpose: Quick voice support. Buttons are injected from here so the five HTML pa
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = RECOGNITION_LANG;
     utterance.rate = 1;
-    const done = () => { resetSpeakButton(btn); if (activeButton === btn) activeButton = null; };
+    const turn = ++playback;
+    const done = () => { if (turn !== playback) return; resetSpeakButton(btn); activeButton = null; };
     utterance.onend = done;
-    utterance.onerror = done;
+    utterance.onerror = () => { if (turn !== playback) return; done(); const feedback = document.createElement("span"); feedback.setAttribute("role", "status"); feedback.textContent = " Read aloud is unavailable. Check your device voices."; btn.parentElement.querySelector(".voice-playback-status")?.remove(); feedback.className = "voice-playback-status"; btn.after(feedback); };
 
     activeButton = btn;
     btn.classList.add("is-speaking");
     btn.innerHTML = STOP_ICON + "<span>Stop</span>";
     btn.setAttribute("aria-label", "Stop reading aloud");
-    synth.speak(utterance);
+    try { synth.speak(utterance); } catch { utterance.onerror(); }
   }
 
   function decorateBotRow(row) {
     if (!row.classList || !row.classList.contains("message-row") || !row.classList.contains("bot")) return;
     const bubble = row.querySelector(".bubble");
-    if (!bubble || bubble.querySelector(".typing-dots") || bubble.querySelector(".speak-btn")) return;
-    if (!speakableText(bubble)) return;
+    if (!bubble || bubble.querySelector(".typing-dots") || bubble.querySelector(".voice-listen-btn")) return;
+    if (!speakableText(bubble) || bubble.querySelector('.voice-playback-status')) return;
+    if (!synth || typeof window.SpeechSynthesisUtterance !== 'function') {
+      const note = document.createElement('small');
+      note.className = 'voice-playback-status';
+      note.textContent = 'Read aloud is unavailable in this browser.';
+      bubble.appendChild(note);
+      return;
+    }
 
     const btn = document.createElement("button");
     btn.type = "button";
-    btn.className = "speak-btn";
+    btn.className = "speak-btn voice-listen-btn";
     resetSpeakButton(btn);
     btn.addEventListener("click", () => speak(bubble, btn));
-    bubble.appendChild(btn);
+    (bubble.querySelector('.answer-tools') || bubble).appendChild(btn);
   }
 
   function initSpeaker() {
     const box = document.getElementById("chat-box");
-    if (!box || !synth) return;
+    if (!box) return;
     box.querySelectorAll(".message-row.bot").forEach(decorateBotRow);
     new MutationObserver((mutations) => {
       for (const m of mutations) m.addedNodes.forEach((node) => { if (node.nodeType === 1) decorateBotRow(node); });
     }).observe(box, { childList: true });
 
+    if (!synth) return;
     // Stop talking when a new question is sent or the page is left.
     const form = document.getElementById("input-area");
-    if (form) form.addEventListener("submit", () => { synth.cancel(); if (activeButton) { resetSpeakButton(activeButton); activeButton = null; } });
-    for(const event of ["pagehide","unilus-student-context-changed","unilus-demo-profile-changing"])window.addEventListener(event,()=>{synth.cancel();if(activeButton)resetSpeakButton(activeButton);activeButton=null;});
+    if (form) form.addEventListener("submit", () => { playback++; synth.cancel(); if (activeButton) { resetSpeakButton(activeButton); activeButton = null; } });
+    for(const event of ["pagehide","unilus-student-context-changed","unilus-demo-profile-changing"])window.addEventListener(event,()=>{playback++;synth.cancel();if(activeButton)resetSpeakButton(activeButton);activeButton=null;});
   }
 
   function start() {

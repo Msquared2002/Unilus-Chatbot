@@ -68,6 +68,7 @@ async function handleChat(req, res) {
             question,
 
             answer: result.answer,
+            schedule: result.schedule,
 
             queryType: result.queryType,
 

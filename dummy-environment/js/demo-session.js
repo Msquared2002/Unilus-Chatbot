@@ -4,9 +4,11 @@
   const PROGRAMME_KEY = "unilusDemoProgramme";
   const normalize = (value) => String(value || "").trim().replace(/\s+/g, " ").toUpperCase();
 
+  const syncedProgrammes=new Map();
+  function registerProgrammes(programmes){for(const p of programmes||[]){const id=p.programmeId||p.id;if(typeof id==='string'&&typeof p.name==='string')syncedProgrammes.set(id,{id,name:p.name});}}
   function canonicalProgramme(value) {
     const identity = normalize(value);
-    return root.UnilusDemoProgrammes.programmes.find((programme) =>
+    return [...root.UnilusDemoProgrammes.programmes,...syncedProgrammes.values()].find((programme) =>
       normalize(programme.id) === identity || normalize(programme.name) === identity) || null;
   }
 
@@ -42,6 +44,7 @@
   function currentStudent(storage = root.sessionStorage) {
     if (storage?.getItem(SESSION_KEY) === 'authenticated' && storage.getItem('unilusAuthToken')) {
       try { const p=JSON.parse(storage.getItem('unilusDemoAcademicProfile') || 'null');
+        if(p?.id&&p.accountUsername&&p.programmeId&&p.programmeName)registerProgrammes([{programmeId:p.programmeId,name:p.programmeName}]);
         if(p?.id&&p.accountUsername&&canonicalProgramme(p.programmeId))return { id:'demo-account:'+p.accountUsername+':'+p.programmeId,name:p.name,username:p.studentNumber,programmeId:p.programmeId,programme:p.programmeName,programmeName:p.programmeName,academicProfileId:p.id };
       } catch { /* Refresh server context before showing academic records. */ }
     }
@@ -59,7 +62,7 @@
     storage.removeItem('unilusDemoAcademicProfileId');
   }
 
-  const api = { SESSION_KEY, PROGRAMME_KEY, canonicalProgramme, studentForProgramme,
+  const api = { SESSION_KEY, PROGRAMME_KEY, registerProgrammes, canonicalProgramme, studentForProgramme,
     authenticate, login, startSession, currentStudent, logout };
   root.UnilusDemoSession = api;
   if (typeof module !== "undefined") module.exports = api;

@@ -4,7 +4,7 @@ Affects: Campus map search controls and selected-place behavior.
 Purpose: Uses the canonical campus search endpoint instead of duplicating its index in the browser.
 */
 window.CampusSearch = (function () {
-  function mount(view, onPick, onStatus) {
+  function mount(view, onPick, onStatus, getCampus = () => 'silverest') {
     if (!view || view.querySelector(".map-search")) return;
     const box = document.createElement("div");
     box.className = "map-search";
@@ -20,15 +20,16 @@ window.CampusSearch = (function () {
       clearTimeout(timer);
       const myRequest = ++requestNumber;
       const query = input.value.trim();
+      const campus = getCampus();
       results.hidden = true;
       results.replaceChildren();
       if (!query) { results.hidden = true; results.replaceChildren(); return; }
       timer = setTimeout(async () => {
         try {
-          const response = await fetch(`${CampusDataClient.API_BASE}/search?q=${encodeURIComponent(query)}`);
+          const response = await fetch(`${CampusDataClient.API_BASE}/search?q=${encodeURIComponent(query)}&campus=${encodeURIComponent(campus)}`);
           if (!response.ok) throw new Error("Search unavailable");
           const matches = await response.json();
-          if (myRequest !== requestNumber) return;
+          if (myRequest !== requestNumber || campus !== getCampus()) return;
           results.replaceChildren();
           if (!matches.length) {
             const empty = document.createElement("p");
@@ -42,7 +43,7 @@ window.CampusSearch = (function () {
             button.addEventListener("click", () => {
               input.value = facility ? facility.name : place.name;
               results.hidden = true;
-              onPick(place.id);
+              onPick(place.id, facility, campus);
             });
             results.appendChild(button);
           });

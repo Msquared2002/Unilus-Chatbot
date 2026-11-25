@@ -11,10 +11,11 @@ window.CampusDataClient = (function () {
   }
 
   async function load() {
-    const [places, boundary, presentation] = await Promise.all([
+    const [places, boundary, presentation, extra] = await Promise.all([
       getJson(`${API_BASE}/places`),
       getJson(`${API_BASE}/boundary`),
-      getJson(PRESENTATION_URL)
+      getJson(PRESENTATION_URL),
+      getJson(`${API_BASE}/directory-maps`).catch(() => ({}))
     ]);
     if (!Array.isArray(places) || !boundary?.geometry?.coordinates?.[0]) {
       throw new Error("Campus API returned invalid place or boundary data");
@@ -39,8 +40,8 @@ window.CampusDataClient = (function () {
           gallery: enrichment[place.id]?.gallery || []
         }))
       },
-      pioneer: presentation.pioneer,
-      leopards: presentation.leopards
+      pioneer: extra.pioneer || presentation.pioneer,
+      leopards: extra.leopards || presentation.leopards
     };
   }
 

@@ -77,3 +77,12 @@ test('fee classification cannot retrieve classes, lecturers or weekday actions',
     const t = classifyQuery(q); assert.equal(t.isTimetable, false); assert.equal(t.isKnowledge, true); assert.equal(t.entities.day, null);
   }
 });
+
+test('fee guidance leaves calculations, payment instructions, aid and campus directions to their own routes', () => {
+    for (const question of ['How much are BIT fees?', 'How do I pay my fees?', 'Where can I get help with a scholarship?', 'Where is the Accounts Office at Pioneer?']) {
+        assert.equal(fees.tryHelp(question), null, question);
+    }
+    assert.equal(fees.tryAnswer('How do I pay my fees?'), null);
+    assert.equal(fees.tryAnswer('Where is the Accounts Office at Pioneer?'), null);
+    assert.equal(fees.tryAnswer('How much are BIT fees?').queryType.isTuition, true);
+});

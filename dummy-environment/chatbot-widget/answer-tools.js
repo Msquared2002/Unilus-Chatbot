@@ -12,6 +12,15 @@ window.UnilusAnswerTools={render(row,data){
   button('Helpful',()=>submit('up'));
   button('Not helpful',()=>{if(tools.querySelector('select'))return;const select=document.createElement('select');select.setAttribute('aria-label','Feedback reason');for(const [v,t]of [['unclear','Unclear'],['wrong','Incorrect'],['outdated','Outdated'],['not_answered','Did not answer'],['other','Other']])select.add(new Option(t,v));const comment=document.createElement('input');comment.maxLength=1000;comment.placeholder='Optional comment; omit private details';comment.setAttribute('aria-label','Optional feedback comment');tools.append(select,comment);button('Send feedback',()=>submit('down',select.value,comment.value));button('Skip comment',()=>submit('down',select.value));});
   button('Save PDF',async()=>{if(pending)return;pending=true;status.textContent='Preparing PDF…';try{const sources=(data.sources||[]).slice(0,12).map(s=>typeof s==='string'?s:[s.title||s.name||s.source,s.url].filter(Boolean).join(' — ')).map(s=>s.slice(0,500));const res=await request('/chat/pdf',{sessionId:data.sessionId,title:'UNILUS answer',markdown:data.answer,sources});const url=URL.createObjectURL(await res.blob()),a=document.createElement('a');a.href=url;a.download='unilus-answer.pdf';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);status.textContent='PDF ready.';}catch{status.textContent='Could not export this answer.';}finally{pending=false;}});
+  if(data.sources?.length){
+    const sourcePanel=document.createElement('div');sourcePanel.hidden=true;
+    sourcePanel.setAttribute('aria-label','Answer sources');
+    for(const source of data.sources){const p=document.createElement('p');p.textContent=typeof source==='string'?source:[source.title||source.source_file||source.source,source.page_number?'page '+source.page_number:null].filter(Boolean).join(' — ');sourcePanel.append(p);}
+    if(data.schedule?.limitation){const note=document.createElement('p');note.textContent=data.schedule.limitation;sourcePanel.append(note);}
+    button('Sources',()=>{if(identity()!==owner)return;sourcePanel.hidden=!sourcePanel.hidden;});
+    tools.append(sourcePanel);
+  }
+
   tools.append(status);(row.querySelector('.bubble')||row).append(tools);
   const disable=()=>{tools.querySelectorAll('button,input,select').forEach(el=>el.disabled=true);};
   window.addEventListener('unilus-student-context-changed',()=>{if(owner!==identity())disable();},{once:true});window.addEventListener('unilus-demo-profile-changing',disable,{once:true});

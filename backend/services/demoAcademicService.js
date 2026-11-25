@@ -6,7 +6,7 @@ const timetable = require('./timetableService');
 const { toDisplayTimetableEntry } = require('./timetablePresentationService');
 const catalogue = require('../../dummy-environment/js/demo-programmes').programmes;
 const { ACADEMIC_MODEL_VERSION, EXAM_MAXIMUM, assessmentConfiguration, assessmentRecord, courseResults, semesterOutcome } = require('./undergraduateAcademicPolicy');
-const ids = { BIT: 'bachelor-of-science-in-information-systems-and-technology', BCS: 'bachelor-of-science-in-computer-science', BSPH: 'bachelor-of-science-in-public-health', LLB: 'bachelor-of-laws' };
+const ids = { BIT: 'bachelor-of-science-in-information-systems-and-technology', BCS: 'bachelor-of-science-in-computer-science', CYBER:'bachelor-of-science-in-cyber-security', BSPH: 'bachelor-of-science-in-public-health', LLB: 'bachelor-of-laws' };
 const locks = new Map();
 const bitCurriculum=require('../data/bit-curriculum-v1.json');
 const isFixed=user=>user?.role==='student'&&(user.username==='demo'||process.env.DEMO_FIXED_ACCOUNT&&user.username===process.env.DEMO_FIXED_ACCOUNT);
@@ -16,11 +16,11 @@ function fail(message, status = 409) { return Object.assign(Error(message), { st
 function mappings() {
     const result = {};
     for (const row of timetable.getAll()) {
-        const match = String(row.programme_code).match(/^(BIT|BCS|BSPH|LLB)([1-4])([12])$/);
+        const match = String(row.programme_code).match(/^(BIT|BCS|BSC|BSPH|LLB)([1-4])([12])$/);
         // Combined/ambiguous codes in the timetable are not separate verified courses.
         if (!match || !/^[A-Z]{2,6}\d{3}$/.test(String(row.course_code)) || !row.course_name) continue;
-        const [, code, year, semester] = match, key = `${year}-${semester}`;
-        const programme = result[code] ||= { code, programmeId: ids[code], name: catalogue.find(p => p.id === ids[code]).name, periods: {} };
+        const [, sourceFamily, year, semester] = match, code=sourceFamily==='BSC'?'BCS':sourceFamily==='BCS'?'CYBER':sourceFamily, key = `${year}-${semester}`;
+        const programme = result[code] ||= { code, timetableProgramme:sourceFamily, programmeId: ids[code], name: catalogue.find(p => p.id === ids[code]).name, periods: {} };
         const period = programme.periods[key] ||= { key, year: +year, semester: +semester, courses: [] };
         if (!period.courses.some(c => c.code === row.course_code)) {
             const display = toDisplayTimetableEntry(row);
@@ -39,17 +39,43 @@ function mappings() {
     result.BIT=curriculumMapping();
     return result;
 }
+// Catalogue choices are independent of whether the simulator has a curriculum.
+function programmeChoices(){
+ const mapped=mappings(),official=require('./programmeCatalogueService').catalogue;
+ return official.filter(p=>p.evidence.length||p.offeringStatus==='current_application_catalogue').map(p=>{
+  const code=Object.keys(ids).find(code=>ids[code]===p.id)||p.id,model=mapped[code];
+  let periods=model?Object.values(model.periods).map(p=>({year:p.year,semester:p.semester})):[];
+  let duration=null;
+  for(const evidence of p.evidence.filter(e=>e.source==='UNILUS-PROSPECTUS-2026-11.pdf')){
+   const escaped=p.name.replace(/[\\^$.*+?()[\]{}|]/g,'\\function integer(seed, label, min, max)'),m=evidence.text.match(new RegExp(escaped+'\\s+Duration\\s*:?\\s*(\\d+)\\s*Years?','i'));if(m){duration=Number(m[1]);break;}
+  }
+  if(!periods.length)periods=Array.from({length:Math.max(1,Math.min(8,duration||1))},(_,i)=>[{year:i+1,semester:1},{year:i+1,semester:2}]).flat();
+  return {code,programmeId:p.id,name:p.name,level:p.level,periods,simulationStatus:model?'mapped':'curriculum_unavailable',levelSource:model?'retained curriculum':duration?'prospectus duration':'initial demonstration year; programme duration unverified'};
+ }).sort((a,b)=>a.name.localeCompare(b.name));
+}
+function pickProgramme(seed,codes=programmeChoices().map(p=>p.code)){return codes[integer(seed,'programme',0,codes.length-1)];}
+function metadataProfile(user,previous,options,code,seed){
+ const choice=programmeChoices().find(p=>p.code===code);if(!choice)throw fail('Choose a programme from the verified catalogue.',422);
+ const requested=options.year!=null||options.semester!=null;
+ let period=requested?choice.periods.find(p=>p.year===Number(options.year)&&p.semester===Number(options.semester)):options.mode==='keep'&&previous?.programme===code?choice.periods.find(p=>p.year===previous.year&&p.semester===previous.semester):choice.periods[0];
+ if(!period)throw fail('Choose an available year and semester for this programme.',422);
+ const id=crypto.randomUUID(),key=period.year+'-'+period.semester;
+ return {id,seed,modelVersion:ACADEMIC_MODEL_VERSION,name:'Namonje Besa',studentNumber:'DEMO-'+id.slice(0,8).toUpperCase(),programme:code,programmeId:choice.programmeId,programmeName:choice.name,year:period.year,semester:period.semester,activePeriod:key,periods:[{key,...period,academicYear:new Date().getUTCFullYear(),completed:false,completeCourseLoadVerified:false,courses:[]}],simulated:true,simulationStatus:'curriculum_unavailable',registeredCourses:[],classGroup:null,curriculum:[],mappingNotice:'A simulated curriculum is not yet available for this programme. No course records or grades have been invented.',levelSource:choice.levelSource};
+}
+
 function integer(seed, label, min, max) { return min + crypto.createHash('sha256').update(seed + ':' + label).digest().readUInt32BE() % (max - min + 1); }
 function generate(user, previous = null, options = {}) {
-    const available = mappings(), codes = Object.keys(available), fixed=isFixed(user), seed = fixed?'luka-fictional-transcript-v1':crypto.randomBytes(32).toString('hex');
+    const available = mappings(), codes = programmeChoices().map(p=>p.code), fixed=isFixed(user), seed = fixed?'luka-fictional-transcript-v1':crypto.randomBytes(32).toString('hex');
     if (!['keep', 'random', 'specific'].includes(options.mode || 'keep')) throw fail('Unsupported programme setting', 400);
-    const code = fixed?'BIT':options.mode === 'random' ? codes[integer(seed, 'programme', 0, codes.length - 1)] : options.mode === 'specific' ? options.programme : previous?.programme || user.programme;
-    if (!available[code]) throw fail('Reliable course mapping is unavailable for that programme. Choose a supported programme.', 422);
+    const code = fixed?'BIT':options.mode === 'random' ? pickProgramme(seed,codes) : options.mode === 'specific' ? options.programme : previous?.programme || user.programme;
+    if (!available[code]) return metadataProfile(user,previous,options,code,seed);
     const programme = available[code], choices = Object.values(programme.periods).sort((a,b) => a.year-b.year || a.semester-b.semester);
     const initial = !previous && choices.find(p => p.year === +user.year && p.semester === +user.semester);
-    const active = (fixed?choices.find(p=>p.key==='3-2'):null) || initial || choices[integer(seed, 'period', 0, choices.length - 1)];
+    const requested=options.year!=null||options.semester!=null;
+    if(!fixed&&requested&&!choices.some(p=>p.year===Number(options.year)&&p.semester===Number(options.semester)))throw fail('Choose an available year and semester for this programme.',422);
+    const active = (fixed?choices.find(p=>p.key==='3-2'):null) || (!fixed&&requested?choices.find(p=>p.year===Number(options.year)&&p.semester===Number(options.semester)):null) || initial || choices[integer(seed, 'period', 0, choices.length - 1)];
     const id = fixed?'luka-simulated-profile-v1':crypto.randomUUID();
-    const profile = { id, seed, modelVersion:ACADEMIC_MODEL_VERSION, name: ['Lina','Tendo','Miro','Sena'][integer(seed,'name',0,3)] + ' Demo-' + ['River','Lake','Hill','Grove'][integer(seed,'surname',0,3)], studentNumber: 'DEMO-' + id.slice(0,8).toUpperCase(), programme: code, programmeId: programme.programmeId, programmeName: programme.name, year: active.year, semester: active.semester, activePeriod: active.key, periods: [], simulated: true,
+    const profile = { id, seed, modelVersion:ACADEMIC_MODEL_VERSION, name: 'Namonje Besa', studentNumber: 'DEMO-' + id.slice(0,8).toUpperCase(), programme: code, programmeId: programme.programmeId, programmeName: programme.name, year: active.year, semester: active.semester, activePeriod: active.key, periods: [], simulated: true,
         policy:'Fictional demonstration scheme: coursework 30 and examination 70; this differs from the published handbook.',
         mappingNotice:'Available timetable course identities only; full registration, attendance and prerequisite records are not available.' };
     for (const period of choices.filter(p => p.year*2+p.semester <= active.year*2+active.semester)) {
@@ -68,6 +94,7 @@ function generate(user, previous = null, options = {}) {
         const record={ key: period.key, year: period.year, semester: period.semester, academicYear: new Date().getUTCFullYear() - (active.year-period.year), completed, completeCourseLoadVerified:false, courses };
         record.outcome=semesterOutcome(record);profile.periods.push(record);
     }
+    if(!fixed)profile.timetableProgramme=programme.timetableProgramme||code;
     if(fixed){Object.assign(profile,{fixed:true,transcriptVersion:'luka-fictional-v1',name:'Luka Hamududu',studentNumber:'BIT24240001',mode:'FT',curriculumVersion:bitCurriculum.version,curriculum:bitCurriculum.courses,registeredCourses:bitCurriculum.courses.filter(c=>c.year===3&&c.semester===2).map(c=>c.code),classGroup:null,mappingNotice:'Owner-provided curriculum; fictional fixed transcript, not official grades or verified class-group enrolment.'});for(const p of profile.periods)p.academicYear=2026-(3-p.year);}
     return profile;
 }
@@ -98,6 +125,7 @@ async function locked(user, fn) {
 async function load(user) {
     let profile = await object(user);
     if (!profile || isFixed(user)&&profile.transcriptVersion!=='luka-fictional-v1') { profile=generate(user); profile.sessionId=await require('./sessionOwnershipService').resolveSession(null,user); await object(user,profile); }
+    if(!isFixed(user)&&profile.name!=='Namonje Besa'){profile.name='Namonje Besa';await object(user,profile);}
     const sid=await require('./sessionOwnershipService').resolveSession(profile.sessionId,user);
     if(sid!==profile.sessionId){profile.sessionId=sid;await object(user,profile);}
     return profile;
@@ -123,4 +151,4 @@ async function withChat(user, expected, requestedSession, fn) { return locked(us
     if(expected!==profile.id || requestedSession && requestedSession!==profile.sessionId) throw fail('The demo profile changed. Refresh its academic context before retrying.');
     return fn(profile);
 }); }
-module.exports={existing,isFixed,allowed,mappings,generate,get,renew,withChat};
+module.exports={existing,isFixed,allowed,mappings,programmeChoices,pickProgramme,generate,get,renew,withChat};

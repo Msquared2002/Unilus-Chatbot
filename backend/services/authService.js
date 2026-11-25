@@ -73,7 +73,7 @@ function publicUser(user) {
     return {
         username: user.username,
         ...(process.env.DEMO_ACADEMIC_ENABLED==='yes'&&user.role==='student'&&user.username===process.env.DEMO_FIXED_ACCOUNT?{loginUsername:'demo'}:{}),
-        name: user.name || user.username,
+        name: process.env.DEMO_ACADEMIC_ENABLED==='yes'&&String(process.env.DEMO_ACADEMIC_USERS||'').split(',').map(s=>s.trim()).includes(user.username)&&user.role==='student'&&!require('./demoAcademicService').isFixed(user)?'Namonje Besa':user.name || user.username,
         role: user.role,
         department: user.department || null,
         programme: user.programme || null,

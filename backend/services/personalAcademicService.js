@@ -136,7 +136,8 @@ async function tryAnswer(question, { user, profile, sessionId, now = new Date() 
         return reply(`You have ${unread} unread updates. Showing ${items.length} recent eligible events.\n\n` + (items.length ? items.slice(0, 8).map(i => `- ${i.read ? 'Read' : 'Unread'}: ${i.message}`).join('\n') : 'No eligible updates are available. Unknown class-group membership can limit timetable alerts.'), profile, 'notifications', { notifications: items.slice(0, 8).map(i => ({ id: i.id, read: i.read, category: i.category, message: i.message })), unreadCount: unread });
     }
     if (timetableIntent) {
-        if(profile.programme==='BCS')return reply('Personal timetable matching is unavailable because BCS has an unresolved catalogue/timetable programme-name conflict. I will not equate Cyber Security with Computer Science.',profile,'timetable',{sessions:[],calendarVerified:false});
+        if(profile.simulationStatus==='curriculum_unavailable')return reply('I do not have a timetable linked to your selected programme yet. You can ask about a specific programme’s published timetable.',profile,'timetable-unavailable',{sessions:[],calendarVerified:false});
+        if(profile.programme==='BCS'&&!profile.timetableProgramme)return reply('Personal timetable matching is unavailable because BCS has an unresolved catalogue/timetable programme-name conflict. I will not equate Cyber Security with Computer Science.',profile,'timetable',{sessions:[],calendarVerified:false});
         const requestedStage=selection(q,profile,null);
         if(requestedStage&&(requestedStage.year!==profile.year||requestedStage.semester&&requestedStage.semester!==profile.semester))return reply('Your current registered timetable context is Year '+profile.year+', Semester '+profile.semester+'. Historical or future personal timetable registration for the requested period is unavailable.',profile,'timetable',{sessions:[],calendarVerified:false});
         await publications.refreshAccepted(true);
@@ -147,7 +148,10 @@ async function tryAnswer(question, { user, profile, sessionId, now = new Date() 
         const day = /tomorrow/.test(q) ? days[(local.weekday + 1) % 7] : /today/.test(q) ? days[local.weekday] : namedDay || (follow?previous?.day:null) || null;
         if(reference.choices.length){save('timetable',{next,day,awaitingCourse:true});return reply('Which course do you mean? Please specify a code: '+reference.choices.map(c=>c.code+' — '+c.name).join('; '),profile,'clarification');}
         const courseCode=reference.code||(follow?previous?.courseCode:null);
+        const requestedGroup=q.match(/\b(?:class\s+)?group\s+([a-z]\d*)\b/i)?.[1]?.toUpperCase();if(requestedGroup)context.group=requestedGroup;
         const result = schedule(context, { day, next, courseCode, now });
+        const groups=[...new Set(result.rows.map(r=>r.class_group).filter(Boolean))];
+        if(!context.group&&groups.length>1)return reply('Which class group are you in: '+groups.join(', ')+'?',profile,'clarification',{groupChoices:groups,calendarVerified:false});
         save('timetable', { next, courseCode, day });
         let answer = next ? 'Next listed lecture candidate(s), not confirmed attendance' : `Your recurring timetable${day ? ' for ' + day : ' for this week'}`;
         answer += ` (Africa/Lusaka, local date ${local.iso}).\n\n`;
@@ -156,7 +160,7 @@ async function tryAnswer(question, { user, profile, sessionId, now = new Date() 
         if(!context.mode)answer+='\nYour study mode is not recorded; standard-cohort listings are candidates, not verified full-time registration.';
         if (result.excludedConflict) answer += '\nA BIT301 source-title conflict was excluded rather than treated as the registered E-Business course.';
         if (result.rows.length > 30) answer += '\nShowing the first 30 matching sessions.';
-        return reply(answer, profile, 'timetable', { sessions: result.rows.slice(0, 30), publicationId: publication?.id || null, calendarVerified: false, timeZone: 'Africa/Lusaka' });
+        return reply(answer, profile, 'timetable', { day, next, sessions: result.rows.slice(0, 30), publicationId: publication?.id || null, calendarVerified: false, timeZone: 'Africa/Lusaka' });
     }
     if(previous?.kind==='ca'&&follow&&!/final|results|exam/.test(q)){
         const period=profile.periods.find(p=>p.key===previous.periodKey),courses=period?.courses.filter(c=>Number.isInteger(c.totalCA))||[];

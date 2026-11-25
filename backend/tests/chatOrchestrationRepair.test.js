@@ -232,3 +232,24 @@ test('planner rewrites never confer student timetable authorization', async () =
     const first = await ask('What are the hostel fees?'); mode = 'guestRewrite';
     const r = await ask('What about that?', first.data.sessionId); assert.equal(r.data.signInRequired, true); assert.equal(r.data.timetableMatches, 0);
 });
+
+test('natural accommodation cost questions reach university retrieval', async () => {
+    const reply = await ask('How much would accommodation cost me?');
+    assert.equal(reply.data.queryType?.isConversation, undefined);
+    assert.equal(reply.data.sources.length, 1);
+    const retrieval = calls.find(call => call.kind === 'retrieval');
+    assert.equal(retrieval.options.entities.fee_scope, 'accommodation');
+});
+
+test('fee help and Accounts contact return sourced Finance guidance without initiating a ticket', async () => {
+    const before = await countTickets();
+    for (const question of ['Where can I get help with my fees?', 'Who can clarify my tuition balance?', 'How do I contact the Accounts Office?']) {
+        const result = await ask(question);
+        assert.equal(result.data.queryType?.isFinanceHelp, true);
+        assert.match(result.data.answer, /Finance Office/);
+        assert.equal(result.data.sources.length, 1);
+        assert.equal(result.data.ticket, null);
+        assert.equal(result.data.support, undefined);
+    }
+    assert.equal(await countTickets(), before);
+});

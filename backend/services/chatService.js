@@ -458,7 +458,12 @@ async function answerQuestionCore(question, sessionId, audience = "public", prof
         };
     }
 
-    const { timetable, knowledge, resources, queryType, needsContextClarification } = await retrievalService.retrieveAnswer(question, priorHistory, audience, profile);
+    const { timetable, knowledge, resources, queryType, needsContextClarification, schedulePlan } = await retrievalService.retrieveAnswer(question, priorHistory, audience, profile);
+    if (schedulePlan && audience === 'student') {
+        const calculated=require('./scheduleReasoningService').response(schedulePlan,sessionId);
+        await sessionService.appendMessage(sessionId,'assistant',calculated.answer);
+        return {...calculated,sessionId};
+    }
     if (needsContextClarification) {
         const answer = 'Which programme, timetable or university topic are you referring to? Please include the subject so I can look up the right information.';
         await sessionService.appendMessage(sessionId, 'assistant', answer);
@@ -608,9 +613,10 @@ function markAdvisorTopic(sessionId, active) {
     const profile = store.get(sessionId);
     if (profile) { profile.topicActive = active; store.set(sessionId, profile); }
 }
-async function answerQuestion(question, sessionId, audience='public', profile=null, { user = null, academicProfile = null, supportDraftId = null } = {}) {
+async function answerQuestionInternal(question, sessionId, audience='public', profile=null, { user = null, academicProfile = null, supportDraftId = null } = {}) {
     // Applicant grades remain in the bounded advisor store, never in persistent chat history or tone rewriting.
     question = require('./supportContactService').redact(conversation.stripGreeting(question));
+    if(audience==='student')require('./scheduleReasoningService').observeQuestion(question,sessionId);
     if(supportDraftId){const guarded=await supportConversation.tryHandle(question,sessionId,user,supportDraftId);if(guarded)return {...guarded,sessionId};}
     const conversational=require('./companionConversationService');
     const advisorCandidate=require('./programmeAdvisorService').canHandle(question,sessionId);
@@ -628,7 +634,8 @@ async function answerQuestion(question, sessionId, audience='public', profile=nu
         const supportReply=await supportConversation.tryHandle(question,sessionId,user);
         if(supportReply){markAdvisorTopic(sessionId,false);await sessionService.appendMessage(sessionId,'user',question);await sessionService.appendMessage(sessionId,'assistant',supportReply.answer);return {...supportReply,sessionId};}
     }
-    const feeReply = supportConversation.isExplicitRequest(question) ? null : require('./tuitionFeeService').tryAnswer(question, sessionId ? await sessionService.getRecentHistory(sessionId) : []);
+    const tuitionFees = require('./tuitionFeeService');
+    const feeReply = supportConversation.isExplicitRequest(question) ? null : tuitionFees.tryHelp(question) || tuitionFees.tryAnswer(question, sessionId ? await sessionService.getRecentHistory(sessionId) : []);
     if (feeReply) {
         require("./personalAcademicService").clear(sessionId);
         sessionId ||= sessionService.createSessionId();
@@ -644,8 +651,11 @@ async function answerQuestion(question, sessionId, audience='public', profile=nu
     const facility=academicPublication?null:await require('./facilityInfoService').chat(question);
     const study=academicPublication||facility?null:await require('./studySupportService').chat(question,user,academicProfile,sessionId);
     if(academicPublication||facility||study){const result=academicPublication||facility||study;supportConversation.reset(sessionId);markAdvisorTopic(sessionId,false);await sessionService.appendMessage(sessionId,'user','[Structured academic/study interaction omitted]');await sessionService.appendMessage(sessionId,'assistant','[Structured academic/study response omitted]');return {...result,sessionId};}
-    const personalized = await require('./personalAcademicService').tryAnswer(question,{user,profile:academicProfile,sessionId});
+    const timetableSelection=require('./timetableQueryContext').parse(question);
+    const otherTimetable=/\b(?:timetable|classes|lectures?|break|gap)\b/i.test(question)&&timetableSelection.explicit&&((timetableSelection.family&&timetableSelection.family.toUpperCase()!==academicProfile?.programme)||(timetableSelection.year&&timetableSelection.year!==academicProfile?.year)||(timetableSelection.semester&&timetableSelection.semester!==academicProfile?.semester));
+    const personalized = otherTimetable?null:await require('./personalAcademicService').tryAnswer(question,{user,profile:academicProfile,sessionId});
     if(personalized){
+        if(personalized.academic?.kind==='timetable')require('./scheduleReasoningService').rememberTimetable(question,sessionId,academicProfile);
         supportConversation.reset(sessionId);markAdvisorTopic(sessionId,false);
           await sessionService.appendMessage(sessionId,'user',personalized.academic?.kind==='provided-results'?'[University course results omitted from persistent history]':question);
         await sessionService.appendMessage(sessionId,'assistant','[Private academic response omitted from model history]');
@@ -672,6 +682,13 @@ async function answerQuestion(question, sessionId, audience='public', profile=nu
         await sessionService.appendMessage(sessionId, 'assistant', supportReply.answer);
         return { ...supportReply, sessionId };
     }
+    const scheduleReply = await require('./queryUnderstandingService').tryReadOnlyCapability(question, sessionId, audience, academicProfile||profile);
+    if (scheduleReply) {
+        supportConversation.reset(sessionId);markAdvisorTopic(sessionId,false);
+        await sessionService.appendMessage(sessionId,'user',question);
+        await sessionService.appendMessage(sessionId,'assistant',scheduleReply.answer);
+        return {...scheduleReply,sessionId};
+    }
     const advisor = (!conversation.reply(question, profile)||advisorCandidate) && (!conversation.personalResults(question) || /\b(?:which programme|choos(?:e|ing) a programme|programme.*interests)\b/i.test(question))
         ? require('./programmeAdvisorService').tryAnswer(question,sessionId) : null;
     if (advisor) { markAdvisorTopic(sessionId, true); return advisor; }
@@ -685,11 +702,22 @@ async function answerQuestion(question, sessionId, audience='public', profile=nu
         return reply;
     }
     const result=await answerQuestionCore(safeQuestion,sessionId,audience,profile,user);
+    if(result.queryType?.isTimetable)require('./scheduleReasoningService').rememberTimetable(safeQuestion,sessionId,academicProfile||profile);
     const records=result._actionRecords || [];delete result._actionRecords;
     try{result.suggestedActions=require('./suggestedActionService').selectActions(question,result,records);}catch{result.suggestedActions=[];}
     if (result.support || result.queryType?.isConversation) result.suggestedActions = [];
     return result;
 }
+async function answerQuestion(...args){const result = await answerQuestionInternal(...args);
+    if (!result.navigation && /\b(?:where|venue|room)\b/i.test(args[0])) {
+        const sessions = result.academic?.next ? result.academic.sessions : result.schedule?.nextSessions;
+        if (sessions?.length === 1) {
+            const row = sessions[0];
+            result.navigation = require('./additionalCampusService').forVenue(row.venue_name, row.campus)
+                || require('./additionalCampusService').forVenue(row.venue_code, row.campus);
+        }
+    }
+    return require('./responsePresentationService').present(result,args[0]);}
 module.exports = {
     answerQuestion,
     formatContext,

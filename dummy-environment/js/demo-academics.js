@@ -1,7 +1,8 @@
 (function(){
   const api=window.UNILUS_API_BASE||'/api';
   const token=()=>sessionStorage.getItem('unilusAuthToken');
-  let profile=null,changing=false;
+  let profile=null,changing=false,programmeChoices=[];
+  function levelOptions(){const choice=programmeChoices.find(p=>p.code===document.querySelector('[data-profile-programme]').value);const years=[...new Set((choice?.periods||[]).map(p=>p.year))];const year=document.querySelector('[data-profile-year]'),semester=document.querySelector('[data-profile-semester]');if(!year||!semester)return;const old=year.value;year.innerHTML=years.map(y=>'<option value="'+y+'">Year '+y+'</option>').join('');if(years.includes(Number(old)))year.value=old;semester.innerHTML=(choice?.periods||[]).filter(p=>p.year===Number(year.value)).map(p=>'<option value="'+p.semester+'">Semester '+p.semester+'</option>').join('');}
   const view=document.querySelector('[data-academic-view]'),message=document.querySelector('[data-profile-message]');
   const settings=document.querySelector('[data-profile-controls] details'),trigger=settings.querySelector('summary');
   const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -13,7 +14,7 @@
   async function request(path,body){const r=await fetch(api+'/demo-academics/'+path,{method:body?'POST':'GET',headers:{Authorization:'Bearer '+token(),'Content-Type':'application/json'},...(body?{body:JSON.stringify(body)}:{})});const data=await r.json();if(!r.ok)throw Error(data.error||'Profile unavailable');return data;}
   function install(data){
     if(profile&&profile.id!==data.id)view.replaceChildren();closeSettings();profile=data;
-    document.querySelector('[data-profile-programme]').value=data.programme;
+    document.querySelector('[data-profile-programme]').value=data.programme;levelOptions();if(document.querySelector('[data-profile-year]')){document.querySelector('[data-profile-year]').value=data.year;levelOptions();document.querySelector('[data-profile-semester]').value=data.semester;}
     sessionStorage.setItem('unilusDemoAcademicProfile',JSON.stringify(data));sessionStorage.setItem('unilusDemoAcademicProfileId',data.id);sessionStorage.setItem('unilusChatSession',data.sessionId);sessionStorage.setItem('unilusDemoProgramme',data.programmeId);
     document.querySelectorAll('[data-demo-identity]').forEach(el=>el.textContent=data.studentNumber);
     document.querySelectorAll('[data-demo-name]').forEach(el=>el.textContent=data.name);
@@ -28,6 +29,7 @@
     document.body.classList.toggle('academic-view',!!type);view.hidden=!type;if(!type)return;
     if(!profile){view.innerHTML='<p>Results are unavailable or still loading.</p>';return;}
     if(profile.requiresNewProfile){view.innerHTML='<p>Choose New Profile to start with the corrected assessment scheme.</p>';return;}
+    if(!profile.periods.some(p=>p.courses.length)){view.innerHTML='<h1>'+ (type==='ca'?'CA Marks':'Final Results')+'</h1><p>A simulated curriculum is not available for '+esc(profile.programmeName)+' yet. Your programme selection is saved; no course records or grades have been invented.</p>';return;}
     const chosen=document.querySelector('[data-academic-period]')?.value||profile.activePeriod;
     const period=profile.periods.find(p=>p.key===chosen)||profile.periods.find(p=>p.key===profile.activePeriod);
     document.querySelector('.portal-breadcrumb').textContent='Home > Grades > '+(type==='ca'?'CA Marks':'Final Results');
@@ -48,12 +50,14 @@
   }
   async function renew(){
     if(changing||!profile)return;changing=true;closeSettings();document.querySelectorAll('[data-profile-controls] button').forEach(b=>b.disabled=true);window.dispatchEvent(new Event('unilus-demo-profile-changing'));message.textContent='Creating profile…';
-    try{const mode=document.querySelector('[data-profile-mode]').value;install(await request('profile',{mode,programme:document.querySelector('[data-profile-programme]').value,expectedProfileId:profile.id}));}
+    try{const mode=document.querySelector('[data-profile-mode]').value;install(await request('profile',{mode,programme:document.querySelector('[data-profile-programme]').value,expectedProfileId:profile.id,year:mode==='specific'?document.querySelector('[data-profile-year]')?.value:undefined,semester:mode==='specific'?document.querySelector('[data-profile-semester]')?.value:undefined}));}
     catch(e){const error=e.message;try{install(await request('profile'));}catch{ /* Never manufacture a fallback profile. */ }message.textContent=error;}
     finally{changing=false;document.querySelectorAll('[data-profile-controls] button').forEach(b=>b.disabled=false);}
   }
+  document.querySelector('[data-profile-programme]')?.addEventListener('change',levelOptions);
+  document.querySelector('[data-profile-year]')?.addEventListener('change',levelOptions);
   document.querySelector('[data-new-demo-profile]')?.addEventListener('click',renew);
   window.addEventListener('hashchange',()=>{render();document.querySelector('.portal-sidebar')?.classList.remove('is-open');document.querySelector('.portal-menu-toggle')?.setAttribute('aria-expanded','false');window.scrollTo(0,0);});
-  if(token())Promise.all([request('profile'),request('programmes')]).then(([data,programmes])=>{document.querySelector('[data-profile-programme]').innerHTML=programmes.map(p=>`<option value="${esc(p.code)}">${esc(p.name)}</option>`).join('');install(data);}).catch(e=>{message.textContent=e.message;render();});
+  if(token())Promise.all([request('profile'),request('programmes')]).then(([data,programmes])=>{programmeChoices=programmes;window.UnilusDemoSession?.registerProgrammes?.(programmes);document.querySelector('[data-profile-programme]').innerHTML=programmes.map(p=>`<option value="${esc(p.code)}">${esc(p.name)}</option>`).join('');install(data);}).catch(e=>{message.textContent=e.message;render();});
   else{message.textContent='Independent demonstration · sign in with a demo account.';render();}
 })();

@@ -61,6 +61,8 @@ function buildProximityAnswer(place, nearby) {
  *                   recommendedResources: Array, timetableMatches: number}}
  */
 function tryHandleNavigation(question) {
+    const directoryReply = require('./additionalCampusService').answer(question);
+    if (directoryReply) return directoryReply;
   if(/\b(?:my (?:academic|student) profile|programme am i|year am i)\b/i.test(question))return null;
   if(/\bshow (?:the )?academic buildings\b/i.test(question)){
     const buildings=campusRepository.getAllPlaces().filter(p=>p.category==='academic');

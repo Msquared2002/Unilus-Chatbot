@@ -1,0 +1,2399 @@
+{
+  "branch": "codex/production-integration",
+  "queries": [
+    {
+      "question": "What's my timetable tomorrow?",
+      "answer": "Your recurring timetable for Wednesday (Africa/Lusaka, local date 2026-11-17).\n\n| Course | Day | Time | Venue | Lecturer | Qualification |\n| --- | --- | --- | --- | --- | --- |\n| BIT326 — Systems Development and Implementation | Wednesday | 08:00-10:00 | Lecture Room 6 | Mrs Rabecca Mumba | Possible group-specific session; membership unknown |\n| BIT346 — Business Web Development - Server Side with Visual Studio and C# | Wednesday | 10:00-11:00 | Lecture Room 10 | Mr Joseph Mwanza | Possible group-specific session; membership unknown |\n| BIT326 — Systems Development and Implementation | Wednesday | 14:00-16:00 | Lecture Room 6 | Mrs Rabecca Mumba | Possible group-specific session; membership unknown |\n\nThis is a recurring weekly listing. Term dates, holidays and cancellations are not verified, so attendance on a specific date is not confirmed.\n\nSimulated demonstration records, not an official university transcript."
+    },
+    {
+      "question": "What's my longest break on Monday?",
+      "answer": "[offline generation boundary]"
+    },
+    {
+      "question": "What's BIT32's longest break on Monday?",
+      "answer": "[offline generation boundary]"
+    },
+    {
+      "question": "When is Mr D. Tembo free on Thursday?",
+      "answer": "Mr D. Tembo — Thursday: Recorded teaching: none. No class recorded between: no calculable gaps. Comparison window: not established (first to last recorded class; not opening hours).\n\nThis does not confirm consultation availability or absence of other duties.  Based on the retained recurring teaching timetable (source links include 2025); current academic validity and complete booking coverage are unverified.",
+      "scheduleStatus": "calculated"
+    }
+  ],
+  "simulatorProgrammes": [
+    "BSPH",
+    "BCS",
+    "BIT"
+  ],
+  "advisorCatalogue": 89,
+  "verifiedChoices": [
+    {
+      "id": "bachelor-of-accountancy",
+      "name": "Bachelor of Accountancy"
+    },
+    {
+      "id": "bachelor-of-arts-in-development-studies",
+      "name": "Bachelor of Arts in Development Studies"
+    },
+    {
+      "id": "bachelor-of-arts-in-economics",
+      "name": "Bachelor of Arts in Economics"
+    },
+    {
+      "id": "bachelor-of-business-administration",
+      "name": "Bachelor of Business Administration"
+    },
+    {
+      "id": "bachelor-of-laws",
+      "name": "Bachelor of Laws"
+    },
+    {
+      "id": "bachelor-of-medicine-and-bachelor-surgery",
+      "name": "Bachelor of Medicine and Bachelor Surgery"
+    },
+    {
+      "id": "bachelor-of-pharmacy",
+      "name": "Bachelor of Pharmacy"
+    },
+    {
+      "id": "bachelor-of-science-in-actuarial-science",
+      "name": "Bachelor of Science in Actuarial Science"
+    },
+    {
+      "id": "bachelor-of-science-in-banking-and-finance",
+      "name": "Bachelor of Science in Banking and Finance"
+    },
+    {
+      "id": "bachelor-of-science-in-biomedical-sciences",
+      "name": "Bachelor of Science in Biomedical Sciences"
+    },
+    {
+      "id": "bachelor-of-science-in-computer-science",
+      "name": "Bachelor of Science in Computer Science"
+    },
+    {
+      "id": "bachelor-of-science-in-cyber-security",
+      "name": "Bachelor of Science in Cyber Security"
+    },
+    {
+      "id": "bachelor-of-science-in-economics-and-finance",
+      "name": "Bachelor of Science in Economics and Finance"
+    },
+    {
+      "id": "bachelor-of-science-in-human-resource-management",
+      "name": "Bachelor of Science in Human Resource Management"
+    },
+    {
+      "id": "bachelor-of-science-in-information-systems-and-technology",
+      "name": "Bachelor of Science in Information Systems and Technology"
+    },
+    {
+      "id": "bachelor-of-science-in-insurance-and-pension-management",
+      "name": "Bachelor of Science in Insurance and Pension Management"
+    },
+    {
+      "id": "bachelor-of-science-in-marketing",
+      "name": "Bachelor of Science in Marketing"
+    },
+    {
+      "id": "bachelor-of-science-in-nursing",
+      "name": "Bachelor of Science in Nursing"
+    },
+    {
+      "id": "bachelor-of-science-in-politics-and-international-relations",
+      "name": "Bachelor of Science in Politics and International Relations"
+    },
+    {
+      "id": "bachelor-of-science-in-public-administration",
+      "name": "Bachelor of Science in Public Administration"
+    },
+    {
+      "id": "bachelor-of-science-in-public-health",
+      "name": "Bachelor of Science in Public Health"
+    },
+    {
+      "id": "bachelor-of-science-in-purchasing-and-supply",
+      "name": "Bachelor of Science in Purchasing and Supply"
+    },
+    {
+      "id": "diploma-in-nursing-sciences",
+      "name": "Diploma in Nursing sciences"
+    },
+    {
+      "id": "doctor-of-business-administration",
+      "name": "Doctor of Business Administration"
+    },
+    {
+      "id": "doctor-of-philosophy-phd-in-business-administration",
+      "name": "Doctor of Philosophy (PhD) in Business Administration"
+    },
+    {
+      "id": "doctor-of-philosophy-phd-in-human-resource-management",
+      "name": "Doctor of Philosophy (PhD) in Human Resource Management"
+    },
+    {
+      "id": "doctor-of-philosophy-in-accounting-and-finance",
+      "name": "Doctor of Philosophy in Accounting and Finance"
+    },
+    {
+      "id": "doctor-of-philosophy-in-computer-science",
+      "name": "Doctor of Philosophy in Computer Science"
+    },
+    {
+      "id": "doctor-of-philosophy-in-cyber-security",
+      "name": "Doctor of Philosophy in Cyber Security"
+    },
+    {
+      "id": "doctor-of-philosophy-in-data-science",
+      "name": "Doctor of Philosophy in Data Science"
+    },
+    {
+      "id": "doctor-of-philosophy-in-development-studies",
+      "name": "Doctor of Philosophy in Development Studies"
+    },
+    {
+      "id": "doctor-of-philosophy-in-economics",
+      "name": "Doctor of Philosophy in Economics"
+    },
+    {
+      "id": "doctor-of-philosophy-in-environmental-management",
+      "name": "Doctor of Philosophy in Environmental Management"
+    },
+    {
+      "id": "doctor-of-philosophy-in-information-technology",
+      "name": "Doctor of Philosophy in Information Technology"
+    },
+    {
+      "id": "doctor-of-philosophy-in-law",
+      "name": "Doctor of Philosophy in Law"
+    },
+    {
+      "id": "doctor-of-philosophy-in-marketing",
+      "name": "Doctor of Philosophy in Marketing"
+    },
+    {
+      "id": "doctor-of-philosophy-in-project-management",
+      "name": "Doctor of Philosophy in Project Management"
+    },
+    {
+      "id": "doctor-of-philosophy-in-public-health",
+      "name": "Doctor of Philosophy in Public Health"
+    },
+    {
+      "id": "executive-master-of-business-administration-in-leadership-and-wealth-creation",
+      "name": "Executive Master of Business Administration in Leadership and Wealth Creation"
+    },
+    {
+      "id": "master-of-arts-in-development-studies",
+      "name": "Master of Arts in Development Studies"
+    },
+    {
+      "id": "master-of-arts-in-human-resource-management",
+      "name": "Master of Arts in Human Resource Management"
+    },
+    {
+      "id": "master-of-business-administration",
+      "name": "Master of Business Administration"
+    },
+    {
+      "id": "master-of-business-administration-finance",
+      "name": "Master of Business Administration - Finance"
+    },
+    {
+      "id": "master-of-business-administration-in-health-care-management",
+      "name": "Master of Business Administration in Health Care Management"
+    },
+    {
+      "id": "master-of-law-in-environmental-laws",
+      "name": "Master of Law in Environmental Laws"
+    },
+    {
+      "id": "master-of-law-in-general-laws",
+      "name": "Master of Law in General Laws"
+    },
+    {
+      "id": "master-of-law-in-human-rights-laws",
+      "name": "Master of Law in Human Rights Laws"
+    },
+    {
+      "id": "master-of-laws-in-banking-and-finance-law",
+      "name": "Master of Laws in Banking and Finance Law"
+    },
+    {
+      "id": "master-of-laws-in-commercial-corporate-law",
+      "name": "Master of Laws in Commercial & Corporate Law"
+    },
+    {
+      "id": "master-of-laws-in-competition-law",
+      "name": "Master of Laws in Competition Law"
+    },
+    {
+      "id": "master-of-laws-in-constitutional-and-administrative-law",
+      "name": "Master of Laws in Constitutional and Administrative Law"
+    },
+    {
+      "id": "master-of-laws-in-criminal-litigation",
+      "name": "Master of Laws in Criminal Litigation"
+    },
+    {
+      "id": "master-of-laws-in-intellectual-property-law",
+      "name": "Master of Laws in Intellectual Property Law"
+    },
+    {
+      "id": "master-of-laws-in-international-trade-and-investment-law",
+      "name": "Master of Laws in International Trade and investment Law"
+    },
+    {
+      "id": "master-of-laws-in-labour-law",
+      "name": "Master of Laws in Labour Law"
+    },
+    {
+      "id": "master-of-laws-in-mineral-resources-extraction-and-law",
+      "name": "Master of Laws in Mineral Resources, Extraction and Law"
+    },
+    {
+      "id": "master-of-laws-in-public-international-law",
+      "name": "Master of Laws in Public International Law"
+    },
+    {
+      "id": "master-of-laws-in-tax-law",
+      "name": "Master of Laws in Tax Law"
+    },
+    {
+      "id": "master-of-peace-and-security-studies",
+      "name": "Master of Peace and Security Studies"
+    },
+    {
+      "id": "master-of-political-science-and-international-relations",
+      "name": "Master of Political Science and International Relations"
+    },
+    {
+      "id": "master-of-public-administration",
+      "name": "Master of Public Administration"
+    },
+    {
+      "id": "master-of-public-health",
+      "name": "Master of Public Health"
+    },
+    {
+      "id": "master-of-science-in-accounting-and-finance",
+      "name": "Master of Science in Accounting and Finance"
+    },
+    {
+      "id": "master-of-science-in-actuarial-science",
+      "name": "Master of Science in Actuarial Science"
+    },
+    {
+      "id": "master-of-science-in-auditing",
+      "name": "Master of Science in Auditing"
+    },
+    {
+      "id": "master-of-science-in-computer-science",
+      "name": "Master of Science in Computer Science"
+    },
+    {
+      "id": "master-of-science-in-cyber-security",
+      "name": "Master of Science in Cyber Security"
+    },
+    {
+      "id": "master-of-science-in-data-science",
+      "name": "Master of Science in Data Science"
+    },
+    {
+      "id": "master-of-science-in-development-economics",
+      "name": "Master of Science in Development Economics"
+    },
+    {
+      "id": "master-of-science-in-economics-and-finance",
+      "name": "Master of Science in Economics and Finance"
+    },
+    {
+      "id": "master-of-science-in-environmental-management",
+      "name": "Master of Science in Environmental Management"
+    },
+    {
+      "id": "master-of-science-in-epidemiology-and-biostatistics",
+      "name": "Master of Science in Epidemiology and Biostatistics"
+    },
+    {
+      "id": "master-of-science-in-infectious-diseases",
+      "name": "Master of Science in Infectious Diseases"
+    },
+    {
+      "id": "master-of-science-in-information-technology",
+      "name": "Master of Science in information Technology"
+    },
+    {
+      "id": "master-of-science-in-insurance-and-pensions-management",
+      "name": "Master of Science in Insurance and Pensions Management"
+    },
+    {
+      "id": "master-of-science-in-logistics-and-transport-management",
+      "name": "Master of Science in Logistics and Transport Management"
+    },
+    {
+      "id": "master-of-science-in-marketing-management",
+      "name": "Master of Science in Marketing Management"
+    },
+    {
+      "id": "master-of-science-in-procurement-and-supply-chain-management",
+      "name": "Master of Science in Procurement and Supply Chain Management"
+    },
+    {
+      "id": "master-of-science-in-project-management",
+      "name": "Master of Science in Project Management"
+    },
+    {
+      "id": "master-of-science-in-public-finance-and-taxation",
+      "name": "Master of Science in Public Finance and Taxation"
+    },
+    {
+      "id": "master-of-science-in-risk-management",
+      "name": "Master of Science in Risk Management"
+    },
+    {
+      "id": "postgraduate-diploma-in-lecturing-teaching-methodology",
+      "name": "Postgraduate Diploma in Lecturing/Teaching Methodology"
+    },
+    {
+      "id": "postgraduate-diploma-in-quality-assurance-in-higher-education",
+      "name": "Postgraduate Diploma in Quality Assurance in Higher Education"
+    },
+    {
+      "id": "bachelor-of-science-in-logistics-and-transport-management",
+      "name": "Bachelor of Science in Logistics and Transport Management"
+    },
+    {
+      "id": "bachelor-of-science-in-cybersecurity",
+      "name": "Bachelor of Science in Cybersecurity"
+    },
+    {
+      "id": "bachelor-of-medicine-and-surgery",
+      "name": "Bachelor of Medicine and Surgery"
+    },
+    {
+      "id": "diploma-in-registered-nursing",
+      "name": "Diploma in Registered Nursing"
+    }
+  ],
+  "fixedProfileHash": "3bf3695700e64d966a431c8fb0ed610d856b78d1a6e419553f177fff3c3598cf",
+  "fixedProfile": {
+    "id": "luka-simulated-profile-v1",
+    "seed": "luka-fictional-transcript-v1",
+    "modelVersion": 4,
+    "name": "Luka Hamududu",
+    "studentNumber": "BIT24240001",
+    "programme": "BIT",
+    "programmeId": "bachelor-of-science-in-information-systems-and-technology",
+    "programmeName": "Bachelor of Science in Information Systems and Technology",
+    "year": 3,
+    "semester": 2,
+    "activePeriod": "3-2",
+    "periods": [
+      {
+        "key": "1-1",
+        "year": 1,
+        "semester": 1,
+        "academicYear": 2024,
+        "completed": true,
+        "completeCourseLoadVerified": false,
+        "courses": [
+          {
+            "code": "BBA141",
+            "name": "Communication Skills",
+            "year": 1,
+            "semester": 1,
+            "sourceTitles": [
+              "Business Communication Skills Group D",
+              "D_ Business Communication Skills Group D",
+              "Business Communication Skills GROUP A",
+              "Business Communication Skills Group A TUTORIAL",
+              "B* Business Communication Skills GROUP B",
+              "COMMUNICATION SKILLS GROUP C",
+              "Business Communication Skills Group TUTORIAL",
+              "Business Communication Skills Group B TUTORIAL",
+              "BSPH COMMUNICATION SKILLS GROUP D",
+              "BSPHb COMMUNICATION SKILLS GROUP D",
+              "Business Communication Skills EDUCATION GROUP#Virtual",
+              "FT_ED Business Communication Skills EDUCATION GROUP#115"
+            ],
+            "aliasReviewRequired": true,
+            "assessments": [
+              {
+                "name": "Assignment 1",
+                "weight": 10,
+                "status": "available",
+                "score": 9,
+                "contribution": 9
+              },
+              {
+                "name": "Midexam 1",
+                "weight": 20,
+                "status": "available",
+                "score": 16,
+                "contribution": 16
+              },
+              {
+                "name": "Practical",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              },
+              {
+                "name": "Project 1",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              }
+            ],
+            "visibleCA": 25,
+            "totalCA": 25,
+            "ready": true,
+            "finalExam": {
+              "score": 58,
+              "weight": 70,
+              "contribution": 58
+            },
+            "finalMark": 83,
+            "finalGrade": "A"
+          },
+          {
+            "code": "BIT101",
+            "name": "Introduction to Business Information Systems",
+            "year": 1,
+            "semester": 1,
+            "sourceTitles": [
+              "Introduction to Business Information Systems",
+              "PT#5 Introduction to Business Information Systems"
+            ],
+            "aliasReviewRequired": false,
+            "assessments": [
+              {
+                "name": "Assignment 1",
+                "weight": 10,
+                "status": "available",
+                "score": 9,
+                "contribution": 9
+              },
+              {
+                "name": "Midexam 1",
+                "weight": 20,
+                "status": "available",
+                "score": 20,
+                "contribution": 20
+              },
+              {
+                "name": "Practical",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              },
+              {
+                "name": "Project 1",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              }
+            ],
+            "visibleCA": 29,
+            "totalCA": 29,
+            "ready": true,
+            "finalExam": {
+              "score": 67,
+              "weight": 70,
+              "contribution": 67
+            },
+            "finalMark": 96,
+            "finalGrade": "A+"
+          },
+          {
+            "code": "BIT102",
+            "name": "Computer Mathematics",
+            "year": 1,
+            "semester": 1,
+            "sourceTitles": [
+              "BSC 111 Mathematics#70",
+              "TT#90 Computer Mathematics TUTORIAL Group A",
+              "TT# Computer Mathematics TUTORIAL Group C",
+              "TT## Computer Mathematics TUTORIAL Group B",
+              "Computer Mathematics PT#5",
+              "\\BSC111TT Computer Mathematics Tutorial Group A"
+            ],
+            "aliasReviewRequired": true,
+            "assessments": [
+              {
+                "name": "Assignment 1",
+                "weight": 10,
+                "status": "available",
+                "score": 9,
+                "contribution": 9
+              },
+              {
+                "name": "Midexam 1",
+                "weight": 20,
+                "status": "available",
+                "score": 11,
+                "contribution": 11
+              },
+              {
+                "name": "Practical",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              },
+              {
+                "name": "Project 1",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              }
+            ],
+            "visibleCA": 20,
+            "totalCA": 20,
+            "ready": true,
+            "finalExam": {
+              "score": 58,
+              "weight": 70,
+              "contribution": 58
+            },
+            "finalMark": 78,
+            "finalGrade": "A"
+          },
+          {
+            "code": "BIT110",
+            "name": "Computer Systems Architecture",
+            "year": 1,
+            "semester": 1,
+            "sourceTitles": [],
+            "aliasReviewRequired": true,
+            "assessments": [
+              {
+                "name": "Assignment 1",
+                "weight": 10,
+                "status": "available",
+                "score": 5,
+                "contribution": 5
+              },
+              {
+                "name": "Midexam 1",
+                "weight": 20,
+                "status": "available",
+                "score": 10,
+                "contribution": 10
+              },
+              {
+                "name": "Practical",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              },
+              {
+                "name": "Project 1",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              }
+            ],
+            "visibleCA": 15,
+            "totalCA": 15,
+            "ready": true,
+            "finalExam": {
+              "score": 63,
+              "weight": 70,
+              "contribution": 63
+            },
+            "finalMark": 78,
+            "finalGrade": "A"
+          }
+        ],
+        "outcome": {
+          "code": "limited",
+          "label": "All available courses passed",
+          "detail": "Based on available results; a full semester decision requires the registered course load."
+        }
+      },
+      {
+        "key": "1-2",
+        "year": 1,
+        "semester": 2,
+        "academicYear": 2024,
+        "completed": true,
+        "completeCourseLoadVerified": false,
+        "courses": [
+          {
+            "code": "BBA140",
+            "name": "Business Environment",
+            "year": 1,
+            "semester": 2,
+            "sourceTitles": [
+              "Business Environment GROUP C",
+              "\" Business Environment Tutorial Group-BSPH",
+              "Business Environment Tutorial Group C - LLB",
+              "B_LAW Business Environment Tutorial Group B - LLB",
+              "Business Environment Tutorial Group-AFIN",
+              "BUSINESS ENVIRONMENT GROUP A",
+              "Business Environment Tutorial Group-BFIN",
+              "' Business Environment Tutorial Group-ECF",
+              "Business Environment PT\\DL#25",
+              "TT_E_ Business Environment Tutorial Group E and F -LLB",
+              "TT_D Business Environment Tutorial Group D-LLB",
+              "*LAW#230 Business Environment LAW",
+              "TT_A Business Environment Tutorial Group A-LLB",
+              "*LAW#230b Business Environment LAW",
+              "Business Environment GROUP B",
+              "B_ Business Environment GROUP B",
+              "TT_A Business Environment Tutorial Group-BACT/BSM/BLTM",
+              "TT_B Business Environment Tutorial Group B-BBA",
+              "TT_H Business Environment Tutorial Group H-BBA",
+              "TT_G Business Environment Tutorial Group G-ECA/BIP/BPS",
+              "TT_E Business Environment Tutorial Group E-HRM",
+              "TT_C Business Environment Tutorial Group C-ED",
+              ",TT Business Environment Tutorial Group B-ED"
+            ],
+            "aliasReviewRequired": true,
+            "assessments": [
+              {
+                "name": "Assignment 1",
+                "weight": 10,
+                "status": "available",
+                "score": 9,
+                "contribution": 9
+              },
+              {
+                "name": "Midexam 1",
+                "weight": 20,
+                "status": "available",
+                "score": 10,
+                "contribution": 10
+              },
+              {
+                "name": "Practical",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              },
+              {
+                "name": "Project 1",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              }
+            ],
+            "visibleCA": 19,
+            "totalCA": 19,
+            "ready": true,
+            "finalExam": {
+              "score": 58,
+              "weight": 70,
+              "contribution": 58
+            },
+            "finalMark": 77,
+            "finalGrade": "A"
+          },
+          {
+            "code": "BIT107",
+            "name": "Operating System Operations and Services",
+            "year": 1,
+            "semester": 2,
+            "sourceTitles": [
+              "Operating Systems Operations and Services Group A#60",
+              "Operating Systems Operations and Services PT/DL#9"
+            ],
+            "aliasReviewRequired": true,
+            "assessments": [
+              {
+                "name": "Assignment 1",
+                "weight": 10,
+                "status": "available",
+                "score": 5,
+                "contribution": 5
+              },
+              {
+                "name": "Midexam 1",
+                "weight": 20,
+                "status": "available",
+                "score": 12,
+                "contribution": 12
+              },
+              {
+                "name": "Practical",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              },
+              {
+                "name": "Project 1",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              }
+            ],
+            "visibleCA": 17,
+            "totalCA": 17,
+            "ready": true,
+            "finalExam": {
+              "score": 56,
+              "weight": 70,
+              "contribution": 56
+            },
+            "finalMark": 73,
+            "finalGrade": "B+"
+          },
+          {
+            "code": "BIT112",
+            "name": "Pseudocode and Programming Logic",
+            "year": 1,
+            "semester": 2,
+            "sourceTitles": [
+              "Pseudo Code and Programming Logic",
+              "Introduction to Programing/Programing Concepts Computer Lab Tutorial",
+              "FT Pseudo Code and Programming Logic",
+              "PT#10 Pseudo Code and Programming Logic PT#10"
+            ],
+            "aliasReviewRequired": false,
+            "assessments": [
+              {
+                "name": "Assignment 1",
+                "weight": 10,
+                "status": "available",
+                "score": 5,
+                "contribution": 5
+              },
+              {
+                "name": "Midexam 1",
+                "weight": 20,
+                "status": "available",
+                "score": 15,
+                "contribution": 15
+              },
+              {
+                "name": "Practical",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              },
+              {
+                "name": "Project 1",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              }
+            ],
+            "visibleCA": 20,
+            "totalCA": 20,
+            "ready": true,
+            "finalExam": {
+              "score": 62,
+              "weight": 70,
+              "contribution": 62
+            },
+            "finalMark": 82,
+            "finalGrade": "A"
+          },
+          {
+            "code": "BIT121",
+            "name": "Data and Information Management",
+            "year": 1,
+            "semester": 2,
+            "sourceTitles": [],
+            "aliasReviewRequired": true,
+            "assessments": [
+              {
+                "name": "Assignment 1",
+                "weight": 10,
+                "status": "available",
+                "score": 6,
+                "contribution": 6
+              },
+              {
+                "name": "Midexam 1",
+                "weight": 20,
+                "status": "available",
+                "score": 17,
+                "contribution": 17
+              },
+              {
+                "name": "Practical",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              },
+              {
+                "name": "Project 1",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              }
+            ],
+            "visibleCA": 23,
+            "totalCA": 23,
+            "ready": true,
+            "finalExam": {
+              "score": 45,
+              "weight": 70,
+              "contribution": 45
+            },
+            "finalMark": 68,
+            "finalGrade": "B+"
+          }
+        ],
+        "outcome": {
+          "code": "limited",
+          "label": "All available courses passed",
+          "detail": "Based on available results; a full semester decision requires the registered course load."
+        }
+      },
+      {
+        "key": "2-1",
+        "year": 2,
+        "semester": 1,
+        "academicYear": 2025,
+        "completed": true,
+        "completeCourseLoadVerified": false,
+        "courses": [
+          {
+            "code": "AFIN102",
+            "name": "Financial Accounting",
+            "year": 2,
+            "semester": 1,
+            "sourceTitles": [
+              "Financial Accounting GROUP A",
+              "Financial Accounting GROUP B#350",
+              "E_TTd Financial Accounting Tutorial Group E#128",
+              "PT/DL Financial Accounting PT#128",
+              "B-#120 Financial Accounting Group B#128",
+              "B_TTb Financial Accounting Tutorial Group B#128"
+            ],
+            "aliasReviewRequired": true,
+            "assessments": [
+              {
+                "name": "Assignment 1",
+                "weight": 10,
+                "status": "available",
+                "score": 9,
+                "contribution": 9
+              },
+              {
+                "name": "Midexam 1",
+                "weight": 20,
+                "status": "available",
+                "score": 16,
+                "contribution": 16
+              },
+              {
+                "name": "Practical",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              },
+              {
+                "name": "Project 1",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              }
+            ],
+            "visibleCA": 25,
+            "totalCA": 25,
+            "ready": true,
+            "finalExam": {
+              "score": 57,
+              "weight": 70,
+              "contribution": 57
+            },
+            "finalMark": 82,
+            "finalGrade": "A"
+          },
+          {
+            "code": "BIT213",
+            "name": "Introduction to Programming - JAVA",
+            "year": 2,
+            "semester": 1,
+            "sourceTitles": [
+              "PT#5 Java Programming For Beginners#5"
+            ],
+            "aliasReviewRequired": true,
+            "assessments": [
+              {
+                "name": "Assignment 1",
+                "weight": 10,
+                "status": "available",
+                "score": 5,
+                "contribution": 5
+              },
+              {
+                "name": "Midexam 1",
+                "weight": 20,
+                "status": "available",
+                "score": 11,
+                "contribution": 11
+              },
+              {
+                "name": "Practical",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              },
+              {
+                "name": "Project 1",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              }
+            ],
+            "visibleCA": 16,
+            "totalCA": 16,
+            "ready": true,
+            "finalExam": {
+              "score": 45,
+              "weight": 70,
+              "contribution": 45
+            },
+            "finalMark": 61,
+            "finalGrade": "B"
+          },
+          {
+            "code": "BIT222",
+            "name": "Database Design and Management",
+            "year": 2,
+            "semester": 1,
+            "sourceTitles": [
+              "Database Design and Management"
+            ],
+            "aliasReviewRequired": false,
+            "assessments": [
+              {
+                "name": "Assignment 1",
+                "weight": 10,
+                "status": "available",
+                "score": 6,
+                "contribution": 6
+              },
+              {
+                "name": "Midexam 1",
+                "weight": 20,
+                "status": "available",
+                "score": 16,
+                "contribution": 16
+              },
+              {
+                "name": "Practical",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              },
+              {
+                "name": "Project 1",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              }
+            ],
+            "visibleCA": 22,
+            "totalCA": 22,
+            "ready": true,
+            "finalExam": {
+              "score": 54,
+              "weight": 70,
+              "contribution": 54
+            },
+            "finalMark": 76,
+            "finalGrade": "A"
+          },
+          {
+            "code": "BIT241",
+            "name": "Network and Telecom Systems",
+            "year": 2,
+            "semester": 1,
+            "sourceTitles": [],
+            "aliasReviewRequired": true,
+            "assessments": [
+              {
+                "name": "Assignment 1",
+                "weight": 10,
+                "status": "available",
+                "score": 6,
+                "contribution": 6
+              },
+              {
+                "name": "Midexam 1",
+                "weight": 20,
+                "status": "available",
+                "score": 17,
+                "contribution": 17
+              },
+              {
+                "name": "Practical",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              },
+              {
+                "name": "Project 1",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              }
+            ],
+            "visibleCA": 23,
+            "totalCA": 23,
+            "ready": true,
+            "finalExam": {
+              "score": 44,
+              "weight": 70,
+              "contribution": 44
+            },
+            "finalMark": 67,
+            "finalGrade": "B+"
+          }
+        ],
+        "outcome": {
+          "code": "limited",
+          "label": "All available courses passed",
+          "detail": "Based on available results; a full semester decision requires the registered course load."
+        }
+      },
+      {
+        "key": "2-2",
+        "year": 2,
+        "semester": 2,
+        "academicYear": 2025,
+        "completed": true,
+        "completeCourseLoadVerified": false,
+        "courses": [
+          {
+            "code": "BBA240",
+            "name": "Quantitative Methods",
+            "year": 2,
+            "semester": 2,
+            "sourceTitles": [
+              "BUS#2_A Quantitave Methods Business Students GROUP A#250",
+              "C_TT#Z.CA Quantitave Methods Group C TUTORIAL#100",
+              "PT\\DL# Quantitave Methods PT\\DL",
+              "A_TT#1 Quantitave Methods TUTORIAL Group A#100",
+              "BUS#B. Quantitave Methods Business Students GROUP B#250",
+              "BUS#B Quantitave Methods Business Students GROUP B#250",
+              "B_TT#B Quantitave Methods Group B#100",
+              "ED#50 Quantitave Methods Education Students#50",
+              "ED_TT Quantitave Methods Education Students TUTORIAL"
+            ],
+            "aliasReviewRequired": true,
+            "assessments": [
+              {
+                "name": "Assignment 1",
+                "weight": 10,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              },
+              {
+                "name": "Midexam 1",
+                "weight": 20,
+                "status": "available",
+                "score": 16,
+                "contribution": 16
+              },
+              {
+                "name": "Practical",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              },
+              {
+                "name": "Project 1",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              }
+            ],
+            "visibleCA": 16,
+            "totalCA": 16,
+            "ready": true,
+            "finalExam": {
+              "score": 40,
+              "weight": 70,
+              "contribution": 40
+            },
+            "finalMark": 56,
+            "finalGrade": "C+"
+          },
+          {
+            "code": "BIT214",
+            "name": "Advanced Programming",
+            "year": 2,
+            "semester": 2,
+            "sourceTitles": [
+              "Advanced Java Programming TUTORIAL",
+              "\\BSC221 Advanced Java Programming",
+              "PT#2 Advanced Programming -Java PT"
+            ],
+            "aliasReviewRequired": true,
+            "assessments": [
+              {
+                "name": "Assignment 1",
+                "weight": 10,
+                "status": "available",
+                "score": 5,
+                "contribution": 5
+              },
+              {
+                "name": "Midexam 1",
+                "weight": 20,
+                "status": "available",
+                "score": 16,
+                "contribution": 16
+              },
+              {
+                "name": "Practical",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              },
+              {
+                "name": "Project 1",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              }
+            ],
+            "visibleCA": 21,
+            "totalCA": 21,
+            "ready": true,
+            "finalExam": {
+              "score": 36,
+              "weight": 70,
+              "contribution": 36
+            },
+            "finalMark": 57,
+            "finalGrade": "C+"
+          },
+          {
+            "code": "BIT242",
+            "name": "Network Design and Management (Enterprise Network)",
+            "year": 2,
+            "semester": 2,
+            "sourceTitles": [
+              "Network Design and Management",
+              "Network Design and Management PT",
+              "FT#20. Network Design and Management#20"
+            ],
+            "aliasReviewRequired": true,
+            "assessments": [
+              {
+                "name": "Assignment 1",
+                "weight": 10,
+                "status": "available",
+                "score": 10,
+                "contribution": 10
+              },
+              {
+                "name": "Midexam 1",
+                "weight": 20,
+                "status": "available",
+                "score": 8,
+                "contribution": 8
+              },
+              {
+                "name": "Practical",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              },
+              {
+                "name": "Project 1",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              }
+            ],
+            "visibleCA": 18,
+            "totalCA": 18,
+            "ready": true,
+            "finalExam": {
+              "score": 54,
+              "weight": 70,
+              "contribution": 54
+            },
+            "finalMark": 72,
+            "finalGrade": "B+"
+          },
+          {
+            "code": "BIT254",
+            "name": "Multimedia Systems and Applications",
+            "year": 2,
+            "semester": 2,
+            "sourceTitles": [],
+            "aliasReviewRequired": true,
+            "assessments": [
+              {
+                "name": "Assignment 1",
+                "weight": 10,
+                "status": "available",
+                "score": 6,
+                "contribution": 6
+              },
+              {
+                "name": "Midexam 1",
+                "weight": 20,
+                "status": "available",
+                "score": 14,
+                "contribution": 14
+              },
+              {
+                "name": "Practical",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              },
+              {
+                "name": "Project 1",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              }
+            ],
+            "visibleCA": 20,
+            "totalCA": 20,
+            "ready": true,
+            "finalExam": {
+              "score": 56,
+              "weight": 70,
+              "contribution": 56
+            },
+            "finalMark": 76,
+            "finalGrade": "A"
+          },
+          {
+            "code": "BIT256",
+            "name": "Data Structures and Algorithms",
+            "year": 2,
+            "semester": 2,
+            "sourceTitles": [
+              "Data Structures and Algorithms#15",
+              "Data Structures and Algorithms_PT"
+            ],
+            "aliasReviewRequired": true,
+            "assessments": [
+              {
+                "name": "Assignment 1",
+                "weight": 10,
+                "status": "available",
+                "score": 9,
+                "contribution": 9
+              },
+              {
+                "name": "Midexam 1",
+                "weight": 20,
+                "status": "available",
+                "score": 18,
+                "contribution": 18
+              },
+              {
+                "name": "Practical",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              },
+              {
+                "name": "Project 1",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              }
+            ],
+            "visibleCA": 27,
+            "totalCA": 27,
+            "ready": true,
+            "finalExam": {
+              "score": 57,
+              "weight": 70,
+              "contribution": 57
+            },
+            "finalMark": 84,
+            "finalGrade": "A"
+          }
+        ],
+        "outcome": {
+          "code": "limited",
+          "label": "All available courses passed",
+          "detail": "Based on available results; a full semester decision requires the registered course load."
+        }
+      },
+      {
+        "key": "3-1",
+        "year": 3,
+        "semester": 1,
+        "academicYear": 2026,
+        "completed": true,
+        "completeCourseLoadVerified": false,
+        "courses": [
+          {
+            "code": "BBA361",
+            "name": "Research Methods in Business and Social Science",
+            "year": 3,
+            "semester": 1,
+            "sourceTitles": [],
+            "aliasReviewRequired": true,
+            "assessments": [
+              {
+                "name": "Assignment 1",
+                "weight": 10,
+                "status": "available",
+                "score": 8,
+                "contribution": 8
+              },
+              {
+                "name": "Midexam 1",
+                "weight": 20,
+                "status": "available",
+                "score": 12,
+                "contribution": 12
+              },
+              {
+                "name": "Practical",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              },
+              {
+                "name": "Project 1",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              }
+            ],
+            "visibleCA": 20,
+            "totalCA": 20,
+            "ready": true,
+            "finalExam": {
+              "score": 62,
+              "weight": 70,
+              "contribution": 62
+            },
+            "finalMark": 82,
+            "finalGrade": "A"
+          },
+          {
+            "code": "BIT315",
+            "name": "Business Web Application Development - Client Side",
+            "year": 3,
+            "semester": 1,
+            "sourceTitles": [
+              "PT\\DL Business Web ApplicationDevelopment- Client Side"
+            ],
+            "aliasReviewRequired": true,
+            "assessments": [
+              {
+                "name": "Assignment 1",
+                "weight": 10,
+                "status": "available",
+                "score": 7,
+                "contribution": 7
+              },
+              {
+                "name": "Midexam 1",
+                "weight": 20,
+                "status": "available",
+                "score": 9,
+                "contribution": 9
+              },
+              {
+                "name": "Practical",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              },
+              {
+                "name": "Project 1",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              }
+            ],
+            "visibleCA": 16,
+            "totalCA": 16,
+            "ready": true,
+            "finalExam": {
+              "score": 30,
+              "weight": 70,
+              "contribution": 30
+            },
+            "finalMark": 46,
+            "finalGrade": "D"
+          },
+          {
+            "code": "BIT316",
+            "name": "Project Management",
+            "year": 3,
+            "semester": 1,
+            "sourceTitles": [
+              "Project Management",
+              "Project Management TUTORIAL",
+              "PT\\DL Project Management PT\\DL"
+            ],
+            "aliasReviewRequired": false,
+            "assessments": [
+              {
+                "name": "Assignment 1",
+                "weight": 10,
+                "status": "available",
+                "score": 7,
+                "contribution": 7
+              },
+              {
+                "name": "Midexam 1",
+                "weight": 20,
+                "status": "available",
+                "score": 10,
+                "contribution": 10
+              },
+              {
+                "name": "Practical",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              },
+              {
+                "name": "Project 1",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              }
+            ],
+            "visibleCA": 17,
+            "totalCA": 17,
+            "ready": true,
+            "finalExam": {
+              "score": 66,
+              "weight": 70,
+              "contribution": 66
+            },
+            "finalMark": 83,
+            "finalGrade": "A"
+          },
+          {
+            "code": "BIT325",
+            "name": "Systems Analysis and Design",
+            "year": 3,
+            "semester": 1,
+            "sourceTitles": [],
+            "aliasReviewRequired": true,
+            "assessments": [
+              {
+                "name": "Assignment 1",
+                "weight": 10,
+                "status": "available",
+                "score": 8,
+                "contribution": 8
+              },
+              {
+                "name": "Midexam 1",
+                "weight": 20,
+                "status": "available",
+                "score": 8,
+                "contribution": 8
+              },
+              {
+                "name": "Practical",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              },
+              {
+                "name": "Project 1",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              }
+            ],
+            "visibleCA": 16,
+            "totalCA": 16,
+            "ready": true,
+            "finalExam": {
+              "score": 60,
+              "weight": 70,
+              "contribution": 60
+            },
+            "finalMark": 76,
+            "finalGrade": "A"
+          },
+          {
+            "code": "BIT353",
+            "name": "Big Data and Data Warehousing",
+            "year": 3,
+            "semester": 1,
+            "sourceTitles": [],
+            "aliasReviewRequired": true,
+            "assessments": [
+              {
+                "name": "Assignment 1",
+                "weight": 10,
+                "status": "available",
+                "score": 9,
+                "contribution": 9
+              },
+              {
+                "name": "Midexam 1",
+                "weight": 20,
+                "status": "available",
+                "score": 19,
+                "contribution": 19
+              },
+              {
+                "name": "Practical",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              },
+              {
+                "name": "Project 1",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              }
+            ],
+            "visibleCA": 28,
+            "totalCA": 28,
+            "ready": true,
+            "finalExam": {
+              "score": 29,
+              "weight": 70,
+              "contribution": 29
+            },
+            "finalMark": 57,
+            "finalGrade": "C+"
+          }
+        ],
+        "outcome": {
+          "code": "limited",
+          "label": "1 course requires attention",
+          "detail": "Based on available results; a full semester decision requires the registered course load."
+        }
+      },
+      {
+        "key": "3-2",
+        "year": 3,
+        "semester": 2,
+        "academicYear": 2026,
+        "completed": false,
+        "completeCourseLoadVerified": false,
+        "courses": [
+          {
+            "code": "BBA360",
+            "name": "Entrepreneurship and Innovation",
+            "year": 3,
+            "semester": 2,
+            "sourceTitles": [
+              "Entrepreneurship & Innovation",
+              "PT_ Entrepreneurship & Innovation PT",
+              "PNRb Entrepreneurship & Innovation",
+              "PNR Entrepreneurship & Innovation",
+              "Entrepreneurship & Innovation TUTORIAL GROUP E",
+              "Entrepreneurship & Innovation TUTORIAL GROUP F",
+              "Entrepreneurship & Innovation TUTORIAL GROUP B"
+            ],
+            "aliasReviewRequired": true,
+            "assessments": [
+              {
+                "name": "Assignment 1",
+                "weight": 10,
+                "status": "available",
+                "score": 6,
+                "contribution": 6
+              },
+              {
+                "name": "Midexam 1",
+                "weight": 20,
+                "status": "pending",
+                "score": null,
+                "contribution": null
+              },
+              {
+                "name": "Practical",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              },
+              {
+                "name": "Project 1",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              }
+            ],
+            "visibleCA": 6,
+            "totalCA": null,
+            "ready": false,
+            "finalExam": null,
+            "finalMark": null,
+            "finalGrade": null
+          },
+          {
+            "code": "BIT301",
+            "name": "E-Business and Enterprise Information System",
+            "year": 3,
+            "semester": 2,
+            "sourceTitles": [
+              "E-Business and Enterprise Information Sysystems",
+              "PT/DL_VT Decision Support Systems PT VIRTUAL CLASS"
+            ],
+            "aliasReviewRequired": true,
+            "assessments": [
+              {
+                "name": "Assignment 1",
+                "weight": 10,
+                "status": "available",
+                "score": 4,
+                "contribution": 4
+              },
+              {
+                "name": "Midexam 1",
+                "weight": 20,
+                "status": "locked",
+                "score": null,
+                "contribution": null
+              },
+              {
+                "name": "Practical",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              },
+              {
+                "name": "Project 1",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              }
+            ],
+            "visibleCA": 4,
+            "totalCA": null,
+            "ready": false,
+            "finalExam": null,
+            "finalMark": null,
+            "finalGrade": null
+          },
+          {
+            "code": "BIT320",
+            "name": "Group Studio ICT Projects",
+            "year": 3,
+            "semester": 2,
+            "sourceTitles": [
+              "Group Studio ICT Projects",
+              "TT Group Studio ICT Projects",
+              "PT\\DL Group Studio ICT Projects"
+            ],
+            "aliasReviewRequired": false,
+            "assessments": [
+              {
+                "name": "Assignment 1",
+                "weight": 10,
+                "status": "available",
+                "score": 7,
+                "contribution": 7
+              },
+              {
+                "name": "Midexam 1",
+                "weight": 20,
+                "status": "available",
+                "score": 14,
+                "contribution": 14
+              },
+              {
+                "name": "Practical",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              },
+              {
+                "name": "Project 1",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              }
+            ],
+            "visibleCA": 21,
+            "totalCA": 21,
+            "ready": true,
+            "finalExam": null,
+            "finalMark": null,
+            "finalGrade": null
+          },
+          {
+            "code": "BIT326",
+            "name": "Systems Development and Implementation",
+            "year": 3,
+            "semester": 2,
+            "sourceTitles": [
+              "Systems Development and Implementation",
+              "PT\\DL Systems Development and Implementation"
+            ],
+            "aliasReviewRequired": false,
+            "assessments": [
+              {
+                "name": "Assignment 1",
+                "weight": 10,
+                "status": "available",
+                "score": 4,
+                "contribution": 4
+              },
+              {
+                "name": "Midexam 1",
+                "weight": 20,
+                "status": "pending",
+                "score": null,
+                "contribution": null
+              },
+              {
+                "name": "Practical",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              },
+              {
+                "name": "Project 1",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              }
+            ],
+            "visibleCA": 4,
+            "totalCA": null,
+            "ready": false,
+            "finalExam": null,
+            "finalMark": null,
+            "finalGrade": null
+          },
+          {
+            "code": "BIT346",
+            "name": "Business Web Development - Server Side",
+            "year": 3,
+            "semester": 2,
+            "sourceTitles": [
+              "Business Web Development -Server Side with Visual Studio and C#",
+              "Business Web Development -Server Side with Visual Studio and C TUTORIAL",
+              "PT\\DL Business Web Development -Server Side with Visual Studio and C#"
+            ],
+            "aliasReviewRequired": true,
+            "assessments": [
+              {
+                "name": "Assignment 1",
+                "weight": 10,
+                "status": "available",
+                "score": 8,
+                "contribution": 8
+              },
+              {
+                "name": "Midexam 1",
+                "weight": 20,
+                "status": "locked",
+                "score": null,
+                "contribution": null
+              },
+              {
+                "name": "Practical",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              },
+              {
+                "name": "Project 1",
+                "weight": 0,
+                "status": "available",
+                "score": 0,
+                "contribution": 0
+              }
+            ],
+            "visibleCA": 8,
+            "totalCA": null,
+            "ready": false,
+            "finalExam": null,
+            "finalMark": null,
+            "finalGrade": null
+          }
+        ],
+        "outcome": {
+          "code": "unpublished",
+          "label": "Results pending",
+          "detail": ""
+        }
+      }
+    ],
+    "simulated": true,
+    "policy": "Fictional demonstration scheme: coursework 30 and examination 70; this differs from the published handbook.",
+    "mappingNotice": "Owner-provided curriculum; fictional fixed transcript, not official grades or verified class-group enrolment.",
+    "fixed": true,
+    "transcriptVersion": "luka-fictional-v1",
+    "mode": "FT",
+    "curriculumVersion": "owner-checklist-2026-v1",
+    "curriculum": [
+      {
+        "code": "BBA141",
+        "name": "Communication Skills",
+        "year": 1,
+        "semester": 1,
+        "sourceTitles": [
+          "Business Communication Skills Group D",
+          "D_ Business Communication Skills Group D",
+          "Business Communication Skills GROUP A",
+          "Business Communication Skills Group A TUTORIAL",
+          "B* Business Communication Skills GROUP B",
+          "COMMUNICATION SKILLS GROUP C",
+          "Business Communication Skills Group TUTORIAL",
+          "Business Communication Skills Group B TUTORIAL",
+          "BSPH COMMUNICATION SKILLS GROUP D",
+          "BSPHb COMMUNICATION SKILLS GROUP D",
+          "Business Communication Skills EDUCATION GROUP#Virtual",
+          "FT_ED Business Communication Skills EDUCATION GROUP#115"
+        ],
+        "aliasReviewRequired": true
+      },
+      {
+        "code": "BIT101",
+        "name": "Introduction to Business Information Systems",
+        "year": 1,
+        "semester": 1,
+        "sourceTitles": [
+          "Introduction to Business Information Systems",
+          "PT#5 Introduction to Business Information Systems"
+        ],
+        "aliasReviewRequired": false
+      },
+      {
+        "code": "BIT102",
+        "name": "Computer Mathematics",
+        "year": 1,
+        "semester": 1,
+        "sourceTitles": [
+          "BSC 111 Mathematics#70",
+          "TT#90 Computer Mathematics TUTORIAL Group A",
+          "TT# Computer Mathematics TUTORIAL Group C",
+          "TT## Computer Mathematics TUTORIAL Group B",
+          "Computer Mathematics PT#5",
+          "\\BSC111TT Computer Mathematics Tutorial Group A"
+        ],
+        "aliasReviewRequired": true
+      },
+      {
+        "code": "BIT110",
+        "name": "Computer Systems Architecture",
+        "year": 1,
+        "semester": 1,
+        "sourceTitles": [],
+        "aliasReviewRequired": true
+      },
+      {
+        "code": "BBA140",
+        "name": "Business Environment",
+        "year": 1,
+        "semester": 2,
+        "sourceTitles": [
+          "Business Environment GROUP C",
+          "\" Business Environment Tutorial Group-BSPH",
+          "Business Environment Tutorial Group C - LLB",
+          "B_LAW Business Environment Tutorial Group B - LLB",
+          "Business Environment Tutorial Group-AFIN",
+          "BUSINESS ENVIRONMENT GROUP A",
+          "Business Environment Tutorial Group-BFIN",
+          "' Business Environment Tutorial Group-ECF",
+          "Business Environment PT\\DL#25",
+          "TT_E_ Business Environment Tutorial Group E and F -LLB",
+          "TT_D Business Environment Tutorial Group D-LLB",
+          "*LAW#230 Business Environment LAW",
+          "TT_A Business Environment Tutorial Group A-LLB",
+          "*LAW#230b Business Environment LAW",
+          "Business Environment GROUP B",
+          "B_ Business Environment GROUP B",
+          "TT_A Business Environment Tutorial Group-BACT/BSM/BLTM",
+          "TT_B Business Environment Tutorial Group B-BBA",
+          "TT_H Business Environment Tutorial Group H-BBA",
+          "TT_G Business Environment Tutorial Group G-ECA/BIP/BPS",
+          "TT_E Business Environment Tutorial Group E-HRM",
+          "TT_C Business Environment Tutorial Group C-ED",
+          ",TT Business Environment Tutorial Group B-ED"
+        ],
+        "aliasReviewRequired": true
+      },
+      {
+        "code": "BIT107",
+        "name": "Operating System Operations and Services",
+        "year": 1,
+        "semester": 2,
+        "sourceTitles": [
+          "Operating Systems Operations and Services Group A#60",
+          "Operating Systems Operations and Services PT/DL#9"
+        ],
+        "aliasReviewRequired": true
+      },
+      {
+        "code": "BIT112",
+        "name": "Pseudocode and Programming Logic",
+        "year": 1,
+        "semester": 2,
+        "sourceTitles": [
+          "Pseudo Code and Programming Logic",
+          "Introduction to Programing/Programing Concepts Computer Lab Tutorial",
+          "FT Pseudo Code and Programming Logic",
+          "PT#10 Pseudo Code and Programming Logic PT#10"
+        ],
+        "aliasReviewRequired": false
+      },
+      {
+        "code": "BIT121",
+        "name": "Data and Information Management",
+        "year": 1,
+        "semester": 2,
+        "sourceTitles": [],
+        "aliasReviewRequired": true
+      },
+      {
+        "code": "AFIN102",
+        "name": "Financial Accounting",
+        "year": 2,
+        "semester": 1,
+        "sourceTitles": [
+          "Financial Accounting GROUP A",
+          "Financial Accounting GROUP B#350",
+          "E_TTd Financial Accounting Tutorial Group E#128",
+          "PT/DL Financial Accounting PT#128",
+          "B-#120 Financial Accounting Group B#128",
+          "B_TTb Financial Accounting Tutorial Group B#128"
+        ],
+        "aliasReviewRequired": true
+      },
+      {
+        "code": "BIT213",
+        "name": "Introduction to Programming - JAVA",
+        "year": 2,
+        "semester": 1,
+        "sourceTitles": [
+          "PT#5 Java Programming For Beginners#5"
+        ],
+        "aliasReviewRequired": true
+      },
+      {
+        "code": "BIT222",
+        "name": "Database Design and Management",
+        "year": 2,
+        "semester": 1,
+        "sourceTitles": [
+          "Database Design and Management"
+        ],
+        "aliasReviewRequired": false
+      },
+      {
+        "code": "BIT241",
+        "name": "Network and Telecom Systems",
+        "year": 2,
+        "semester": 1,
+        "sourceTitles": [],
+        "aliasReviewRequired": true
+      },
+      {
+        "code": "BBA240",
+        "name": "Quantitative Methods",
+        "year": 2,
+        "semester": 2,
+        "sourceTitles": [
+          "BUS#2_A Quantitave Methods Business Students GROUP A#250",
+          "C_TT#Z.CA Quantitave Methods Group C TUTORIAL#100",
+          "PT\\DL# Quantitave Methods PT\\DL",
+          "A_TT#1 Quantitave Methods TUTORIAL Group A#100",
+          "BUS#B. Quantitave Methods Business Students GROUP B#250",
+          "BUS#B Quantitave Methods Business Students GROUP B#250",
+          "B_TT#B Quantitave Methods Group B#100",
+          "ED#50 Quantitave Methods Education Students#50",
+          "ED_TT Quantitave Methods Education Students TUTORIAL"
+        ],
+        "aliasReviewRequired": true
+      },
+      {
+        "code": "BIT214",
+        "name": "Advanced Programming",
+        "year": 2,
+        "semester": 2,
+        "sourceTitles": [
+          "Advanced Java Programming TUTORIAL",
+          "\\BSC221 Advanced Java Programming",
+          "PT#2 Advanced Programming -Java PT"
+        ],
+        "aliasReviewRequired": true
+      },
+      {
+        "code": "BIT242",
+        "name": "Network Design and Management (Enterprise Network)",
+        "year": 2,
+        "semester": 2,
+        "sourceTitles": [
+          "Network Design and Management",
+          "Network Design and Management PT",
+          "FT#20. Network Design and Management#20"
+        ],
+        "aliasReviewRequired": true
+      },
+      {
+        "code": "BIT254",
+        "name": "Multimedia Systems and Applications",
+        "year": 2,
+        "semester": 2,
+        "sourceTitles": [],
+        "aliasReviewRequired": true
+      },
+      {
+        "code": "BIT256",
+        "name": "Data Structures and Algorithms",
+        "year": 2,
+        "semester": 2,
+        "sourceTitles": [
+          "Data Structures and Algorithms#15",
+          "Data Structures and Algorithms_PT"
+        ],
+        "aliasReviewRequired": true
+      },
+      {
+        "code": "BBA361",
+        "name": "Research Methods in Business and Social Science",
+        "year": 3,
+        "semester": 1,
+        "sourceTitles": [],
+        "aliasReviewRequired": true
+      },
+      {
+        "code": "BIT315",
+        "name": "Business Web Application Development - Client Side",
+        "year": 3,
+        "semester": 1,
+        "sourceTitles": [
+          "PT\\DL Business Web ApplicationDevelopment- Client Side"
+        ],
+        "aliasReviewRequired": true
+      },
+      {
+        "code": "BIT316",
+        "name": "Project Management",
+        "year": 3,
+        "semester": 1,
+        "sourceTitles": [
+          "Project Management",
+          "Project Management TUTORIAL",
+          "PT\\DL Project Management PT\\DL"
+        ],
+        "aliasReviewRequired": false
+      },
+      {
+        "code": "BIT325",
+        "name": "Systems Analysis and Design",
+        "year": 3,
+        "semester": 1,
+        "sourceTitles": [],
+        "aliasReviewRequired": true
+      },
+      {
+        "code": "BIT353",
+        "name": "Big Data and Data Warehousing",
+        "year": 3,
+        "semester": 1,
+        "sourceTitles": [],
+        "aliasReviewRequired": true
+      },
+      {
+        "code": "BBA360",
+        "name": "Entrepreneurship and Innovation",
+        "year": 3,
+        "semester": 2,
+        "sourceTitles": [
+          "Entrepreneurship & Innovation",
+          "PT_ Entrepreneurship & Innovation PT",
+          "PNRb Entrepreneurship & Innovation",
+          "PNR Entrepreneurship & Innovation",
+          "Entrepreneurship & Innovation TUTORIAL GROUP E",
+          "Entrepreneurship & Innovation TUTORIAL GROUP F",
+          "Entrepreneurship & Innovation TUTORIAL GROUP B"
+        ],
+        "aliasReviewRequired": true
+      },
+      {
+        "code": "BIT301",
+        "name": "E-Business and Enterprise Information System",
+        "year": 3,
+        "semester": 2,
+        "sourceTitles": [
+          "E-Business and Enterprise Information Sysystems",
+          "PT/DL_VT Decision Support Systems PT VIRTUAL CLASS"
+        ],
+        "aliasReviewRequired": true
+      },
+      {
+        "code": "BIT320",
+        "name": "Group Studio ICT Projects",
+        "year": 3,
+        "semester": 2,
+        "sourceTitles": [
+          "Group Studio ICT Projects",
+          "TT Group Studio ICT Projects",
+          "PT\\DL Group Studio ICT Projects"
+        ],
+        "aliasReviewRequired": false
+      },
+      {
+        "code": "BIT326",
+        "name": "Systems Development and Implementation",
+        "year": 3,
+        "semester": 2,
+        "sourceTitles": [
+          "Systems Development and Implementation",
+          "PT\\DL Systems Development and Implementation"
+        ],
+        "aliasReviewRequired": false
+      },
+      {
+        "code": "BIT346",
+        "name": "Business Web Development - Server Side",
+        "year": 3,
+        "semester": 2,
+        "sourceTitles": [
+          "Business Web Development -Server Side with Visual Studio and C#",
+          "Business Web Development -Server Side with Visual Studio and C TUTORIAL",
+          "PT\\DL Business Web Development -Server Side with Visual Studio and C#"
+        ],
+        "aliasReviewRequired": true
+      },
+      {
+        "code": "BIT402",
+        "name": "ICT Project/Research",
+        "year": 4,
+        "semester": 1,
+        "sourceTitles": [
+          "IS Project /Research"
+        ],
+        "aliasReviewRequired": true
+      },
+      {
+        "code": "BIT405",
+        "name": "Information Technology Law",
+        "year": 4,
+        "semester": 1,
+        "sourceTitles": [
+          "Information Technology Law For IT TUTORIAL",
+          "Information Technology Law For IT",
+          "PT\\DL Information Technology Law For IT"
+        ],
+        "aliasReviewRequired": true
+      },
+      {
+        "code": "BIT442",
+        "name": "Information Systems and Society",
+        "year": 4,
+        "semester": 1,
+        "sourceTitles": [
+          "Information Sytems and Society#5",
+          "PT\\DL Information Systems Project Management#10"
+        ],
+        "aliasReviewRequired": true
+      },
+      {
+        "code": "BIT446",
+        "name": "Strategic Information Systems and Business Policy",
+        "year": 4,
+        "semester": 1,
+        "sourceTitles": [
+          "Strategic Information Systems and Business Policies#12",
+          "Strategic Information Systems and Business Policy"
+        ],
+        "aliasReviewRequired": false
+      },
+      {
+        "code": "BIT416",
+        "name": "Current Trends in ICT",
+        "year": 4,
+        "semester": 2,
+        "sourceTitles": [
+          "Current Trends in ICT",
+          "PT\\DL Current Trends in ICT"
+        ],
+        "aliasReviewRequired": false
+      },
+      {
+        "code": "BIT423",
+        "name": "ICT Project/Research",
+        "year": 4,
+        "semester": 2,
+        "sourceTitles": [],
+        "aliasReviewRequired": true
+      },
+      {
+        "code": "BIT434",
+        "name": "Information Technology Security",
+        "year": 4,
+        "semester": 2,
+        "sourceTitles": [
+          "PT\\DL Information Technology Security"
+        ],
+        "aliasReviewRequired": true
+      },
+      {
+        "code": "BIT443",
+        "name": "System Administration (Linux)",
+        "year": 4,
+        "semester": 2,
+        "sourceTitles": [
+          "System Administration(Linux)",
+          "TT System Administration(Linux) TUTORIAL",
+          "PT\\DL System Administration(Linux)"
+        ],
+        "aliasReviewRequired": false
+      }
+    ],
+    "registeredCourses": [
+      "BBA360",
+      "BIT301",
+      "BIT320",
+      "BIT326",
+      "BIT346"
+    ],
+    "classGroup": null
+  },
+  "outfits": [
+    {
+      "name": "black-spirit-hoodie.png",
+      "sha256": "662b4f29c930e39a42904192a146f91f350017f93f23ee4a4f8f3f011615ff7d"
+    },
+    {
+      "name": "business-blazer.png",
+      "sha256": "376622bc4b66ba398ea86db4d3a8ab07623d8ee9af6d640a2f4a72a83d821d11"
+    },
+    {
+      "name": "giphy.gif",
+      "sha256": "7bfe96b0f2144e693c3c3a696b85161b159c4463308137ad5796166918cd0c7f"
+    },
+    {
+      "name": "glasses-cateye-black.png",
+      "sha256": "bc01bbf6efded9e50e316d5c884b050d5d116bd9c68d89aa0ab6c8f2d10243e4"
+    },
+    {
+      "name": "glasses-round-gold.png",
+      "sha256": "c03bc9a0a8c6f0050edd872937797b3400ddf9d78e45daabc663377eb2e979bb"
+    },
+    {
+      "name": "glasses-square-black.png",
+      "sha256": "5a576111da77bdd01a082607d0287f06060f352f2c4118451e8c99cc44e20977"
+    },
+    {
+      "name": "gray-spirit-hoodie.png",
+      "sha256": "e68bd064a53a113aa6acb5c73d2a3d0802ba0e7cd5253196817ec0023bbdba20"
+    },
+    {
+      "name": "green-polo.png",
+      "sha256": "52619338ae4c7587a4676a07ae9cac6762dcf964005875cc4a1fc8620e6178ae"
+    },
+    {
+      "name": "health-coat.png",
+      "sha256": "d1e8986c1d051de6ad4e070a1c7551f7684b502b80130f88cff519c9918f0612"
+    },
+    {
+      "name": "health-scrub.png",
+      "sha256": "0c85f63bb07c02a028d0601ec247bb96ade3d06018d3b766b0cce02fa093fc4c"
+    },
+    {
+      "name": "laptop.png",
+      "sha256": "6e14d044ba502583c0d08f22778f6b8abfc1cf14cf0ca06bf9f1edc54370d84d"
+    },
+    {
+      "name": "law-wig.png",
+      "sha256": "f8b2fb8e1a614613df76c131b081f0c65e116f950112e235c4e1202a644bfedc"
+    },
+    {
+      "name": "law-wig.svg",
+      "sha256": "4aaee4996e3b428d6b19d82d4319f65a672264edc6a9be96c7ede7f6972cdb19"
+    },
+    {
+      "name": "maroon-spirit-hoodie.png",
+      "sha256": "7f8d922cff342a9ea873715c434773efee2f3069bb8219b406c4f0cf380df487"
+    },
+    {
+      "name": "navy-varsity-tee.png",
+      "sha256": "5fa7cbfbe6aa411f111cee60803291da293f3362f861613080d3c7d5b0f434aa"
+    },
+    {
+      "name": "spirit-hoodie.png",
+      "sha256": "ac1feafa7d2b774ac2343b50db5657c968232c45c6db34e489a592de0baafc5a"
+    },
+    {
+      "name": "spirit-tee.png",
+      "sha256": "d545ab8063762cfe7d2ce3a31bb73ae480ed807ceabbfd2bd7292f6337a473e0"
+    },
+    {
+      "name": "striped-nursing-uniform.png",
+      "sha256": "f94b1316fdd8ba336f24f6a0abf83032873a0e915ae11243efda156553469400"
+    },
+    {
+      "name": "tech-circuit-hoodie.png",
+      "sha256": "6266d7993aca6261fcbcdb6c1ff6debeed22999c84420ead87c0c4c8d005d26a"
+    },
+    {
+      "name": "tech-hoodie.png",
+      "sha256": "4dc3c479fe842e1c86bc6c784c92328fe8fedfd5a21ac479ccb7878353d27097"
+    },
+    {
+      "name": "white-nursing-uniform.png",
+      "sha256": "faca79f34c011474f8813710958576622089d5fd961b90fa0e2509ea07f43a78"
+    },
+    {
+      "name": "white-varsity-tee.png",
+      "sha256": "2db7d6480be96659d93361568782490926094808bd05aa3ea90da9c5d1a50112"
+    }
+  ],
+  "entitlementHash": "6a24764c35029f8b36f225e20ff534dce2b4b1dd9a5a1733c08f503062c80c7e"
+}

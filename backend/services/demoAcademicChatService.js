@@ -8,6 +8,7 @@ function tryAnswer(question, profile) {
     const identity=/\b(?:what|which) programme.*(?:year|am i)|what year am i/i.test(q);
     const academic=/(?:\b(?:my|i|which courses|which assessments|which subjects)\b.*\b(?:ca|marks?|results?|perform\w*|grades?|assessment\w*|best|lowest|highest|pending|attention|clear\w*)\b)|(?:compare.*results)/i.test(q);
     if (!identity && !academic) return null;
+    if(academic&&profile.simulationStatus==='curriculum_unavailable')return {answer:'A simulated curriculum is not available for '+profile.programmeName+' yet. No course records or grades have been invented.',queryType:{isSimulatedAcademic:true},academic:{profileId:profile.id,kind:'curriculum-unavailable',courses:[]},sources:[],resources:[],timetableMatches:0};
     let answer,period=profile.periods.find(p=>p.key===profile.activePeriod),records=[];
     const earlier=profile.semester===2?`${profile.year}-1`:`${profile.year-1}-2`;
     if (/last|previous/i.test(q)) period=profile.periods.find(p=>p.key===earlier);

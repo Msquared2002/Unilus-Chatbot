@@ -101,7 +101,7 @@ function extractVenueCode(text) {
 
 function extractDay(text) {
   const lower = text.toLowerCase();
-  return DAYS.find((day) => lower.includes(day.toLowerCase())) || null;
+  return require('./timetableQueryContext').dayOf(text);
 }
 
 function extractStudyMode(text) {
@@ -140,7 +140,7 @@ function extractProgrammeStage(text) {
   let semester = null;
 
   const ordinals={first:1,second:2,third:3,fourth:4,fifth:5,sixth:6};
-  const stageText=raw.replace(/\b(first|second|third|fourth|fifth|sixth)\b/gi,w=>ordinals[w.toLowerCase()]);
+  const stageText=raw.replace(/-/g,' ').replace(/\b(first|second|third|fourth|fifth|sixth)\b/gi,w=>ordinals[w.toLowerCase()]);
   const yearMatch = stageText.match(/\b([1-9])(?:st|nd|rd|th)?\s*(?:year|yr)\b/i)
     || stageText.match(/\b(?:year|yr)\s*([1-9])\b/i);
   if (yearMatch) year = Number(yearMatch[1]);
@@ -206,6 +206,7 @@ function extractLecturerQuery(text) {
   const known = words.filter(
     (w) =>
       !ignoredWords.has(w) &&
+      !DAYS.some(day => day.toLowerCase() === w) &&
       timetableService.isKnownLecturerNameToken(w)
   );
 
@@ -223,6 +224,7 @@ function classifyQuery(query) {
   const day = extractDay(query);
   const lecturer = extractLecturerQuery(query);
   const programmeStage = extractProgrammeStage(query);
+  if(!programmeStage.programmeFamily&&/\b(?:timetable|classes|lectures?|schedule)\b/i.test(query)){const natural=require('./timetableQueryContext').parse(query);if(natural.family)Object.assign(programmeStage,{programmeFamily:natural.family,year:natural.year,semester:natural.semester});}
 
   const hasTimetableKeyword = TIMETABLE_KEYWORDS.some((k) => lower.includes(k));
   const hasKnowledgeKeyword = KNOWLEDGE_KEYWORDS.some((k) => lower.includes(k));
@@ -468,6 +470,12 @@ async function retrieveAnswer(query, history = [], audience = "public", profile 
       searchQueries: result.queryPlan.searchQueries,
       entities: result.queryPlan.entities,
     });
+  }
+
+  // The existing planner can select a validated calculation, using the same
+  // operations as deterministic fast paths. No additional inference pass.
+  if (isStudent && result.queryPlan.schedule) {
+    result.schedulePlan = result.queryPlan.schedule;
   }
 
   // Second, content-level audience gate: strip any knowledge chunk from

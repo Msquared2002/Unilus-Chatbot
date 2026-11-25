@@ -126,7 +126,16 @@ router.get("/buildings", (req, res) => {
 // SEARCH PLACES BY FREE TEXT
 // Example:
 // /api/campus/search?q=where+is+the+library
+const campusDirectory = require("../services/additionalCampusService");
+router.get("/directory-maps", (_req, res) => res.json(campusDirectory.campuses));
 router.get("/search", (req, res) => {
+    if (Object.hasOwn(campusDirectory.campuses, req.query.campus)) {
+        const key = req.query.campus;
+        return res.json(campusDirectory.search(String(req.query.q || ""), key).map(row => ({
+            place: { id: row.anchor, name: campusDirectory.describe(row) || campusDirectory.campuses[key].label },
+            facility: { ...row, description: [campusDirectory.describe(row), row.note].filter(Boolean).join(". ") }
+        })));
+    }
 
     const query = req.query.q;
 

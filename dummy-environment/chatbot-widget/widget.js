@@ -379,7 +379,7 @@ window.UnilusWidget = (function () {
       // it last was (its parent view is hidden, so it's simply not shown).
     } else if (!hasBotReplied) {
       mount(els.heroSlot);
-    } else if (window._latestBotAvatarSlot) {
+    } else if (window._latestBotAvatarSlot?.isConnected) {
       mount(window._latestBotAvatarSlot);
     }
   }
@@ -571,8 +571,17 @@ window.UnilusWidget = (function () {
     placeAvatar();
   }
 
+  function resetConversation() {
+    hasBotReplied = false;
+    window._latestBotAvatarSlot = null;
+    els.heroArea?.classList.remove('is-collapsed');
+    mount(els.heroSlot);
+    placeAvatar();
+  }
+
   return {
   init,
+  resetConversation,
   onBotMessage,
   showNotifications: () => goToView("notifications"),
   openMap,

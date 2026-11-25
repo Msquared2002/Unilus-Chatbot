@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="openstreetmap-cgimap 2.1.1 (1697787 spike-06.openstreetmap.org)" copyright="OpenStreetMap and contributors" attribution="http://www.openstreetmap.org/copyright" license="http://opendatacommons.org/licenses/odbl/1-0/">
+ <bounds minlat="-15.4542700" minlon="28.3788760" maxlat="-15.4528890" maxlon="28.3801960"/>
+ <node id="355676946" visible="true" version="3" changeset="22848365" timestamp="2014-06-10T11:49:09Z" user="jojokant" uid="656522" lat="-15.4538239" lon="28.3780980"/>
+ <node id="355676959" visible="true" version="2" changeset="67222702" timestamp="2019-02-15T10:39:11Z" user="stand_it" uid="8484109" lat="-15.4517105" lon="28.3808297"/>
+ <node id="5491816274" visible="true" version="1" changeset="57361068" timestamp="2018-03-20T18:05:33Z" user="Erick Nyirenda" uid="5173681" lat="-15.4539019" lon="28.3796768">
+  <tag k="addr:street" v="Leopards Hill Road"/>
+  <tag k="amenity" v="school"/>
+  <tag k="name" v="Lusaka University (School of Law)"/>
+  <tag k="opening_hours" v="Mo-Fr 08:00-18:00"/>
+ </node>
+ <node id="6285763335" visible="true" version="1" changeset="67310400" timestamp="2019-02-18T10:52:23Z" user="serveandvolley" uid="8559131" lat="-15.4525582" lon="28.3797696"/>
+ <node id="6285763336" visible="true" version="1" changeset="67310400" timestamp="2019-02-18T10:52:23Z" user="serveandvolley" uid="8559131" lat="-15.4531709" lon="28.3789757"/>
+ <node id="7861614868" visible="true" version="2" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827" lat="-15.4542192" lon="28.3795785"/>
+ <node id="7861614869" visible="true" version="1" changeset="90191770" timestamp="2020-08-31T12:17:24Z" user="AndyFlem" uid="393767" lat="-15.4549814" lon="28.3802176"/>
+ <node id="7861614870" visible="true" version="1" changeset="90191770" timestamp="2020-08-31T12:17:24Z" user="AndyFlem" uid="393767" lat="-15.4545629" lon="28.3808263"/>
+ <node id="7861614871" visible="true" version="2" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827" lat="-15.4537552" lon="28.3801813"/>
+ <node id="7861614872" visible="true" version="2" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827" lat="-15.4528840" lon="28.3794944"/>
+ <node id="7861614873" visible="true" version="2" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827" lat="-15.4533745" lon="28.3788731"/>
+ <node id="7861614878" visible="true" version="1" changeset="90191770" timestamp="2020-08-31T12:17:24Z" user="AndyFlem" uid="393767" lat="-15.4531244" lon="28.3790360"/>
+ <node id="7861614879" visible="true" version="2" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827" lat="-15.4537981" lon="28.3795795"/>
+ <node id="8298813858" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711" lat="-15.4545729" lon="28.3799124"/>
+ <node id="8298813859" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711" lat="-15.4547009" lon="28.3797481"/>
+ <node id="8298813860" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711" lat="-15.4543978" lon="28.3794939"/>
+ <node id="8298813861" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711" lat="-15.4542698" lon="28.3796581"/>
+ <node id="8298813874" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711" lat="-15.4543774" lon="28.3792186"/>
+ <node id="8298813875" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711" lat="-15.4544358" lon="28.3791378"/>
+ <node id="8298813876" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711" lat="-15.4543078" lon="28.3790383"/>
+ <node id="8298813877" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711" lat="-15.4543431" lon="28.3789895"/>
+ <node id="8298813878" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711" lat="-15.4543003" lon="28.3789563"/>
+ <node id="8298813879" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711" lat="-15.4542343" lon="28.3790477"/>
+ <node id="8298813880" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711" lat="-15.4542198" lon="28.3790364"/>
+ <node id="8298813881" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711" lat="-15.4541923" lon="28.3790746"/>
+ <node id="8298813882" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711" lat="-15.4541850" lon="28.3790808"/>
+ <node id="8298813883" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711" lat="-15.4543860" lon="28.3792512"/>
+ <node id="8298813884" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711" lat="-15.4543566" lon="28.3792886"/>
+ <node id="8298813885" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711" lat="-15.4541556" lon="28.3791182"/>
+ <node id="8298813886" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711" lat="-15.4542411" lon="28.3793752"/>
+ <node id="8298813887" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711" lat="-15.4543072" lon="28.3792897"/>
+ <node id="8298813888" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711" lat="-15.4542090" lon="28.3792080"/>
+ <node id="8298813889" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711" lat="-15.4540814" lon="28.3793731"/>
+ <node id="8298813890" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711" lat="-15.4541589" lon="28.3794376"/>
+ <node id="8298813891" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711" lat="-15.4542204" lon="28.3793580"/>
+ <node id="8298813892" visible="true" version="2" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827" lat="-15.4540444" lon="28.3794060"/>
+ <node id="8298813893" visible="true" version="2" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827" lat="-15.4542103" lon="28.3791823"/>
+ <node id="8298813894" visible="true" version="2" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827" lat="-15.4541676" lon="28.3791482"/>
+ <node id="8298813895" visible="true" version="2" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827" lat="-15.4540017" lon="28.3793719"/>
+ <node id="8298813896" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711" lat="-15.4539001" lon="28.3789179"/>
+ <node id="8298813897" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711" lat="-15.4541282" lon="28.3786230"/>
+ <node id="8298813898" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711" lat="-15.4540037" lon="28.3785193"/>
+ <node id="8298813899" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711" lat="-15.4537756" lon="28.3788142"/>
+ <node id="8298832418" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711" lat="-15.4535496" lon="28.3787354"/>
+ <node id="8298832419" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711" lat="-15.4536962" lon="28.3788641"/>
+ <node id="8298832420" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711" lat="-15.4536886" lon="28.3788735"/>
+ <node id="8298832421" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711" lat="-15.4537399" lon="28.3789185"/>
+ <node id="8298832422" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711" lat="-15.4536200" lon="28.3790656"/>
+ <node id="8298832423" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711" lat="-15.4533629" lon="28.3788401"/>
+ <node id="8298832424" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711" lat="-15.4534749" lon="28.3787027"/>
+ <node id="8298832425" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711" lat="-15.4535340" lon="28.3787546"/>
+ <node id="8298832426" visible="true" version="2" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827" lat="-15.4539691" lon="28.3794429"/>
+ <node id="8298832427" visible="true" version="2" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827" lat="-15.4541290" lon="28.3795768"/>
+ <node id="8298832428" visible="true" version="2" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827" lat="-15.4539308" lon="28.3798315"/>
+ <node id="8298832429" visible="true" version="2" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827" lat="-15.4537709" lon="28.3796975"/>
+ <node id="8298832430" visible="true" version="3" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4537213" lon="28.3800251"/>
+ <node id="8298832431" visible="true" version="3" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4538635" lon="28.3798500"/>
+ <node id="8298832432" visible="true" version="3" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4537892" lon="28.3797851"/>
+ <node id="8298832433" visible="true" version="3" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4537737" lon="28.3798042"/>
+ <node id="8298832434" visible="true" version="3" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4536199" lon="28.3796699"/>
+ <node id="8298832435" visible="true" version="3" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4536322" lon="28.3796547"/>
+ <node id="8298832436" visible="true" version="3" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4535366" lon="28.3795739"/>
+ <node id="8298832437" visible="true" version="3" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4535199" lon="28.3795945"/>
+ <node id="8298832438" visible="true" version="3" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4534526" lon="28.3795356"/>
+ <node id="8298832439" visible="true" version="3" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4533452" lon="28.3796677"/>
+ <node id="8298832440" visible="true" version="3" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4534332" lon="28.3797446"/>
+ <node id="8298832441" visible="true" version="3" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4534197" lon="28.3797611"/>
+ <node id="8298832442" visible="true" version="3" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4535019" lon="28.3798330"/>
+ <node id="8298832443" visible="true" version="3" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4535166" lon="28.3798149"/>
+ <node id="8298832444" visible="true" version="2" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827" lat="-15.4540326" lon="28.3798404"/>
+ <node id="8298832445" visible="true" version="2" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827" lat="-15.4540900" lon="28.3798880"/>
+ <node id="8298832446" visible="true" version="2" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827" lat="-15.4538967" lon="28.3801387"/>
+ <node id="8298832447" visible="true" version="2" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827" lat="-15.4540810" lon="28.3802918"/>
+ <node id="8298832448" visible="true" version="2" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827" lat="-15.4540330" lon="28.3803540"/>
+ <node id="8298832449" visible="true" version="2" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827" lat="-15.4537913" lon="28.3801533"/>
+ <node id="9301858958" visible="true" version="1" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827" lat="-15.4537501" lon="28.3791836"/>
+ <node id="9301858959" visible="true" version="1" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827" lat="-15.4535993" lon="28.3793767"/>
+ <node id="9301858960" visible="true" version="1" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827" lat="-15.4537626" lon="28.3795139"/>
+ <node id="9301858961" visible="true" version="1" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827" lat="-15.4539134" lon="28.3793208"/>
+ <node id="9301858962" visible="true" version="1" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827" lat="-15.4536718" lon="28.3794777"/>
+ <node id="9301858963" visible="true" version="1" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827" lat="-15.4538024" lon="28.3793110"/>
+ <node id="9301858964" visible="true" version="1" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827" lat="-15.4537281" lon="28.3796610"/>
+ <node id="9301858965" visible="true" version="1" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827" lat="-15.4539568" lon="28.3793948"/>
+ <node id="9301858966" visible="true" version="2" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4535740" lon="28.3796066"/>
+ <node id="9301858967" visible="true" version="2" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4535852" lon="28.3795929"/>
+ <node id="9301858968" visible="true" version="2" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4536296" lon="28.3796316"/>
+ <node id="9301858969" visible="true" version="2" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4536197" lon="28.3796438"/>
+ <node id="9301858970" visible="true" version="2" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4536860" lon="28.3799630"/>
+ <node id="9301858971" visible="true" version="2" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4536711" lon="28.3799813"/>
+ <node id="9301858972" visible="true" version="1" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827" lat="-15.4532310" lon="28.3790957"/>
+ <node id="9301858973" visible="true" version="1" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827" lat="-15.4532246" lon="28.3790602"/>
+ <node id="9301858974" visible="true" version="1" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827" lat="-15.4531690" lon="28.3791333"/>
+ <node id="9301858975" visible="true" version="1" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827" lat="-15.4532013" lon="28.3791346"/>
+ <node id="9301858976" visible="true" version="1" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827" lat="-15.4530756" lon="28.3792513"/>
+ <node id="9301858977" visible="true" version="1" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827" lat="-15.4531044" lon="28.3792513"/>
+ <node id="9301858978" visible="true" version="1" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827" lat="-15.4531302" lon="28.3792211"/>
+ <node id="9301858979" visible="true" version="1" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827" lat="-15.4531263" lon="28.3791869"/>
+ <node id="9753814323" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4529102" lon="28.3788254"/>
+ <node id="9753814324" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4527883" lon="28.3789824"/>
+ <node id="9753814325" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4528655" lon="28.3790469"/>
+ <node id="9753814326" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4529874" lon="28.3788899"/>
+ <node id="9753814327" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4532700" lon="28.3790955"/>
+ <node id="9753814328" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4532756" lon="28.3790882"/>
+ <node id="9753814329" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4533296" lon="28.3790213"/>
+ <node id="9753814330" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4533364" lon="28.3790124"/>
+ <node id="9753814331" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4534407" lon="28.3791472"/>
+ <node id="9753814332" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4534013" lon="28.3791934"/>
+ <node id="9753814333" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4534249" lon="28.3792151"/>
+ <node id="9753814334" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4534644" lon="28.3791688"/>
+ <node id="9753814335" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4535293" lon="28.3791206"/>
+ <node id="9753814336" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4535050" lon="28.3790988"/>
+ <node id="9753814337" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4536679" lon="28.3792117"/>
+ <node id="9753814338" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4535936" lon="28.3792969"/>
+ <node id="9753814339" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4536217" lon="28.3793234"/>
+ <node id="9753814340" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4536961" lon="28.3792382"/>
+ <node id="9753814341" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4536327" lon="28.3791971"/>
+ <node id="9753814342" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4535591" lon="28.3792899"/>
+ <node id="9753814343" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4535303" lon="28.3792654"/>
+ <node id="9753814344" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4536040" lon="28.3791725"/>
+ <node id="9753814345" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4535667" lon="28.3791143"/>
+ <node id="9753814346" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4534834" lon="28.3792168"/>
+ <node id="9753814347" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4535117" lon="28.3792415"/>
+ <node id="9753814348" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4535949" lon="28.3791390"/>
+ <node id="9753814373" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4533730" lon="28.3790573"/>
+ <node id="9753814399" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4529752" lon="28.3797256"/>
+ <node id="9753814404" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4534219" lon="28.3791536"/>
+ <node id="9753814405" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4530172" lon="28.3799083"/>
+ <node id="9753814419" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4530906" lon="28.3795274"/>
+ <node id="9753814424" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4533761" lon="28.3798647"/>
+ <node id="9753814441" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4532952" lon="28.3797243"/>
+ <node id="9753814446" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4531061" lon="28.3800842"/>
+ <node id="9753814451" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4535507" lon="28.3790438"/>
+ <node id="9753814454" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4532889" lon="28.3795020"/>
+ <node id="9753814456" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4532753" lon="28.3796627"/>
+ <node id="9753814462" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4534164" lon="28.3790061"/>
+ <node id="9753814467" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4533921" lon="28.3791948"/>
+ <node id="9753814475" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4534522" lon="28.3791086"/>
+ <node id="9753814514" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4534245" lon="28.3791015"/>
+ <node id="9753814520" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4533810" lon="28.3791219"/>
+ <node id="9753814530" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4532322" lon="28.3790641"/>
+ <node id="9753814536" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4529957" lon="28.3796862"/>
+ <node id="9753814541" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4535251" lon="28.3790209"/>
+ <node id="9753814555" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4528751" lon="28.3796696"/>
+ <node id="9753814568" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4533528" lon="28.3795487"/>
+ <node id="9753814575" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4534633" lon="28.3790361"/>
+ <node id="9753814578" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4531499" lon="28.3800347"/>
+ <node id="9753814588" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4535021" lon="28.3791532"/>
+ <node id="9753814591" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4532970" lon="28.3789798"/>
+ <node id="9753814597" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4534136" lon="28.3798067"/>
+ <node id="9753814599" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4532577" lon="28.3797823"/>
+ <node id="9753814614" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4529734" lon="28.3799578"/>
+ <node id="9753814621" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4533535" lon="28.3794071"/>
+ <node id="9753814622" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4533513" lon="28.3791631"/>
+ <node id="9753814629" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4528956" lon="28.3796301"/>
+ <node id="9753814634" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4532327" lon="28.3793187"/>
+ <node id="9753814638" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4533776" lon="28.3790716"/>
+ <node id="9753814646" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285" lat="-15.4533206" lon="28.3791255"/>
+ <way id="31772418" visible="true" version="4" changeset="90191770" timestamp="2020-08-31T12:17:24Z" user="AndyFlem" uid="393767">
+  <nd ref="355676946"/>
+  <nd ref="6285763336"/>
+  <nd ref="7861614878"/>
+  <nd ref="6285763335"/>
+  <nd ref="355676959"/>
+  <tag k="highway" v="residential"/>
+  <tag k="surface" v="unpaved"/>
+ </way>
+ <way id="842714812" visible="true" version="1" changeset="90191770" timestamp="2020-08-31T12:17:24Z" user="AndyFlem" uid="393767">
+  <nd ref="7861614868"/>
+  <nd ref="7861614869"/>
+  <nd ref="7861614870"/>
+  <nd ref="7861614871"/>
+  <nd ref="7861614868"/>
+  <tag k="amenity" v="school"/>
+  <tag k="name" v="Crested Crane Acadamy"/>
+ </way>
+ <way id="842714813" visible="true" version="3" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827">
+  <nd ref="7861614872"/>
+  <nd ref="7861614871"/>
+  <nd ref="7861614868"/>
+  <nd ref="9301858961"/>
+  <nd ref="9301858958"/>
+  <nd ref="7861614873"/>
+  <nd ref="9301858973"/>
+  <nd ref="9301858972"/>
+  <nd ref="9301858975"/>
+  <nd ref="9301858974"/>
+  <nd ref="9301858979"/>
+  <nd ref="9301858978"/>
+  <nd ref="9301858977"/>
+  <nd ref="9301858976"/>
+  <nd ref="7861614872"/>
+  <tag k="amenity" v="university"/>
+  <tag k="name" v="University of Lusaka Leopards Hill Campus"/>
+  <tag k="operator" v="University of Lusaka"/>
+ </way>
+ <way id="842714815" visible="true" version="2" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827">
+  <nd ref="7861614878"/>
+  <nd ref="9301858962"/>
+  <nd ref="7861614879"/>
+  <tag k="highway" v="service"/>
+ </way>
+ <way id="892904464" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711">
+  <nd ref="8298813858"/>
+  <nd ref="8298813859"/>
+  <nd ref="8298813860"/>
+  <nd ref="8298813861"/>
+  <nd ref="8298813858"/>
+  <tag k="building" v="yes"/>
+ </way>
+ <way id="892904467" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711">
+  <nd ref="8298813874"/>
+  <nd ref="8298813875"/>
+  <nd ref="8298813876"/>
+  <nd ref="8298813877"/>
+  <nd ref="8298813878"/>
+  <nd ref="8298813879"/>
+  <nd ref="8298813880"/>
+  <nd ref="8298813881"/>
+  <nd ref="8298813874"/>
+  <tag k="building" v="yes"/>
+ </way>
+ <way id="892904468" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711">
+  <nd ref="8298813882"/>
+  <nd ref="8298813883"/>
+  <nd ref="8298813884"/>
+  <nd ref="8298813885"/>
+  <nd ref="8298813882"/>
+  <tag k="building" v="yes"/>
+ </way>
+ <way id="892904469" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711">
+  <nd ref="8298813886"/>
+  <nd ref="8298813887"/>
+  <nd ref="8298813888"/>
+  <nd ref="8298813889"/>
+  <nd ref="8298813890"/>
+  <nd ref="8298813891"/>
+  <nd ref="8298813886"/>
+  <tag k="building" v="yes"/>
+ </way>
+ <way id="892904470" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711">
+  <nd ref="8298813892"/>
+  <nd ref="8298813893"/>
+  <nd ref="8298813894"/>
+  <nd ref="8298813895"/>
+  <nd ref="8298813892"/>
+  <tag k="building" v="yes"/>
+ </way>
+ <way id="892904471" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711">
+  <nd ref="8298813896"/>
+  <nd ref="8298813897"/>
+  <nd ref="8298813898"/>
+  <nd ref="8298813899"/>
+  <nd ref="8298813896"/>
+  <tag k="building" v="yes"/>
+ </way>
+ <way id="892904475" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711">
+  <nd ref="8298832418"/>
+  <nd ref="8298832419"/>
+  <nd ref="8298832420"/>
+  <nd ref="8298832421"/>
+  <nd ref="8298832422"/>
+  <nd ref="8298832423"/>
+  <nd ref="8298832424"/>
+  <nd ref="8298832425"/>
+  <nd ref="8298832418"/>
+  <tag k="building" v="yes"/>
+ </way>
+ <way id="892904476" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711">
+  <nd ref="8298832426"/>
+  <nd ref="8298832427"/>
+  <nd ref="8298832428"/>
+  <nd ref="8298832429"/>
+  <nd ref="8298832426"/>
+  <tag k="building" v="yes"/>
+ </way>
+ <way id="892904477" visible="true" version="2" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827">
+  <nd ref="8298832430"/>
+  <nd ref="8298832431"/>
+  <nd ref="8298832432"/>
+  <nd ref="8298832433"/>
+  <nd ref="8298832434"/>
+  <nd ref="8298832435"/>
+  <nd ref="9301858969"/>
+  <nd ref="9301858968"/>
+  <nd ref="9301858967"/>
+  <nd ref="9301858966"/>
+  <nd ref="8298832436"/>
+  <nd ref="8298832437"/>
+  <nd ref="8298832438"/>
+  <nd ref="8298832439"/>
+  <nd ref="8298832440"/>
+  <nd ref="8298832441"/>
+  <nd ref="8298832442"/>
+  <nd ref="8298832443"/>
+  <nd ref="9301858970"/>
+  <nd ref="9301858971"/>
+  <nd ref="8298832430"/>
+  <tag k="building" v="yes"/>
+ </way>
+ <way id="892904478" visible="true" version="1" changeset="97081711" timestamp="2021-01-07T04:35:23Z" user="Asparagus Gab" uid="3305711">
+  <nd ref="8298832444"/>
+  <nd ref="8298832445"/>
+  <nd ref="8298832446"/>
+  <nd ref="8298832447"/>
+  <nd ref="8298832448"/>
+  <nd ref="8298832449"/>
+  <nd ref="8298832444"/>
+  <tag k="building" v="yes"/>
+ </way>
+ <way id="1008269678" visible="true" version="1" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827">
+  <nd ref="9301858961"/>
+  <nd ref="9301858960"/>
+  <nd ref="9301858959"/>
+  <nd ref="9301858958"/>
+  <nd ref="9301858961"/>
+  <tag k="amenity" v="parking"/>
+ </way>
+ <way id="1008269679" visible="true" version="1" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827">
+  <nd ref="9301858963"/>
+  <nd ref="9301858962"/>
+  <tag k="highway" v="service"/>
+ </way>
+ <way id="1008269680" visible="true" version="1" changeset="114466885" timestamp="2021-12-02T05:04:12Z" user="WebiShabeelle" uid="11387827">
+  <nd ref="9301858965"/>
+  <nd ref="7861614879"/>
+  <nd ref="9301858964"/>
+  <tag k="highway" v="service"/>
+ </way>
+ <way id="1061632703" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285">
+  <nd ref="9753814326"/>
+  <nd ref="9753814323"/>
+  <nd ref="9753814324"/>
+  <nd ref="9753814325"/>
+  <nd ref="9753814326"/>
+  <tag k="building" v="yes"/>
+ </way>
+ <way id="1061632704" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285">
+  <nd ref="9753814334"/>
+  <nd ref="9753814331"/>
+  <nd ref="9753814332"/>
+  <nd ref="9753814333"/>
+  <nd ref="9753814334"/>
+  <tag k="building" v="yes"/>
+ </way>
+ <way id="1061632705" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285">
+  <nd ref="9753814340"/>
+  <nd ref="9753814337"/>
+  <nd ref="9753814338"/>
+  <nd ref="9753814339"/>
+  <nd ref="9753814340"/>
+  <tag k="building" v="yes"/>
+ </way>
+ <way id="1061632706" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285">
+  <nd ref="9753814344"/>
+  <nd ref="9753814343"/>
+  <nd ref="9753814342"/>
+  <nd ref="9753814341"/>
+  <nd ref="9753814344"/>
+  <tag k="building" v="yes"/>
+ </way>
+ <way id="1061632707" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285">
+  <nd ref="9753814348"/>
+  <nd ref="9753814345"/>
+  <nd ref="9753814346"/>
+  <nd ref="9753814347"/>
+  <nd ref="9753814348"/>
+  <tag k="building" v="yes"/>
+ </way>
+ <way id="1061632711" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285">
+  <nd ref="9753814399"/>
+  <nd ref="9753814555"/>
+  <nd ref="9753814629"/>
+  <nd ref="9753814536"/>
+  <nd ref="9753814399"/>
+  <tag k="building" v="yes"/>
+  <tag k="source" v="microsoft/BuildingFootprints"/>
+ </way>
+ <way id="1061632731" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285">
+  <nd ref="9753814456"/>
+  <nd ref="9753814419"/>
+  <nd ref="9753814634"/>
+  <nd ref="9753814621"/>
+  <nd ref="9753814454"/>
+  <nd ref="9753814568"/>
+  <nd ref="9753814456"/>
+  <tag k="building" v="yes"/>
+  <tag k="source" v="microsoft/BuildingFootprints"/>
+ </way>
+ <way id="1061632736" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285">
+  <nd ref="9753814446"/>
+  <nd ref="9753814614"/>
+  <nd ref="9753814405"/>
+  <nd ref="9753814578"/>
+  <nd ref="9753814446"/>
+  <tag k="building" v="yes"/>
+  <tag k="source" v="microsoft/BuildingFootprints"/>
+ </way>
+ <way id="1061632747" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285">
+  <nd ref="9753814467"/>
+  <nd ref="9753814622"/>
+  <nd ref="9753814520"/>
+  <nd ref="9753814404"/>
+  <nd ref="9753814467"/>
+  <tag k="building" v="yes"/>
+  <tag k="source" v="microsoft/BuildingFootprints"/>
+ </way>
+ <way id="1061632758" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285">
+  <nd ref="9753814541"/>
+  <nd ref="9753814451"/>
+  <nd ref="9753814336"/>
+  <nd ref="9753814335"/>
+  <nd ref="9753814588"/>
+  <nd ref="9753814475"/>
+  <nd ref="9753814541"/>
+  <tag k="building" v="yes"/>
+  <tag k="source" v="microsoft/BuildingFootprints"/>
+ </way>
+ <way id="1061632766" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285">
+  <nd ref="9753814646"/>
+  <nd ref="9753814328"/>
+  <nd ref="9753814327"/>
+  <nd ref="9753814530"/>
+  <nd ref="9753814591"/>
+  <nd ref="9753814330"/>
+  <nd ref="9753814329"/>
+  <nd ref="9753814373"/>
+  <nd ref="9753814646"/>
+  <tag k="building" v="yes"/>
+  <tag k="source" v="microsoft/BuildingFootprints"/>
+ </way>
+ <way id="1061632767" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285">
+  <nd ref="9753814514"/>
+  <nd ref="9753814638"/>
+  <nd ref="9753814462"/>
+  <nd ref="9753814575"/>
+  <nd ref="9753814514"/>
+  <tag k="building" v="yes"/>
+  <tag k="source" v="microsoft/BuildingFootprints"/>
+ </way>
+ <way id="1061632769" visible="true" version="1" changeset="121180297" timestamp="2022-05-19T07:53:18Z" user="Chabota Munachoonga" uid="5323285">
+  <nd ref="9753814597"/>
+  <nd ref="9753814424"/>
+  <nd ref="9753814599"/>
+  <nd ref="9753814441"/>
+  <nd ref="9753814597"/>
+  <tag k="building" v="yes"/>
+  <tag k="source" v="microsoft/BuildingFootprints"/>
+ </way>
+</osm>

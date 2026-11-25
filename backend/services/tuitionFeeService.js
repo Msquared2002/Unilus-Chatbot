@@ -8,6 +8,26 @@ const programmes = [
   ['Bachelor of Laws', /\b(?:llb|law|laws)\b/],
   ['Bachelor of Medicine and Surgery', /\b(?:medicine|mbbs|mbchb)\b/],
 ];
+function isPaymentProcedure(question) {
+  return /\b(?:how (?:do|can|should|to)\b.*\bpay|where (?:do|can|should|to)\b.*\bpay|payment (?:method|instructions|procedure))\b/i.test(question);
+}
+
+function tryHelp(question) {
+  const financeTopic = /\b(?:fees?|tuition|payments?|receipts?|invoices?|balances?)\b/i.test(question);
+  const seeksHelp = /\b(?:(?:where|who|how)\b.*\b(?:help|assistance|support|clarif\w*|contact|speak|talk|ask)|(?:can|could)\b.*\b(?:help|assist)|(?:help|assistance|clarification)\s+with)\b/i.test(question);
+  const asksForOfficeContact = /\b(?:accounts|finance) office\b/i.test(question) && /\b(?:contact|phone|email|speak|talk|reach)\b/i.test(question);
+  if ((!financeTopic || !seeksHelp) && !asksForOfficeContact) return null;
+  if (isPaymentProcedure(question) || /\b(?:calculate|how much|fee schedule|financial aid|scholarship|bursary)\b/i.test(question)) return null;
+  if (require('./navigationService').tryHandleNavigation(question)) return null;
+
+  const office = require('../../dummy-environment/js/support-departments').normalize('finance');
+  return {
+    answer: 'For help with fees, contact the ' + office.name + '. In the Student Companion, you can ask to prepare a Finance Office support ticket for review.',
+    queryType: { isKnowledge: true, isFinanceHelp: true },
+    sources: [{ title: 'Student Companion Support Centre department directory — ' + office.name }],
+    ticket: null
+  };
+}
 function isTuitionQuery(text) {
   return /\b(?:fees?|tuition|cost(?:s)?|how much)\b/i.test(text) &&
     !/\b(?:gym|membership|swimming|pool|accommodation|hostels?|application|registration|graduation|exemption|transcript|payment|bank|ticket|complaint)\b/i.test(text);
@@ -33,6 +53,7 @@ function merge(prior, current) {
   return Object.fromEntries(Object.entries(current).map(([key, value]) => [key, key === 'programmes' ? (value.length ? value : prior[key]) : value ?? prior[key]]));
 }
 function tryAnswer(question, history = []) {
+  if (isPaymentProcedure(question) || /\b(?:accounts|finance) office\b/i.test(question)) return null;
   if (/\b(?:masters?|msc|postgraduate|phd|doctorate)\b/i.test(question)) return null;
   // Keep programme-specific clinical schedules outside this small lookup on
   // their existing RAG path; never replace their evidence with a generic row.
@@ -89,4 +110,4 @@ function tryAnswer(question, history = []) {
     sources: rows.map(row => ({ source_file: row.source, page_number: row.page, title: row.programme, academic_year: row.academicYear, currency: row.currency, audience: row.category, source_type: 'pdf', source_sha256: catalogue.sources[row.source] })),
     tuition: { status, ...fields, schedules: rows }, resources: [], recommendedResources: [], timetableMatches: 0, suggestedActions: [], ticket: null, usedFallback: false };
 }
-module.exports = { tryAnswer, parse, isTuitionQuery };
+module.exports = { tryAnswer, tryHelp, parse, isTuitionQuery };

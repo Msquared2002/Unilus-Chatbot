@@ -51,7 +51,10 @@ window.CampusMap = (function () {
   // with any of these extensions and it's picked up automatically, no
   // JS or buildings.json changes needed.
   const IMAGE_EXTENSIONS = ["webp", "jpg", "jpeg", "png"];
-  const FLY_ZOOM = 18;
+  const NATIVE_ZOOM = 18;
+  const CAMPUS_DETAIL_ZOOM = 21;
+  let renderedCampus;
+
   const TOAST_DURATION_MS = 3200;
   const SATELLITE_TILE_URL =
     "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
@@ -241,11 +244,37 @@ window.CampusMap = (function () {
   function initMapControls() {
     const view = els.mapEl?.closest("#view-map");
     if (!view) return;
-    CampusSearch.mount(view, (id) => {
+    CampusSearch.mount(view, (id, facility, key) => {
       toggleBuildingsList(false);
-      flyToBuilding(id, "silverest");
-      openBuildingCard(id, "silverest");
-    }, showToast);
+      if (id) {
+        flyToBuilding(id, key);
+        openBuildingCard(id, key);
+      }
+      if (facility?.description) showToast(facility.name + ' · ' + facility.description + (!id ? ' · Exact map position unconfirmed' : ''));
+    }, showToast, () => currentCampus);
+    const directory = document.createElement('section');
+    directory.className = 'map-campus-directory';
+    directory.id = 'map-campus-directory';
+    directory.setAttribute('aria-label', 'Campus directory');
+    directory.hidden = true;
+    directory.innerHTML = '<header><h3>Campus directory</h3><button type="button" class="map-directory-close" aria-label="Close directory">×</button></header><label>Floor <select></select></label><ul tabindex="0" aria-label="Facilities"></ul>';
+    const toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.className = 'map-directory-toggle';
+    toggle.textContent = 'Directory';
+    toggle.hidden = true;
+    toggle.setAttribute('aria-controls', directory.id);
+    const setOpen = open => {
+      directory.hidden = !open;
+      toggle.setAttribute('aria-expanded', String(open));
+      if (open) directory.querySelector('select').focus();
+    };
+    toggle.addEventListener('click', () => setOpen(directory.hidden));
+    const close = () => { setOpen(false); toggle.focus(); };
+    directory.querySelector('.map-directory-close').addEventListener('click', close);
+    directory.addEventListener('keydown', event => { if (event.key === 'Escape') close(); });
+    view.querySelector('.map-toolbar').appendChild(toggle);
+    view.querySelector('.map-viewport').appendChild(directory);
     const filters = els.buildingsList?.querySelector(".map-category-filters");
     ["All", "Academic", "Facilities", "Food", "Sports"].forEach((name) => {
       const button = document.createElement("button");
@@ -268,8 +297,12 @@ window.CampusMap = (function () {
     locationButton.textContent = "◎ Re-center";
     locationButton.setAttribute("aria-label", "Use or re-center on my location");
     locationButton.addEventListener("click", () => {
-      const campus = getCampus("silverest");
+      const campus = getCampus(currentCampus);
       if (!leafletMap || !campus) return;
+      if (currentCampus !== 'silverest' && campus.boundary?.length) {
+        fitCampus(leafletMap, L.latLngBounds(campus.boundary), currentCampus);
+        return;
+      }
       locationButton.disabled = true;
       CampusLocation.recenter(leafletMap, campus.boundary, (message) => {
         showToast(message);
@@ -340,7 +373,7 @@ window.CampusMap = (function () {
       els.campusSummary.hidden = true;
       return;
     }
-    const count = (campus.buildings || []).length;
+    const count = (campus.footprints ?? campus.buildings ?? []).length;
     els.campusSummary.innerHTML =
       `<span class="map-campus-summary-icon">${SHIELD_ICON}</span>` +
       `<span class="map-campus-summary-text">` +
@@ -361,7 +394,7 @@ window.CampusMap = (function () {
   // never snaps the view back out to the whole campus.
   function refreshMapLayout() {
     if (!leafletMap) return;
-    leafletMap.invalidateSize();
+    leafletMap.invalidateSize({ animate: false, debounceMoveend: true });
   }
 
   // Moves the existing building-card elements (already in the host
@@ -582,24 +615,25 @@ window.CampusMap = (function () {
         zoomControl: true,
         attributionControl: true,
         minZoom: 15,
-        maxZoom: 18,
+        maxZoom: NATIVE_ZOOM,
         // Vector overlays (our boundary mask) can visibly desync from
         // the tile layer for one frame during Leaflet's animated zoom,
         // reading as a jarring "flash" of the full unmasked map. Turning
         // off the zoom animation removes that desync entirely.
         zoomAnimation: false
       });
+      leafletMap.attributionControl?.addAttribution('&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>');
       L.tileLayer(SATELLITE_TILE_URL, {
-        // Capped at 18, matching the map's own maxZoom above - Esri's
-        // World Imagery doesn't have detailed coverage this far out for
-        // every location, and zooming past what's actually available
-        // shows Esri's own gray "Map data not yet available" placeholder
-        // tiles, which reads as broken. 18 stays comfortably inside
-        // real coverage for campus-scale detail.
-        maxZoom: 18,
+        // Enlarge existing satellite tiles above their native zoom.
+        maxNativeZoom: NATIVE_ZOOM,
+        maxZoom: CAMPUS_DETAIL_ZOOM,
         attribution: SATELLITE_ATTRIBUTION
       }).addTo(leafletMap);
       markerLayer = L.layerGroup().addTo(leafletMap);
+      if (typeof ResizeObserver !== 'undefined') {
+        const mapResizeObserver = new ResizeObserver(refreshMapLayout);
+        mapResizeObserver.observe(els.mapEl);
+      }
     }
     // init() normally preloads data before the user opens the map. Rendering
     // is still required in that case to establish bounds, tiles and markers.
@@ -612,28 +646,16 @@ window.CampusMap = (function () {
           const fallback = firstAvailableCampusKey();
           if (fallback) { openCampus(fallback); return; }
         }
-        renderCampus(currentCampus);
+        refreshMapLayout();
+        if (renderedCampus !== currentCampus) renderCampus(currentCampus);
       });
 
-    leafletMap.invalidateSize();
+    leafletMap.invalidateSize({ animate: false, debounceMoveend: true });
   }
 
-  // A polygon covering a box around the campus (not the whole world)
-  // with the boundary cut out as a hole, so everything outside the
-  // campus is heavily dimmed rather than a normal, distracting view of
-  // the surrounding city. className + the matching CSS rule
-  // (.map-boundary-mask{fill-rule:evenodd}) make the hole render
-  // correctly regardless of which winding direction the boundary
-  // polygon happens to use. Keeping the outer ring finite (padded
-  // campus bounds, not [-180,180]) rather than world-spanning is also
-  // what keeps this cheap enough to redraw without visible lag.
-  function buildMask(boundaryRing, bounds) {
-    const padded = bounds.pad(6);
-    const sw = padded.getSouthWest();
-    const ne = padded.getNorthEast();
-    const outer = [
-      [sw.lat, sw.lng], [sw.lat, ne.lng], [ne.lat, ne.lng], [ne.lat, sw.lng]
-    ];
+  // Cover the projected world and cut out the campus boundary as a hole.
+  function buildMask(boundaryRing) {
+    const outer = [[-85, -180], [-85, 180], [85, 180], [85, -180]];
     return L.polygon([outer, boundaryRing], {
       className: "map-boundary-mask",
       stroke: false,
@@ -643,10 +665,19 @@ window.CampusMap = (function () {
     });
   }
 
+  function fitCampus(map, bounds, key) {
+    refreshMapLayout();
+    map.fitBounds(bounds, { padding: [20, 20], maxZoom: key === 'silverest' ? NATIVE_ZOOM : CAMPUS_DETAIL_ZOOM - 1 });
+  }
+
   function renderCampus(key) {
     const campus = getCampus(key);
     if (!campus || !leafletMap || !markerLayer) return;
 
+    renderedCampus = key;
+    const locationButton = els.mapEl.querySelector?.('.map-location-button');
+    locationButton?.setAttribute('aria-label', key === 'silverest' ? 'Use or re-center on my location' : 'Re-center campus map');
+    leafletMap.setMaxZoom?.(key === 'silverest' ? NATIVE_ZOOM : CAMPUS_DETAIL_ZOOM);
     markerLayer.clearLayers();
     clearRoute();
     closeBuildingCard();
@@ -665,10 +696,10 @@ window.CampusMap = (function () {
       }).addTo(leafletMap);
 
       if (maskLayer) leafletMap.removeLayer(maskLayer);
-      maskLayer = buildMask(boundaryRing, bounds).addTo(leafletMap);
+      maskLayer = buildMask(boundaryRing).addTo(leafletMap);
 
       leafletMap.setMaxBounds(bounds.pad(0.15));
-      leafletMap.fitBounds(bounds, { padding: [20, 20] });
+      fitCampus(leafletMap, bounds, key);
     } else {
       leafletMap.setMaxBounds(null);
       leafletMap.setView(campus.center, campus.zoom);
@@ -676,6 +707,51 @@ window.CampusMap = (function () {
       if (boundaryLayer) { leafletMap.removeLayer(boundaryLayer); boundaryLayer = null; }
     }
 
+    const mapView = els.mapEl.closest('#view-map');
+    const searchInput = mapView?.querySelector('#map-search-input');
+    if (searchInput) { searchInput.value = ''; searchInput.dispatchEvent(new Event('input')); }
+    const directory = mapView?.querySelector('.map-campus-directory');
+    if (directory) {
+      const rows = campus.directory || [];
+      const toggle = mapView.querySelector('.map-directory-toggle');
+      directory.hidden = true;
+      toggle.hidden = !rows.length;
+      toggle.setAttribute('aria-expanded', 'false');
+      const select = directory.querySelector('select');
+      const list = directory.querySelector('ul');
+      const floorName = floor => ['Ground floor', 'First floor', 'Second floor'][floor] || 'Unspecified floor';
+      select.replaceChildren(new Option('All floors', 'all'));
+      const floors = [...new Set(rows.map(row => row.floor))].sort((a, b) => (a ?? 99) - (b ?? 99));
+      for (const floor of floors) select.add(new Option(floorName(floor), String(floor)));
+      const updateDirectory = () => {
+        list.replaceChildren();
+        for (const row of rows.filter(row => select.value === 'all' || String(row.floor) === select.value)) {
+          const item = document.createElement('li');
+          const content = document.createElement(row.anchor ? 'button' : 'div');
+          const name = document.createElement('strong');
+          const detail = document.createElement('small');
+          name.textContent = row.name;
+          detail.textContent = [row.building, floorName(row.floor), row.note,
+            row.anchor ? 'Building anchor' : 'Exact map position unconfirmed'].filter(Boolean).join(' · ');
+          content.append(name, detail);
+          if (row.anchor) {
+            content.type = 'button';
+            content.onclick = () => {
+              directory.hidden = true;
+              toggle.setAttribute('aria-expanded', 'false');
+              openBuildingCard(row.anchor, key);
+              requestAnimationFrame(() => flyToBuilding(row.anchor, key));
+            };
+          }
+          item.append(content);
+          list.append(item);
+        }
+      };
+      select.onchange = updateDirectory;
+      updateDirectory();
+    }
+    for (const footprint of campus.footprints || []) L.polygon(footprint.ring, { color: '#236550', weight: 2, fillOpacity: 0.18, interactive: false }).addTo(markerLayer);
+    for (const line of campus.lines || []) L.polyline(line.points, { color: '#627770', weight: 3, interactive: false }).addTo(markerLayer);
     markersById = {};
     (campus.buildings || []).forEach((b) => {
       const marker = L.marker(b.coordinates, { icon: simplePinIcon() });
@@ -723,7 +799,7 @@ window.CampusMap = (function () {
     return loadData().then(() => {
       const building = findBuilding(id, campusKey);
       if (!building || !leafletMap) return;
-      leafletMap.flyTo(building.coordinates, FLY_ZOOM, { duration: 0.8 });
+      leafletMap.flyTo(building.coordinates, leafletMap.getMaxZoom(), { duration: 0.8 });
     });
   }
 
@@ -768,7 +844,7 @@ window.CampusMap = (function () {
     const ul = document.createElement("ul");
     list.forEach((item) => {
       const li = document.createElement("li");
-      li.textContent = item;
+      li.textContent = typeof item === 'string' ? item : item.name + ' · ' + (['Ground floor','First floor','Second floor'][item.floor] || 'Unspecified floor');
       ul.appendChild(li);
     });
     els.buildingFacilities.appendChild(ul);

@@ -1,0 +1,2111 @@
+{
+  "pioneer": {
+    "label": "Pioneer Campus",
+    "available": true,
+    "center": [
+      -15.413138466666666,
+      28.3216492
+    ],
+    "zoom": 18,
+    "boundary": [
+      [
+        -15.4126424,
+        28.3218054
+      ],
+      [
+        -15.4126752,
+        28.3217877
+      ],
+      [
+        -15.4130627,
+        28.3215781
+      ],
+      [
+        -15.4131475,
+        28.3215322
+      ],
+      [
+        -15.4131616,
+        28.3215246
+      ],
+      [
+        -15.4132227,
+        28.3214915
+      ],
+      [
+        -15.4132507,
+        28.3214764
+      ],
+      [
+        -15.4132784,
+        28.321474
+      ],
+      [
+        -15.4138435,
+        28.3214251
+      ],
+      [
+        -15.4136952,
+        28.321881
+      ],
+      [
+        -15.4129483,
+        28.3219039
+      ],
+      [
+        -15.4127334,
+        28.3219105
+      ],
+      [
+        -15.4126424,
+        28.3218054
+      ]
+    ],
+    "description": "Plot 37413, off Alick Nkhata Road, Mass Media, Lusaka",
+    "buildings": [
+      {
+        "id": "pioneer-main",
+        "name": "Main Academic Block",
+        "coordinates": [
+          -15.41317982,
+          28.32168642
+        ],
+        "description": "Approximate block anchor. Ground floor short wing: 3, 2. Long wing: 4, 5, 6. First floor long wing: 11, 10, 9, 8, 7. Short wing: 16, 15, 14, 13, 12. Sequences follow the private annotation orientation.",
+        "category": "academic",
+        "facilities": [
+          {
+            "id": "pioneer-room-3",
+            "name": "Room 3",
+            "floor": 0,
+            "building": "Main Academic Block",
+            "anchor": "pioneer-main",
+            "aliases": [
+              "room 3",
+              "lecture room 3"
+            ],
+            "note": "Short wing."
+          },
+          {
+            "id": "pioneer-room-2",
+            "name": "Room 2",
+            "floor": 0,
+            "building": "Main Academic Block",
+            "anchor": "pioneer-main",
+            "aliases": [
+              "room 2",
+              "lecture room 2"
+            ],
+            "note": "Short wing."
+          },
+          {
+            "id": "pioneer-room-4",
+            "name": "Room 4",
+            "floor": 0,
+            "building": "Main Academic Block",
+            "anchor": "pioneer-main",
+            "aliases": [
+              "room 4",
+              "lecture room 4"
+            ],
+            "note": "Long wing."
+          },
+          {
+            "id": "pioneer-room-5",
+            "name": "Room 5",
+            "floor": 0,
+            "building": "Main Academic Block",
+            "anchor": "pioneer-main",
+            "aliases": [
+              "room 5",
+              "lecture room 5"
+            ],
+            "note": "Long wing."
+          },
+          {
+            "id": "pioneer-room-6",
+            "name": "Room 6",
+            "floor": 0,
+            "building": "Main Academic Block",
+            "anchor": "pioneer-main",
+            "aliases": [
+              "room 6",
+              "lecture room 6"
+            ],
+            "note": "Long wing."
+          },
+          {
+            "id": "pioneer-room-11",
+            "name": "Room 11",
+            "floor": 1,
+            "building": "Main Academic Block",
+            "anchor": "pioneer-main",
+            "aliases": [
+              "room 11",
+              "lecture room 11"
+            ],
+            "note": "Long wing."
+          },
+          {
+            "id": "pioneer-room-10",
+            "name": "Room 10",
+            "floor": 1,
+            "building": "Main Academic Block",
+            "anchor": "pioneer-main",
+            "aliases": [
+              "room 10",
+              "lecture room 10"
+            ],
+            "note": "Long wing."
+          },
+          {
+            "id": "pioneer-room-9",
+            "name": "Room 9",
+            "floor": 1,
+            "building": "Main Academic Block",
+            "anchor": "pioneer-main",
+            "aliases": [
+              "room 9",
+              "lecture room 9"
+            ],
+            "note": "Long wing."
+          },
+          {
+            "id": "pioneer-room-8",
+            "name": "Room 8",
+            "floor": 1,
+            "building": "Main Academic Block",
+            "anchor": "pioneer-main",
+            "aliases": [
+              "room 8",
+              "lecture room 8"
+            ],
+            "note": "Long wing."
+          },
+          {
+            "id": "pioneer-room-7",
+            "name": "Room 7",
+            "floor": 1,
+            "building": "Main Academic Block",
+            "anchor": "pioneer-main",
+            "aliases": [
+              "room 7",
+              "lecture room 7"
+            ],
+            "note": "Long wing. At the far end above the toilets."
+          },
+          {
+            "id": "pioneer-room-16",
+            "name": "Room 16",
+            "floor": 1,
+            "building": "Main Academic Block",
+            "anchor": "pioneer-main",
+            "aliases": [
+              "room 16",
+              "lecture room 16"
+            ],
+            "note": "Short wing."
+          },
+          {
+            "id": "pioneer-room-15",
+            "name": "Room 15",
+            "floor": 1,
+            "building": "Main Academic Block",
+            "anchor": "pioneer-main",
+            "aliases": [
+              "room 15",
+              "lecture room 15"
+            ],
+            "note": "Short wing."
+          },
+          {
+            "id": "pioneer-room-14",
+            "name": "Room 14",
+            "floor": 1,
+            "building": "Main Academic Block",
+            "anchor": "pioneer-main",
+            "aliases": [
+              "room 14",
+              "lecture room 14"
+            ],
+            "note": "Short wing."
+          },
+          {
+            "id": "pioneer-room-13",
+            "name": "Room 13",
+            "floor": 1,
+            "building": "Main Academic Block",
+            "anchor": "pioneer-main",
+            "aliases": [
+              "room 13",
+              "lecture room 13"
+            ],
+            "note": "Short wing."
+          },
+          {
+            "id": "pioneer-room-12",
+            "name": "Room 12",
+            "floor": 1,
+            "building": "Main Academic Block",
+            "anchor": "pioneer-main",
+            "aliases": [
+              "room 12",
+              "lecture room 12"
+            ],
+            "note": "Short wing."
+          },
+          {
+            "id": "pioneer-pioneer-main-postgraduate-office",
+            "name": "Postgraduate Office",
+            "floor": 0,
+            "building": "Main Academic Block",
+            "anchor": "pioneer-main",
+            "aliases": [],
+            "note": ""
+          },
+          {
+            "id": "pioneer-pioneer-main-counsellor-s-office",
+            "name": "Counsellor's Office",
+            "floor": 0,
+            "building": "Main Academic Block",
+            "anchor": "pioneer-main",
+            "aliases": [],
+            "note": ""
+          },
+          {
+            "id": "pioneer-pioneer-main-ladies--toilets",
+            "name": "Ladies' toilets",
+            "floor": 0,
+            "building": "Main Academic Block",
+            "anchor": "pioneer-main",
+            "aliases": [],
+            "note": ""
+          },
+          {
+            "id": "pioneer-pioneer-main-gents--toilets",
+            "name": "Gents' toilets",
+            "floor": 0,
+            "building": "Main Academic Block",
+            "anchor": "pioneer-main",
+            "aliases": [],
+            "note": ""
+          },
+          {
+            "id": "pioneer-pioneer-main-lost---found",
+            "name": "Lost & Found",
+            "floor": 0,
+            "building": "Main Academic Block",
+            "anchor": "pioneer-main",
+            "aliases": [
+              "lost and found"
+            ],
+            "note": ""
+          }
+        ],
+        "gallery": [],
+        "osmWay": "1584511960"
+      },
+      {
+        "id": "pioneer-inner",
+        "name": "Inner Building / Cafeteria Block",
+        "coordinates": [
+          -15.41306595,
+          28.3217855
+        ],
+        "description": "Approximate block anchor.",
+        "category": "academic",
+        "facilities": [
+          {
+            "id": "pioneer-room-18",
+            "name": "Room 18",
+            "floor": 0,
+            "building": "Inner Building / Cafeteria Block",
+            "anchor": "pioneer-inner",
+            "aliases": [
+              "room 18",
+              "lecture room 18"
+            ],
+            "note": ""
+          },
+          {
+            "id": "pioneer-room-19",
+            "name": "Room 19 — Sick Bay",
+            "floor": 0,
+            "building": "Inner Building / Cafeteria Block",
+            "anchor": "pioneer-inner",
+            "aliases": [
+              "room 19",
+              "lecture room 19",
+              "sick bay"
+            ],
+            "note": ""
+          },
+          {
+            "id": "pioneer-room-20",
+            "name": "Room 20",
+            "floor": 0,
+            "building": "Inner Building / Cafeteria Block",
+            "anchor": "pioneer-inner",
+            "aliases": [
+              "room 20",
+              "lecture room 20"
+            ],
+            "note": ""
+          },
+          {
+            "id": "pioneer-room-21",
+            "name": "Room 21 — Enquiries and IT Department",
+            "floor": 0,
+            "building": "Inner Building / Cafeteria Block",
+            "anchor": "pioneer-inner",
+            "aliases": [
+              "room 21",
+              "lecture room 21",
+              "enquiries",
+              "it department"
+            ],
+            "note": ""
+          },
+          {
+            "id": "pioneer-room-22",
+            "name": "Room 22",
+            "floor": 1,
+            "building": "Inner Building / Cafeteria Block",
+            "anchor": "pioneer-inner",
+            "aliases": [
+              "room 22",
+              "lecture room 22"
+            ],
+            "note": ""
+          },
+          {
+            "id": "pioneer-room-23",
+            "name": "Room 23",
+            "floor": 1,
+            "building": "Inner Building / Cafeteria Block",
+            "anchor": "pioneer-inner",
+            "aliases": [
+              "room 23",
+              "lecture room 23"
+            ],
+            "note": ""
+          },
+          {
+            "id": "pioneer-room-24",
+            "name": "Room 24",
+            "floor": 1,
+            "building": "Inner Building / Cafeteria Block",
+            "anchor": "pioneer-inner",
+            "aliases": [
+              "room 24",
+              "lecture room 24"
+            ],
+            "note": ""
+          },
+          {
+            "id": "pioneer-room-25",
+            "name": "Room 25",
+            "floor": 1,
+            "building": "Inner Building / Cafeteria Block",
+            "anchor": "pioneer-inner",
+            "aliases": [
+              "room 25",
+              "lecture room 25"
+            ],
+            "note": ""
+          },
+          {
+            "id": "pioneer-room-26",
+            "name": "Room 26",
+            "floor": 1,
+            "building": "Inner Building / Cafeteria Block",
+            "anchor": "pioneer-inner",
+            "aliases": [
+              "room 26",
+              "lecture room 26"
+            ],
+            "note": ""
+          },
+          {
+            "id": "pioneer-room-27",
+            "name": "Room 27",
+            "floor": 1,
+            "building": "Inner Building / Cafeteria Block",
+            "anchor": "pioneer-inner",
+            "aliases": [
+              "room 27",
+              "lecture room 27"
+            ],
+            "note": ""
+          },
+          {
+            "id": "pioneer-pioneer-inner-cafeteria",
+            "name": "Cafeteria",
+            "floor": 0,
+            "building": "Inner Building / Cafeteria Block",
+            "anchor": "pioneer-inner",
+            "aliases": [],
+            "note": ""
+          }
+        ],
+        "gallery": [],
+        "osmWay": "1584511969"
+      },
+      {
+        "id": "pioneer-admin",
+        "name": "Academic and Administration Block",
+        "coordinates": [
+          -15.413571375,
+          28.321539525
+        ],
+        "description": "Approximate block anchor.",
+        "category": "academic",
+        "facilities": [
+          {
+            "id": "pioneer-room-17",
+            "name": "Room 17 — Computer Lab",
+            "floor": 0,
+            "building": "Academic and Administration Block",
+            "anchor": "pioneer-admin",
+            "aliases": [
+              "room 17",
+              "lecture room 17",
+              "computer lab",
+              "computer lab 17"
+            ],
+            "note": ""
+          },
+          {
+            "id": "pioneer-pioneer-admin-academic-office",
+            "name": "Academic Office",
+            "floor": 0,
+            "building": "Academic and Administration Block",
+            "anchor": "pioneer-admin",
+            "aliases": [],
+            "note": ""
+          },
+          {
+            "id": "pioneer-pioneer-admin-accounts-office",
+            "name": "Accounts Office",
+            "floor": 0,
+            "building": "Academic and Administration Block",
+            "anchor": "pioneer-admin",
+            "aliases": [
+              "accounts"
+            ],
+            "note": ""
+          },
+          {
+            "id": "pioneer-pioneer-admin-registrar",
+            "name": "Registrar",
+            "floor": 0,
+            "building": "Academic and Administration Block",
+            "anchor": "pioneer-admin",
+            "aliases": [],
+            "note": ""
+          },
+          {
+            "id": "pioneer-pioneer-admin-procurement-office",
+            "name": "Procurement Office",
+            "floor": 0,
+            "building": "Academic and Administration Block",
+            "anchor": "pioneer-admin",
+            "aliases": [],
+            "note": ""
+          },
+          {
+            "id": "pioneer-pioneer-admin-library",
+            "name": "Library",
+            "floor": 0,
+            "building": "Academic and Administration Block",
+            "anchor": "pioneer-admin",
+            "aliases": [],
+            "note": ""
+          },
+          {
+            "id": "pioneer-pioneer-admin-ladies--toilets",
+            "name": "Ladies' toilets",
+            "floor": 0,
+            "building": "Academic and Administration Block",
+            "anchor": "pioneer-admin",
+            "aliases": [],
+            "note": ""
+          },
+          {
+            "id": "pioneer-pioneer-admin-gents--toilets",
+            "name": "Gents' toilets",
+            "floor": 0,
+            "building": "Academic and Administration Block",
+            "anchor": "pioneer-admin",
+            "aliases": [],
+            "note": ""
+          },
+          {
+            "id": "pioneer-pioneer-admin-knowledge-base-1",
+            "name": "Knowledge Base 1",
+            "floor": 1,
+            "building": "Academic and Administration Block",
+            "anchor": "pioneer-admin",
+            "aliases": [],
+            "note": ""
+          },
+          {
+            "id": "pioneer-pioneer-admin-knowledge-base-2",
+            "name": "Knowledge Base 2",
+            "floor": 1,
+            "building": "Academic and Administration Block",
+            "anchor": "pioneer-admin",
+            "aliases": [],
+            "note": ""
+          }
+        ],
+        "gallery": [],
+        "osmWay": "1584511973"
+      },
+      {
+        "id": "pioneer-rear",
+        "name": "Rear classrooms",
+        "coordinates": [
+          -15.413736925,
+          28.32155425
+        ],
+        "description": "Rear section of the Academic and Administration Block.",
+        "category": "academic",
+        "facilities": [
+          {
+            "id": "pioneer-room-28",
+            "name": "Room 28",
+            "floor": 0,
+            "building": "Academic and Administration Block",
+            "anchor": "pioneer-rear",
+            "aliases": [
+              "room 28",
+              "lecture room 28"
+            ],
+            "note": "Rear classroom section."
+          },
+          {
+            "id": "pioneer-room-29",
+            "name": "Room 29",
+            "floor": 0,
+            "building": "Academic and Administration Block",
+            "anchor": "pioneer-rear",
+            "aliases": [
+              "room 29",
+              "lecture room 29"
+            ],
+            "note": "Rear classroom section."
+          },
+          {
+            "id": "pioneer-room-30",
+            "name": "Room 30",
+            "floor": 0,
+            "building": "Academic and Administration Block",
+            "anchor": "pioneer-rear",
+            "aliases": [
+              "room 30",
+              "lecture room 30"
+            ],
+            "note": "Rear classroom section."
+          },
+          {
+            "id": "pioneer-room-31",
+            "name": "Room 31",
+            "floor": 0,
+            "building": "Academic and Administration Block",
+            "anchor": "pioneer-rear",
+            "aliases": [
+              "room 31",
+              "lecture room 31"
+            ],
+            "note": "Rear classroom section."
+          }
+        ],
+        "gallery": [],
+        "osmWay": "1584511971"
+      },
+      {
+        "id": "pioneer-rear-32",
+        "name": "Rear classroom building",
+        "coordinates": [
+          -15.413659125,
+          28.32166835
+        ],
+        "description": "Building anchor for Room 32.",
+        "category": "academic",
+        "facilities": [
+          {
+            "id": "pioneer-room-32",
+            "name": "Room 32",
+            "floor": 1,
+            "building": "Academic and Administration Block",
+            "anchor": "pioneer-rear-32",
+            "aliases": [
+              "room 32",
+              "lecture room 32"
+            ],
+            "note": "Rear classroom section."
+          }
+        ],
+        "gallery": [],
+        "osmWay": "1061989323"
+      }
+    ],
+    "footprints": [
+      {
+        "osmWay": "1584511960",
+        "ring": [
+          [
+            -15.4130627,
+            28.3215781
+          ],
+          [
+            -15.4131616,
+            28.3215246
+          ],
+          [
+            -15.4133247,
+            28.321799
+          ],
+          [
+            -15.4132337,
+            28.3218629
+          ],
+          [
+            -15.4131164,
+            28.3216675
+          ],
+          [
+            -15.4130627,
+            28.3215781
+          ]
+        ]
+      },
+      {
+        "osmWay": "1584511971",
+        "ring": [
+          [
+            -15.4137228,
+            28.3214438
+          ],
+          [
+            -15.4137911,
+            28.3214521
+          ],
+          [
+            -15.4137486,
+            28.3216676
+          ],
+          [
+            -15.4136852,
+            28.3216535
+          ],
+          [
+            -15.4137228,
+            28.3214438
+          ]
+        ]
+      },
+      {
+        "osmWay": "1584511969",
+        "ring": [
+          [
+            -15.4129954,
+            28.3217691
+          ],
+          [
+            -15.4130826,
+            28.3217099
+          ],
+          [
+            -15.4131396,
+            28.3218024
+          ],
+          [
+            -15.4130462,
+            28.3218606
+          ],
+          [
+            -15.4129954,
+            28.3217691
+          ]
+        ]
+      },
+      {
+        "osmWay": "1584511973",
+        "ring": [
+          [
+            -15.4135527,
+            28.3215586
+          ],
+          [
+            -15.4135579,
+            28.3215113
+          ],
+          [
+            -15.4135921,
+            28.3215231
+          ],
+          [
+            -15.4135828,
+            28.3215651
+          ],
+          [
+            -15.4135527,
+            28.3215586
+          ]
+        ]
+      },
+      {
+        "osmWay": "1061989323",
+        "ring": [
+          [
+            -15.4136799,
+            28.3216523
+          ],
+          [
+            -15.4136788,
+            28.3216897
+          ],
+          [
+            -15.4136368,
+            28.3216831
+          ],
+          [
+            -15.413641,
+            28.3216483
+          ],
+          [
+            -15.4136799,
+            28.3216523
+          ]
+        ]
+      }
+    ],
+    "lines": [],
+    "directory": [
+      {
+        "id": "pioneer-room-3",
+        "name": "Room 3",
+        "floor": 0,
+        "building": "Main Academic Block",
+        "anchor": "pioneer-main",
+        "aliases": [
+          "room 3",
+          "lecture room 3"
+        ],
+        "note": "Short wing."
+      },
+      {
+        "id": "pioneer-room-2",
+        "name": "Room 2",
+        "floor": 0,
+        "building": "Main Academic Block",
+        "anchor": "pioneer-main",
+        "aliases": [
+          "room 2",
+          "lecture room 2"
+        ],
+        "note": "Short wing."
+      },
+      {
+        "id": "pioneer-room-4",
+        "name": "Room 4",
+        "floor": 0,
+        "building": "Main Academic Block",
+        "anchor": "pioneer-main",
+        "aliases": [
+          "room 4",
+          "lecture room 4"
+        ],
+        "note": "Long wing."
+      },
+      {
+        "id": "pioneer-room-5",
+        "name": "Room 5",
+        "floor": 0,
+        "building": "Main Academic Block",
+        "anchor": "pioneer-main",
+        "aliases": [
+          "room 5",
+          "lecture room 5"
+        ],
+        "note": "Long wing."
+      },
+      {
+        "id": "pioneer-room-6",
+        "name": "Room 6",
+        "floor": 0,
+        "building": "Main Academic Block",
+        "anchor": "pioneer-main",
+        "aliases": [
+          "room 6",
+          "lecture room 6"
+        ],
+        "note": "Long wing."
+      },
+      {
+        "id": "pioneer-room-11",
+        "name": "Room 11",
+        "floor": 1,
+        "building": "Main Academic Block",
+        "anchor": "pioneer-main",
+        "aliases": [
+          "room 11",
+          "lecture room 11"
+        ],
+        "note": "Long wing."
+      },
+      {
+        "id": "pioneer-room-10",
+        "name": "Room 10",
+        "floor": 1,
+        "building": "Main Academic Block",
+        "anchor": "pioneer-main",
+        "aliases": [
+          "room 10",
+          "lecture room 10"
+        ],
+        "note": "Long wing."
+      },
+      {
+        "id": "pioneer-room-9",
+        "name": "Room 9",
+        "floor": 1,
+        "building": "Main Academic Block",
+        "anchor": "pioneer-main",
+        "aliases": [
+          "room 9",
+          "lecture room 9"
+        ],
+        "note": "Long wing."
+      },
+      {
+        "id": "pioneer-room-8",
+        "name": "Room 8",
+        "floor": 1,
+        "building": "Main Academic Block",
+        "anchor": "pioneer-main",
+        "aliases": [
+          "room 8",
+          "lecture room 8"
+        ],
+        "note": "Long wing."
+      },
+      {
+        "id": "pioneer-room-7",
+        "name": "Room 7",
+        "floor": 1,
+        "building": "Main Academic Block",
+        "anchor": "pioneer-main",
+        "aliases": [
+          "room 7",
+          "lecture room 7"
+        ],
+        "note": "Long wing. At the far end above the toilets."
+      },
+      {
+        "id": "pioneer-room-16",
+        "name": "Room 16",
+        "floor": 1,
+        "building": "Main Academic Block",
+        "anchor": "pioneer-main",
+        "aliases": [
+          "room 16",
+          "lecture room 16"
+        ],
+        "note": "Short wing."
+      },
+      {
+        "id": "pioneer-room-15",
+        "name": "Room 15",
+        "floor": 1,
+        "building": "Main Academic Block",
+        "anchor": "pioneer-main",
+        "aliases": [
+          "room 15",
+          "lecture room 15"
+        ],
+        "note": "Short wing."
+      },
+      {
+        "id": "pioneer-room-14",
+        "name": "Room 14",
+        "floor": 1,
+        "building": "Main Academic Block",
+        "anchor": "pioneer-main",
+        "aliases": [
+          "room 14",
+          "lecture room 14"
+        ],
+        "note": "Short wing."
+      },
+      {
+        "id": "pioneer-room-13",
+        "name": "Room 13",
+        "floor": 1,
+        "building": "Main Academic Block",
+        "anchor": "pioneer-main",
+        "aliases": [
+          "room 13",
+          "lecture room 13"
+        ],
+        "note": "Short wing."
+      },
+      {
+        "id": "pioneer-room-12",
+        "name": "Room 12",
+        "floor": 1,
+        "building": "Main Academic Block",
+        "anchor": "pioneer-main",
+        "aliases": [
+          "room 12",
+          "lecture room 12"
+        ],
+        "note": "Short wing."
+      },
+      {
+        "id": "pioneer-room-18",
+        "name": "Room 18",
+        "floor": 0,
+        "building": "Inner Building / Cafeteria Block",
+        "anchor": "pioneer-inner",
+        "aliases": [
+          "room 18",
+          "lecture room 18"
+        ],
+        "note": ""
+      },
+      {
+        "id": "pioneer-room-19",
+        "name": "Room 19 — Sick Bay",
+        "floor": 0,
+        "building": "Inner Building / Cafeteria Block",
+        "anchor": "pioneer-inner",
+        "aliases": [
+          "room 19",
+          "lecture room 19",
+          "sick bay"
+        ],
+        "note": ""
+      },
+      {
+        "id": "pioneer-room-20",
+        "name": "Room 20",
+        "floor": 0,
+        "building": "Inner Building / Cafeteria Block",
+        "anchor": "pioneer-inner",
+        "aliases": [
+          "room 20",
+          "lecture room 20"
+        ],
+        "note": ""
+      },
+      {
+        "id": "pioneer-room-21",
+        "name": "Room 21 — Enquiries and IT Department",
+        "floor": 0,
+        "building": "Inner Building / Cafeteria Block",
+        "anchor": "pioneer-inner",
+        "aliases": [
+          "room 21",
+          "lecture room 21",
+          "enquiries",
+          "it department"
+        ],
+        "note": ""
+      },
+      {
+        "id": "pioneer-room-22",
+        "name": "Room 22",
+        "floor": 1,
+        "building": "Inner Building / Cafeteria Block",
+        "anchor": "pioneer-inner",
+        "aliases": [
+          "room 22",
+          "lecture room 22"
+        ],
+        "note": ""
+      },
+      {
+        "id": "pioneer-room-23",
+        "name": "Room 23",
+        "floor": 1,
+        "building": "Inner Building / Cafeteria Block",
+        "anchor": "pioneer-inner",
+        "aliases": [
+          "room 23",
+          "lecture room 23"
+        ],
+        "note": ""
+      },
+      {
+        "id": "pioneer-room-24",
+        "name": "Room 24",
+        "floor": 1,
+        "building": "Inner Building / Cafeteria Block",
+        "anchor": "pioneer-inner",
+        "aliases": [
+          "room 24",
+          "lecture room 24"
+        ],
+        "note": ""
+      },
+      {
+        "id": "pioneer-room-25",
+        "name": "Room 25",
+        "floor": 1,
+        "building": "Inner Building / Cafeteria Block",
+        "anchor": "pioneer-inner",
+        "aliases": [
+          "room 25",
+          "lecture room 25"
+        ],
+        "note": ""
+      },
+      {
+        "id": "pioneer-room-26",
+        "name": "Room 26",
+        "floor": 1,
+        "building": "Inner Building / Cafeteria Block",
+        "anchor": "pioneer-inner",
+        "aliases": [
+          "room 26",
+          "lecture room 26"
+        ],
+        "note": ""
+      },
+      {
+        "id": "pioneer-room-27",
+        "name": "Room 27",
+        "floor": 1,
+        "building": "Inner Building / Cafeteria Block",
+        "anchor": "pioneer-inner",
+        "aliases": [
+          "room 27",
+          "lecture room 27"
+        ],
+        "note": ""
+      },
+      {
+        "id": "pioneer-room-17",
+        "name": "Room 17 — Computer Lab",
+        "floor": 0,
+        "building": "Academic and Administration Block",
+        "anchor": "pioneer-admin",
+        "aliases": [
+          "room 17",
+          "lecture room 17",
+          "computer lab",
+          "computer lab 17"
+        ],
+        "note": ""
+      },
+      {
+        "id": "pioneer-room-28",
+        "name": "Room 28",
+        "floor": 0,
+        "building": "Academic and Administration Block",
+        "anchor": "pioneer-rear",
+        "aliases": [
+          "room 28",
+          "lecture room 28"
+        ],
+        "note": "Rear classroom section."
+      },
+      {
+        "id": "pioneer-room-29",
+        "name": "Room 29",
+        "floor": 0,
+        "building": "Academic and Administration Block",
+        "anchor": "pioneer-rear",
+        "aliases": [
+          "room 29",
+          "lecture room 29"
+        ],
+        "note": "Rear classroom section."
+      },
+      {
+        "id": "pioneer-room-30",
+        "name": "Room 30",
+        "floor": 0,
+        "building": "Academic and Administration Block",
+        "anchor": "pioneer-rear",
+        "aliases": [
+          "room 30",
+          "lecture room 30"
+        ],
+        "note": "Rear classroom section."
+      },
+      {
+        "id": "pioneer-room-31",
+        "name": "Room 31",
+        "floor": 0,
+        "building": "Academic and Administration Block",
+        "anchor": "pioneer-rear",
+        "aliases": [
+          "room 31",
+          "lecture room 31"
+        ],
+        "note": "Rear classroom section."
+      },
+      {
+        "id": "pioneer-room-32",
+        "name": "Room 32",
+        "floor": 1,
+        "building": "Academic and Administration Block",
+        "anchor": "pioneer-rear-32",
+        "aliases": [
+          "room 32",
+          "lecture room 32"
+        ],
+        "note": "Rear classroom section."
+      },
+      {
+        "id": "pioneer-pioneer-main-postgraduate-office",
+        "name": "Postgraduate Office",
+        "floor": 0,
+        "building": "Main Academic Block",
+        "anchor": "pioneer-main",
+        "aliases": [],
+        "note": ""
+      },
+      {
+        "id": "pioneer-pioneer-main-counsellor-s-office",
+        "name": "Counsellor's Office",
+        "floor": 0,
+        "building": "Main Academic Block",
+        "anchor": "pioneer-main",
+        "aliases": [],
+        "note": ""
+      },
+      {
+        "id": "pioneer-pioneer-main-ladies--toilets",
+        "name": "Ladies' toilets",
+        "floor": 0,
+        "building": "Main Academic Block",
+        "anchor": "pioneer-main",
+        "aliases": [],
+        "note": ""
+      },
+      {
+        "id": "pioneer-pioneer-main-gents--toilets",
+        "name": "Gents' toilets",
+        "floor": 0,
+        "building": "Main Academic Block",
+        "anchor": "pioneer-main",
+        "aliases": [],
+        "note": ""
+      },
+      {
+        "id": "pioneer-pioneer-main-lost---found",
+        "name": "Lost & Found",
+        "floor": 0,
+        "building": "Main Academic Block",
+        "anchor": "pioneer-main",
+        "aliases": [
+          "lost and found"
+        ],
+        "note": ""
+      },
+      {
+        "id": "pioneer-pioneer-inner-cafeteria",
+        "name": "Cafeteria",
+        "floor": 0,
+        "building": "Inner Building / Cafeteria Block",
+        "anchor": "pioneer-inner",
+        "aliases": [],
+        "note": ""
+      },
+      {
+        "id": "pioneer-pioneer-admin-academic-office",
+        "name": "Academic Office",
+        "floor": 0,
+        "building": "Academic and Administration Block",
+        "anchor": "pioneer-admin",
+        "aliases": [],
+        "note": ""
+      },
+      {
+        "id": "pioneer-pioneer-admin-accounts-office",
+        "name": "Accounts Office",
+        "floor": 0,
+        "building": "Academic and Administration Block",
+        "anchor": "pioneer-admin",
+        "aliases": [
+          "accounts"
+        ],
+        "note": ""
+      },
+      {
+        "id": "pioneer-pioneer-admin-registrar",
+        "name": "Registrar",
+        "floor": 0,
+        "building": "Academic and Administration Block",
+        "anchor": "pioneer-admin",
+        "aliases": [],
+        "note": ""
+      },
+      {
+        "id": "pioneer-pioneer-admin-procurement-office",
+        "name": "Procurement Office",
+        "floor": 0,
+        "building": "Academic and Administration Block",
+        "anchor": "pioneer-admin",
+        "aliases": [],
+        "note": ""
+      },
+      {
+        "id": "pioneer-pioneer-admin-library",
+        "name": "Library",
+        "floor": 0,
+        "building": "Academic and Administration Block",
+        "anchor": "pioneer-admin",
+        "aliases": [],
+        "note": ""
+      },
+      {
+        "id": "pioneer-pioneer-admin-ladies--toilets",
+        "name": "Ladies' toilets",
+        "floor": 0,
+        "building": "Academic and Administration Block",
+        "anchor": "pioneer-admin",
+        "aliases": [],
+        "note": ""
+      },
+      {
+        "id": "pioneer-pioneer-admin-gents--toilets",
+        "name": "Gents' toilets",
+        "floor": 0,
+        "building": "Academic and Administration Block",
+        "anchor": "pioneer-admin",
+        "aliases": [],
+        "note": ""
+      },
+      {
+        "id": "pioneer-pioneer-admin-knowledge-base-1",
+        "name": "Knowledge Base 1",
+        "floor": 1,
+        "building": "Academic and Administration Block",
+        "anchor": "pioneer-admin",
+        "aliases": [],
+        "note": ""
+      },
+      {
+        "id": "pioneer-pioneer-admin-knowledge-base-2",
+        "name": "Knowledge Base 2",
+        "floor": 1,
+        "building": "Academic and Administration Block",
+        "anchor": "pioneer-admin",
+        "aliases": [],
+        "note": ""
+      },
+      {
+        "id": "pioneer-main-gate",
+        "name": "Main gate",
+        "floor": null,
+        "building": "Pioneer Campus",
+        "anchor": null,
+        "aliases": [],
+        "note": ""
+      },
+      {
+        "id": "pioneer-car-park",
+        "name": "Car park",
+        "floor": null,
+        "building": "Pioneer Campus",
+        "anchor": null,
+        "aliases": [],
+        "note": "Campus parking is reported. Its outline is unverified."
+      }
+    ],
+    "osmBoundary": "1584511957",
+    "sources": [
+      "https://www.openstreetmap.org/way/1584511957",
+      "https://web.unilus.ac.zm/aboutunilus/"
+    ],
+    "directorySource": "Firsthand campus handoff, 25 November 2026"
+  },
+  "leopards": {
+    "label": "Leopards Hill Campus",
+    "available": true,
+    "center": [
+      -15.453368485714284,
+      28.379283292857142
+    ],
+    "zoom": 18,
+    "boundary": [
+      [
+        -15.452884,
+        28.3794944
+      ],
+      [
+        -15.4537552,
+        28.3801813
+      ],
+      [
+        -15.4542192,
+        28.3795785
+      ],
+      [
+        -15.4539134,
+        28.3793208
+      ],
+      [
+        -15.4537501,
+        28.3791836
+      ],
+      [
+        -15.4533745,
+        28.3788731
+      ],
+      [
+        -15.4532246,
+        28.3790602
+      ],
+      [
+        -15.453231,
+        28.3790957
+      ],
+      [
+        -15.4532013,
+        28.3791346
+      ],
+      [
+        -15.453169,
+        28.3791333
+      ],
+      [
+        -15.4531263,
+        28.3791869
+      ],
+      [
+        -15.4531302,
+        28.3792211
+      ],
+      [
+        -15.4531044,
+        28.3792513
+      ],
+      [
+        -15.4530756,
+        28.3792513
+      ],
+      [
+        -15.452884,
+        28.3794944
+      ]
+    ],
+    "description": "Plot 17986, off Leopards Hill Road, Lusaka",
+    "buildings": [
+      {
+        "id": "leopards-parking",
+        "name": "Car park",
+        "coordinates": [
+          -15.453756349999999,
+          28.37934875
+        ],
+        "description": "Mapped parking area.",
+        "category": "academic",
+        "facilities": [
+          {
+            "id": "leopards-car-park",
+            "name": "Car park",
+            "floor": null,
+            "building": "Leopards Hill Campus",
+            "anchor": "leopards-parking",
+            "aliases": [],
+            "note": ""
+          }
+        ],
+        "gallery": [],
+        "osmWay": "1008269678"
+      }
+    ],
+    "footprints": [
+      {
+        "osmWay": "892904477",
+        "ring": [
+          [
+            -15.4537213,
+            28.3800251
+          ],
+          [
+            -15.4538635,
+            28.37985
+          ],
+          [
+            -15.4537892,
+            28.3797851
+          ],
+          [
+            -15.4537737,
+            28.3798042
+          ],
+          [
+            -15.4536199,
+            28.3796699
+          ],
+          [
+            -15.4536322,
+            28.3796547
+          ],
+          [
+            -15.4536197,
+            28.3796438
+          ],
+          [
+            -15.4536296,
+            28.3796316
+          ],
+          [
+            -15.4535852,
+            28.3795929
+          ],
+          [
+            -15.453574,
+            28.3796066
+          ],
+          [
+            -15.4535366,
+            28.3795739
+          ],
+          [
+            -15.4535199,
+            28.3795945
+          ],
+          [
+            -15.4534526,
+            28.3795356
+          ],
+          [
+            -15.4533452,
+            28.3796677
+          ],
+          [
+            -15.4534332,
+            28.3797446
+          ],
+          [
+            -15.4534197,
+            28.3797611
+          ],
+          [
+            -15.4535019,
+            28.379833
+          ],
+          [
+            -15.4535166,
+            28.3798149
+          ],
+          [
+            -15.453686,
+            28.379963
+          ],
+          [
+            -15.4536711,
+            28.3799813
+          ],
+          [
+            -15.4537213,
+            28.3800251
+          ]
+        ]
+      },
+      {
+        "osmWay": "892904476",
+        "ring": [
+          [
+            -15.4539691,
+            28.3794429
+          ],
+          [
+            -15.454129,
+            28.3795768
+          ],
+          [
+            -15.4539308,
+            28.3798315
+          ],
+          [
+            -15.4537709,
+            28.3796975
+          ],
+          [
+            -15.4539691,
+            28.3794429
+          ]
+        ]
+      },
+      {
+        "osmWay": "1061632731",
+        "ring": [
+          [
+            -15.4532753,
+            28.3796627
+          ],
+          [
+            -15.4530906,
+            28.3795274
+          ],
+          [
+            -15.4532327,
+            28.3793187
+          ],
+          [
+            -15.4533535,
+            28.3794071
+          ],
+          [
+            -15.4532889,
+            28.379502
+          ],
+          [
+            -15.4533528,
+            28.3795487
+          ],
+          [
+            -15.4532753,
+            28.3796627
+          ]
+        ]
+      },
+      {
+        "osmWay": "1061632766",
+        "ring": [
+          [
+            -15.4533206,
+            28.3791255
+          ],
+          [
+            -15.4532756,
+            28.3790882
+          ],
+          [
+            -15.45327,
+            28.3790955
+          ],
+          [
+            -15.4532322,
+            28.3790641
+          ],
+          [
+            -15.453297,
+            28.3789798
+          ],
+          [
+            -15.4533364,
+            28.3790124
+          ],
+          [
+            -15.4533296,
+            28.3790213
+          ],
+          [
+            -15.453373,
+            28.3790573
+          ],
+          [
+            -15.4533206,
+            28.3791255
+          ]
+        ]
+      },
+      {
+        "osmWay": "1061632769",
+        "ring": [
+          [
+            -15.4534136,
+            28.3798067
+          ],
+          [
+            -15.4533761,
+            28.3798647
+          ],
+          [
+            -15.4532577,
+            28.3797823
+          ],
+          [
+            -15.4532952,
+            28.3797243
+          ],
+          [
+            -15.4534136,
+            28.3798067
+          ]
+        ]
+      },
+      {
+        "osmWay": "1061632758",
+        "ring": [
+          [
+            -15.4535251,
+            28.3790209
+          ],
+          [
+            -15.4535507,
+            28.3790438
+          ],
+          [
+            -15.453505,
+            28.3790988
+          ],
+          [
+            -15.4535293,
+            28.3791206
+          ],
+          [
+            -15.4535021,
+            28.3791532
+          ],
+          [
+            -15.4534522,
+            28.3791086
+          ],
+          [
+            -15.4535251,
+            28.3790209
+          ]
+        ]
+      },
+      {
+        "osmWay": "1061632707",
+        "ring": [
+          [
+            -15.4535949,
+            28.379139
+          ],
+          [
+            -15.4535667,
+            28.3791143
+          ],
+          [
+            -15.4534834,
+            28.3792168
+          ],
+          [
+            -15.4535117,
+            28.3792415
+          ],
+          [
+            -15.4535949,
+            28.379139
+          ]
+        ]
+      },
+      {
+        "osmWay": "1061632706",
+        "ring": [
+          [
+            -15.453604,
+            28.3791725
+          ],
+          [
+            -15.4535303,
+            28.3792654
+          ],
+          [
+            -15.4535591,
+            28.3792899
+          ],
+          [
+            -15.4536327,
+            28.3791971
+          ],
+          [
+            -15.453604,
+            28.3791725
+          ]
+        ]
+      },
+      {
+        "osmWay": "1061632705",
+        "ring": [
+          [
+            -15.4536961,
+            28.3792382
+          ],
+          [
+            -15.4536679,
+            28.3792117
+          ],
+          [
+            -15.4535936,
+            28.3792969
+          ],
+          [
+            -15.4536217,
+            28.3793234
+          ],
+          [
+            -15.4536961,
+            28.3792382
+          ]
+        ]
+      },
+      {
+        "osmWay": "1061632767",
+        "ring": [
+          [
+            -15.4534245,
+            28.3791015
+          ],
+          [
+            -15.4533776,
+            28.3790716
+          ],
+          [
+            -15.4534164,
+            28.3790061
+          ],
+          [
+            -15.4534633,
+            28.3790361
+          ],
+          [
+            -15.4534245,
+            28.3791015
+          ]
+        ]
+      },
+      {
+        "osmWay": "1061632747",
+        "ring": [
+          [
+            -15.4533921,
+            28.3791948
+          ],
+          [
+            -15.4533513,
+            28.3791631
+          ],
+          [
+            -15.453381,
+            28.3791219
+          ],
+          [
+            -15.4534219,
+            28.3791536
+          ],
+          [
+            -15.4533921,
+            28.3791948
+          ]
+        ]
+      },
+      {
+        "osmWay": "1061632704",
+        "ring": [
+          [
+            -15.4534644,
+            28.3791688
+          ],
+          [
+            -15.4534407,
+            28.3791472
+          ],
+          [
+            -15.4534013,
+            28.3791934
+          ],
+          [
+            -15.4534249,
+            28.3792151
+          ],
+          [
+            -15.4534644,
+            28.3791688
+          ]
+        ]
+      }
+    ],
+    "lines": [
+      {
+        "osmWay": "842714815",
+        "points": [
+          [
+            -15.4531244,
+            28.379036
+          ],
+          [
+            -15.4536718,
+            28.3794777
+          ],
+          [
+            -15.4537981,
+            28.3795795
+          ]
+        ]
+      },
+      {
+        "osmWay": "1008269679",
+        "points": [
+          [
+            -15.4538024,
+            28.379311
+          ],
+          [
+            -15.4536718,
+            28.3794777
+          ]
+        ]
+      },
+      {
+        "osmWay": "1008269680",
+        "points": [
+          [
+            -15.4539568,
+            28.3793948
+          ],
+          [
+            -15.4537981,
+            28.3795795
+          ],
+          [
+            -15.4537281,
+            28.379661
+          ]
+        ]
+      }
+    ],
+    "directory": [
+      {
+        "id": "leopards-room-3",
+        "name": "Room 3",
+        "floor": 0,
+        "building": "Old Building",
+        "anchor": null,
+        "aliases": [
+          "room 3",
+          "lecture room 3"
+        ],
+        "note": ""
+      },
+      {
+        "id": "leopards-room-2",
+        "name": "Room 2",
+        "floor": 1,
+        "building": "Old Building",
+        "anchor": null,
+        "aliases": [
+          "room 2",
+          "lecture room 2"
+        ],
+        "note": ""
+      },
+      {
+        "id": "leopards-room-1",
+        "name": "Room 1",
+        "floor": 2,
+        "building": "Old Building",
+        "anchor": null,
+        "aliases": [
+          "room 1",
+          "lecture room 1"
+        ],
+        "note": ""
+      },
+      {
+        "id": "leopards-room-8",
+        "name": "Room 8",
+        "floor": 0,
+        "building": "New Building",
+        "anchor": null,
+        "aliases": [
+          "room 8",
+          "lecture room 8"
+        ],
+        "note": ""
+      },
+      {
+        "id": "leopards-room-9",
+        "name": "Room 9",
+        "floor": 0,
+        "building": "New Building",
+        "anchor": null,
+        "aliases": [
+          "room 9",
+          "lecture room 9"
+        ],
+        "note": ""
+      },
+      {
+        "id": "leopards-room-10",
+        "name": "Room 10",
+        "floor": 0,
+        "building": "New Building",
+        "anchor": null,
+        "aliases": [
+          "room 10",
+          "lecture room 10"
+        ],
+        "note": ""
+      },
+      {
+        "id": "leopards-room-11",
+        "name": "Room 11",
+        "floor": 0,
+        "building": "New Building",
+        "anchor": null,
+        "aliases": [
+          "room 11",
+          "lecture room 11"
+        ],
+        "note": ""
+      },
+      {
+        "id": "leopards-room-12",
+        "name": "Room 12",
+        "floor": 0,
+        "building": "New Building",
+        "anchor": null,
+        "aliases": [
+          "room 12",
+          "lecture room 12"
+        ],
+        "note": ""
+      },
+      {
+        "id": "leopards-room-16",
+        "name": "Room 16",
+        "floor": 0,
+        "building": "New Building",
+        "anchor": null,
+        "aliases": [
+          "room 16",
+          "lecture room 16"
+        ],
+        "note": ""
+      },
+      {
+        "id": "leopards-room-13",
+        "name": "Room 13",
+        "floor": 1,
+        "building": "New Building",
+        "anchor": null,
+        "aliases": [
+          "room 13",
+          "lecture room 13"
+        ],
+        "note": ""
+      },
+      {
+        "id": "leopards-room-15",
+        "name": "Room 15",
+        "floor": 1,
+        "building": "New Building",
+        "anchor": null,
+        "aliases": [
+          "room 15",
+          "lecture room 15"
+        ],
+        "note": ""
+      },
+      {
+        "id": "leopards-room-18",
+        "name": "Room 18 — Computer Lab",
+        "floor": 1,
+        "building": "New Building",
+        "anchor": null,
+        "aliases": [
+          "room 18",
+          "lecture room 18",
+          "computer lab 18",
+          "computer lab"
+        ],
+        "note": ""
+      },
+      {
+        "id": "leopards-room-7",
+        "name": "Room 7",
+        "floor": null,
+        "building": null,
+        "anchor": null,
+        "aliases": [
+          "room 7",
+          "lecture room 7"
+        ],
+        "note": "Historically listed on the ground floor of New Building."
+      },
+      {
+        "id": "leopards-room-14",
+        "name": "Room 14",
+        "floor": null,
+        "building": null,
+        "anchor": null,
+        "aliases": [
+          "room 14",
+          "lecture room 14"
+        ],
+        "note": ""
+      },
+      {
+        "id": "leopards-old-examination-hall",
+        "name": "Old Examination Hall",
+        "floor": null,
+        "building": "Old Building",
+        "anchor": null,
+        "aliases": [],
+        "note": "Historical building association."
+      },
+      {
+        "id": "leopards-new-examination-hall",
+        "name": "New Examination Hall",
+        "floor": null,
+        "building": "New Building",
+        "anchor": null,
+        "aliases": [],
+        "note": ""
+      },
+      {
+        "id": "leopards-library",
+        "name": "Library",
+        "floor": null,
+        "building": null,
+        "anchor": null,
+        "aliases": [],
+        "note": ""
+      },
+      {
+        "id": "leopards-cafeteria",
+        "name": "Cafeteria",
+        "floor": null,
+        "building": null,
+        "anchor": null,
+        "aliases": [],
+        "note": ""
+      },
+      {
+        "id": "leopards-school-of-law",
+        "name": "School of Law",
+        "floor": null,
+        "building": null,
+        "anchor": null,
+        "aliases": [],
+        "note": "Campus-level school reference. Its building is unconfirmed."
+      },
+      {
+        "id": "leopards-car-park",
+        "name": "Car park",
+        "floor": null,
+        "building": "Leopards Hill Campus",
+        "anchor": "leopards-parking",
+        "aliases": [],
+        "note": ""
+      }
+    ],
+    "osmBoundary": "842714813",
+    "schoolReference": {
+      "osmNode": "5491816274",
+      "coordinates": [
+        -15.4539019,
+        28.3796768
+      ]
+    },
+    "sources": [
+      "https://www.openstreetmap.org/way/842714813",
+      "https://web.unilus.ac.zm/aboutunilus/"
+    ],
+    "directorySource": "UNILUS retained venue directory and campus tour"
+  }
+}

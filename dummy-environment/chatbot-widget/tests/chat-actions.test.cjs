@@ -26,3 +26,18 @@ test('structured academic responses opt into the compact wrapping table layout',
 
 test('account switch clears private chat and rejects previous account response/session',async()=>{const pending=[];const s=setup(()=>new Promise(resolve=>pending.push(resolve)));s.storage.setItem('unilusAuthToken','student-b');s.storage.setItem('unilusDemoAcademicProfileId','profile-b');const old=s.ctx.sendMessage('my results');s.box.children.push(node());s.storage.setItem('unilusAuthToken','student-a');s.storage.setItem('unilusDemoAcademicProfileId','profile-a');s.events['unilus-student-context-changed']();assert.equal(s.box.children.length,0);const fresh=s.ctx.sendMessage('my current courses');pending[0]({ok:true,json:async()=>({answer:'old private marks',sessionId:'old-owner-session'})});await old;assert.ok(!s.messages.some(m=>m.text==='old private marks'));pending[1]({ok:true,json:async()=>({answer:'own courses',sessionId:'own-session'})});await fresh;assert.equal(s.storage.getItem('unilusChatSession'),'own-session');s.storage.removeItem('unilusAuthToken');s.events['unilus-student-context-changed']();assert.equal(s.storage.getItem('unilusChatSession'),null);assert.equal(s.box.children.length,0);});
 test('token change without event still cannot render a stale private answer',async()=>{let resolve;const s=setup(()=>new Promise(r=>resolve=r));s.storage.setItem('unilusAuthToken','student-b');const request=s.ctx.sendMessage('my results');s.storage.setItem('unilusAuthToken','student-a');resolve({ok:true,json:async()=>({answer:'private old transcript',sessionId:'old'})});await request;assert.ok(!s.messages.some(m=>m.text==='private old transcript'));assert.equal(s.storage.getItem('unilusChatSession'),null);});
+
+test('profile change remounts the persistent avatar before removing its message row', () => {
+  const s = setup(() => {});
+  const row = node();
+  const avatar = { parent: row };
+  const hero = node();
+  s.box.appendChild(row);
+  s.ctx.UnilusWidget = { resetConversation() {
+    assert.equal(s.box.children[0], row);
+    avatar.parent = hero;
+  }};
+  s.events['unilus-demo-profile-changing']();
+  assert.equal(avatar.parent, hero);
+  assert.equal(s.box.children.length, 0);
+});
