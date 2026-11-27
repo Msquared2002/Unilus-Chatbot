@@ -8,7 +8,7 @@
   "lang": "en",
   "background_color": "#f4f8f6",
   "theme_color": "#0b5137",
-  "description": "Independent student companion demonstration. Private information and AI require connectivity.",
+  "description": "Private information and AI require connectivity.",
   "icons": [
     {
       "src": "assets/pwa-icon.svg",

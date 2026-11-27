@@ -6,7 +6,6 @@
     .forEach((control) =>
       control.addEventListener("click", (event) => {
         event.preventDefault();
-        window.showDemoToast("This LMS control is a visual demonstration.");
       }),
     );
   document

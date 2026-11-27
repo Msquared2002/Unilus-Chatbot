@@ -20,7 +20,7 @@
     document.querySelectorAll('[data-demo-name]').forEach(el=>el.textContent=data.name);
     document.querySelectorAll('[data-demo-programme]').forEach(el=>el.textContent=data.programmeName);
     document.querySelector('[data-profile-controls]').hidden=!!data.fixed;
-    message.textContent='Independent demonstration · fictional student data';
+    message.textContent='';
     window.dispatchEvent(new Event('unilus-student-context-changed'));render();
   }
   function periodOptions(selected){return profile.periods.map(p=>`<option value="${esc(p.key)}" ${p.key===selected?'selected':''}>${p.academicYear} · Year ${p.year}, Semester ${p.semester}${p.completed?'':' · current'}</option>`).join('');}
@@ -59,5 +59,5 @@
   document.querySelector('[data-new-demo-profile]')?.addEventListener('click',renew);
   window.addEventListener('hashchange',()=>{render();document.querySelector('.portal-sidebar')?.classList.remove('is-open');document.querySelector('.portal-menu-toggle')?.setAttribute('aria-expanded','false');window.scrollTo(0,0);});
   if(token())Promise.all([request('profile'),request('programmes')]).then(([data,programmes])=>{programmeChoices=programmes;window.UnilusDemoSession?.registerProgrammes?.(programmes);document.querySelector('[data-profile-programme]').innerHTML=programmes.map(p=>`<option value="${esc(p.code)}">${esc(p.name)}</option>`).join('');install(data);}).catch(e=>{message.textContent=e.message;render();});
-  else{message.textContent='Independent demonstration · sign in with a demo account.';render();}
+  else{render();}
 })();

@@ -28,9 +28,6 @@
   document.querySelectorAll("[data-demo-action]").forEach((button) =>
     button.addEventListener("click", (event) => {
       event.preventDefault();
-      window.showDemoToast(
-        "Demonstration only - no live service is connected.",
-      );
     }),
   );
 })();
